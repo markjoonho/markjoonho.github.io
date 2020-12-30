@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Chapter 2.3.6 Ensemble Decision Trees">
+  <meta property="og:description" content="This post is based on the book "Introduction to Machine Learning with Python" by Andreas C Muller, and Sarah Guido. Since the post is summarized by Joonho Ma...">
+
+  <title>Chapter 2.3.6 Ensemble Decision Trees</title>
+  <meta name="description" content="This post is based on the book "Introduction to Machine Learning with Python" by Andreas C Muller, and Sarah Guido. Since the post is summarized by Joonho Ma...">
+
+  
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css" type="text/css"/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
+</head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>Chapter 2.3.6 Ensemble Decision Trees</b></h1>
+
+<p class="post-metadata text-muted">
+  12 December 2020 -  
+  <b>8 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#introduction-to-ml-with-python">
+      <span class="tag badge badge-pill text-primary border border-primary">Introduction to ML with Python</span>
+    </a>
+    </p>
+
+<p>Source: <a href="https://books.google.co.kr/books?id=vbQlDQAAQBAJ&amp;printsec=frontcover&amp;dq=Introduction+to+Machine+Learning+with+Python&amp;hl=en&amp;sa=X&amp;ved=2ahUKEwi736X_w_TtAhUXwosBHTZJDTwQ6wEwAHoECAYQAQ#v=onepage&amp;q=Introduction%20to%20Machine%20Learning%20with%20Python&amp;f=false">Introduction to Machine Learning with Python</a></p>
+
+<ul>
+  <li>Ensembles are methods that combine multiple machine learning models to create powerful models.
+    <ul>
+      <li>Random Forest</li>
+      <li>Gradient Boosted Decision Trees</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">mglearn</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="p">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">"ignore"</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+</code></pre></div></div>
+
+<h1 id="1-random-forests">1. Random Forests</h1>
+
+<ul>
+  <li>Build many trees and averaging their result to reduct overfitting.(Mathematically Prove)</li>
+  <li>To implement this strategy, we need to build many decision trees.</li>
+  <li>Two ways to make tree randomized.
+    <ul>
+      <li>Randomized by selecting the dat points used to build a tree.</li>
+      <li>Randomized by selecting the features in each split test.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="building-random-forests">Building Random Forests</h2>
+
+<ul>
+  <li>Decide the number of trees to build (n_estimators parameter).</li>
+  <li>First take bootstrap sample of our data.
+    <ul>
+      <li>If we have n_samples data, draw an example randomly with replacement, n_samples times.</li>
+      <li>Some data will be missing and some will be repeated.</li>
+    </ul>
+  </li>
+  <li>
+    <p>A decision tree is build based on this newly created dataset.</p>
+
+    <ul>
+      <li>Each tree operates on a different subset of features.</li>
+      <li>If we set max_features to n_features, each split look at all features in the dataset, and no randomnes will be injected in the feature selection. (only randomnes from bootstrap sampling)</li>
+    </ul>
+  </li>
+  <li>Final prediction:
+    <ul>
+      <li>Classification: soft voting</li>
+      <li>Regression : average the result</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="analyzing-random-forests">Analyzing Random Forests</h2>
+
+<p><strong>Example 1</strong></p>
+
+<ul>
+  <li>Apply random forest consisting of five trees to the two_moons dataset</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_moons</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_moons</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+<span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">forest</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">forest</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RandomForestClassifier(n_estimators=5, random_state=2)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">forest</span><span class="p">.</span><span class="n">estimators_</span><span class="p">)):</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Tree {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_tree_partition</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_2d_separator</span><span class="p">(</span><span class="n">forest</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="p">.</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Random Forest"</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="p">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/ensemble/output_3_0.png" width="500px" /></p>
+
+<ul>
+  <li>Overfits less than any of the trees individually, and provides much more intuitive decision boundary.</li>
+  <li>In real world, we use more trees, leading to even smoother boundaries.</li>
+</ul>
+
+<p><strong>Example 2</strong></p>
+
+<ul>
+  <li>Apply random forest consisting of 100 trees on the Breast cancer dataset.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_breast_cancer</span>
+<span class="n">cancer</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">()</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">cancer</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">cancer</span><span class="p">.</span><span class="n">target</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">forest</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">forest</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on training set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">forest</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on test set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">forest</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Accuracy on training set: 1.000
+Accuracy on test set: 0.972
+</code></pre></div></div>
+
+<ul>
+  <li>Better than the linear models or a single decisio tree, without turning any parameters.</li>
+</ul>
+
+<p><strong>Feature Importances</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">plot_feature_importances_cancer</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="n">n_features</span> <span class="o">=</span> <span class="n">cancer</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">barh</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">),</span> <span class="n">model</span><span class="p">.</span><span class="n">feature_importances_</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s">'center'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_features</span><span class="p">),</span> <span class="n">cancer</span><span class="p">.</span><span class="n">feature_names</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Feature importance"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Feature"</span><span class="p">)</span>
+<span class="n">plot_feature_importances_cancer</span><span class="p">(</span><span class="n">forest</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/ensemble/output_7_0.png" width="500px" /></p>
+
+<ul>
+  <li>Captures a much broader picture of the data than a single data.</li>
+</ul>
+
+<h2 id="parameters">Parameters</h2>
+
+<ul>
+  <li>random_state: want to have reproducible results, set random_state.</li>
+  <li>n_estimators: number of trees to use.</li>
+  <li>max_features: maximum number of features that can use.(followings are default)
+    <ul>
+      <li>Classification: max_features=sqrt(n_features)</li>
+      <li>Regression: max_features=n_features</li>
+    </ul>
+  </li>
+  <li>max_depth: depth of each tree.</li>
+</ul>
+
+<h2 id="strengths-weaknesses">Strengths, Weaknesses</h2>
+
+<ul>
+  <li>Don’t tend to perform well on very high dimensional, sparse data, such as text data. (linear model is better)</li>
+  <li>More memory and are slower to train and to predict than linear models.</li>
+</ul>
+
+<h1 id="2-gradient-boosted-regression-trees">2. Gradient Boosted Regression Trees</h1>
+
+<ul>
+  <li>Works by building trees in a serial manner, where each tree tries to correct the mistakes of the previous one.</li>
+  <li>Use very shallow trees, of depth one to five.</li>
+  <li>Combine many simple models like shallow trees.</li>
+  <li>learning_rate is important parameter, which controls how strongly each tree tries to correct the mistakes of the previous trees.
+    <ul>
+      <li>higher learning_rate: each tree can make stronger corrections.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Example 1</strong></p>
+
+<ul>
+  <li>100 trees of maximum depth 3 and a learning rate of 0.1</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingClassifier</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">cancer</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">cancer</span><span class="p">.</span><span class="n">target</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">gbrt</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">gbrt</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on training set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">gbrt</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on test set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">gbrt</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Accuracy on training set: 1.000
+Accuracy on test set: 0.965
+</code></pre></div></div>
+
+<ul>
+  <li>Overfitting since training set accuracy is 1.000.</li>
+  <li>Apply stronger pre-prunning by limiting the maximum depth or lower the learning rate.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gbrt</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_depth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">gbrt</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on training set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">gbrt</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on test set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">gbrt</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Accuracy on training set: 0.991
+Accuracy on test set: 0.972
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gbrt</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">learning_rate</span> <span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">gbrt</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on training set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">gbrt</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on test set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">gbrt</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Accuracy on training set: 0.988
+Accuracy on test set: 0.965
+</code></pre></div></div>
+
+<ul>
+  <li>lowering the maximum provided a significant improvement of the model.</li>
+</ul>
+
+<p><strong>Feature Importances</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gbrt</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">gbrt</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">plot_feature_importances_cancer</span><span class="p">(</span><span class="n">gbrt</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/ensemble/output_14_0.png" width="500px" /></p>
+
+<ul>
+  <li>Gradient Boosting completely ignored some of the features.</li>
+</ul>
+
+<h2 id="parameters-1">Parameters</h2>
+
+<ul>
+  <li>n_estimators: number of trees to use.</li>
+  <li>max_features: maximum number of features that can use.(followings are default)</li>
+  <li>n_iter_no_change: validation score is not proving iteration done earlier</li>
+  <li>max_depth: depth of each tree.(set very low for gradient boosted, not deeper than five)</li>
+</ul>
+
+<h2 id="strengths-weakness">Strengths, Weakness</h2>
+
+<ul>
+  <li>Most powerful and widely used models for supervised learning.</li>
+  <li>Works well on a mixture of binary and continuous features.</li>
+  <li>Careful tuning the parameters.</li>
+  <li>Take a long time to train.</li>
+  <li>Does not work well on high-dimensional sparse data.</li>
+</ul>
+
+
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

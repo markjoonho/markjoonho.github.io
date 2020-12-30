@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="02. Machine Learning and Deep Learning Models">
+  <meta property="og:description" content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different.">
+
+  <title>02. Machine Learning and Deep Learning Models</title>
+  <meta name="description" content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different.">
+
+  
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css" type="text/css"/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
+</head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>02. Machine Learning and Deep Learning Models</b></h1>
+
+<p class="post-metadata text-muted">
+  18 December 2020 -  
+  <b>less than 1 min read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-ml">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus ML</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+
+<h1 id="what-kinds-of-machine-learning-model">What kinds of Machine Learning Model</h1>
+
+<h1 id="supervised-learning">Supervised Learning</h1>
+
+<h2 id="linear-regression">Linear Regression</h2>
+
+<ul>
+  <li>Assume that X and Y are linear relationship.</li>
+  <li>Since we predict the Y using line, it is easy to find the importance of X.</li>
+</ul>
+
+<h2 id="decision-tree">Decision Tree</h2>
+
+<ul>
+  <li>By the condition of X, classify the Y.</li>
+  <li>It is easy to understand, but overfitiing is the problem.</li>
+</ul>
+
+<h2 id="knn-k-neares-neighbor">KNN (K-Neares Neighbor)</h2>
+
+<ul>
+  <li>For the newest data, classify the data using k datas around.</li>
+  <li>hyper parameter: k</li>
+</ul>
+
+<h2 id="neural-network">Neural Network</h2>
+
+<ul>
+  <li>Model with input, hidden, output.</li>
+  <li>For each layer, update the weight of nodes.</li>
+</ul>
+
+<h2 id="svm-support-vector-machine">SVM (Support Vector Machine)</h2>
+
+<ul>
+  <li>Create the decision boundary that makes the distance between classes(margin) greater.</li>
+</ul>
+
+<h2 id="ensemble-learning">Ensemble Learning</h2>
+
+<ul>
+  <li>Combine multiple model and predict using average or voting.</li>
+</ul>
+
+<hr />
+
+<h1 id="unsupervised-learning">Unsupervised Learning</h1>
+
+<h2 id="k-means-clustering">K-means Clustering</h2>
+
+<ul>
+  <li>Without label, k clusterings.</li>
+</ul>
+
+<h1 id="what-kinds-of-deep-learning-model">What kinds of Deep Learning Model</h1>
+
+<h2 id="neural-network-1">Neural Network</h2>
+
+<ul>
+  <li>Model with input, hidden, output.</li>
+  <li>For each layer, update the weight of nodes.</li>
+</ul>
+
+<h2 id="deep-learning">Deep Learning</h2>
+
+<ul>
+  <li>Using the multi-layer, we can train complex data.</li>
+  <li>Developing of Algorithm and GPU helps to use Deep Learning.</li>
+</ul>
+
+<h2 id="cnn">CNN</h2>
+
+<ul>
+  <li>Useful algorithm for analyzing the image.</li>
+  <li>Using the matrix data when input is made.</li>
+</ul>
+
+<h2 id="rnn">RNN</h2>
+
+<ul>
+  <li>Useful algorithm for analyzing sequence data.</li>
+</ul>
+
+<h2 id="gan-generative-adversarial-network">GAN (Generative Adversarial Network)</h2>
+
+<ul>
+  <li>Generator which makes the data and Discriminnator which evaluates the data, adversarial each other while training.</li>
+  <li>Training Discriminator:
+    <ul>
+      <li>real data: 1</li>
+      <li>fake data: 0</li>
+    </ul>
+  </li>
+  <li>Training Generator:
+    <ul>
+      <li>real data: 1</li>
+      <li>fake data: 1</li>
+    </ul>
+  </li>
+  <li>Generator makes the fake data which is as similar as real data, so discriminator cannot determine which is real or fake.</li>
+</ul>
+
+<h2 id="reinforcement-learning">Reinforcement Learning</h2>
+
+<ul>
+  <li>Q-learning: How to get the best reward at the future?</li>
+  <li>Q-learning + Deep learning: DQN</li>
+</ul>
+
+
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

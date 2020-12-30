@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Chapter 2.3.2 K-Nearest Neighbors Algorithm">
+  <meta property="og:description" content="This post is based on the book "Introduction to Machine Learning with Python" by Andreas C Muller, and Sarah Guido. Since the post is summarized by Joonho Ma...">
+
+  <title>Chapter 2.3.2 K-Nearest Neighbors Algorithm</title>
+  <meta name="description" content="This post is based on the book "Introduction to Machine Learning with Python" by Andreas C Muller, and Sarah Guido. Since the post is summarized by Joonho Ma...">
+
+  
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css" type="text/css"/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
+</head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>Chapter 2.3.2 K-Nearest Neighbors Algorithm</b></h1>
+
+<p class="post-metadata text-muted">
+  07 December 2020 -  
+  <b>7 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#introduction-to-ml-with-python">
+      <span class="tag badge badge-pill text-primary border border-primary">Introduction to ML with Python</span>
+    </a>
+    </p>
+
+<p>Source: <a href="https://books.google.co.kr/books?id=vbQlDQAAQBAJ&amp;printsec=frontcover&amp;dq=Introduction+to+Machine+Learning+with+Python&amp;hl=en&amp;sa=X&amp;ved=2ahUKEwi736X_w_TtAhUXwosBHTZJDTwQ6wEwAHoECAYQAQ#v=onepage&amp;q=Introduction%20to%20Machine%20Learning%20with%20Python&amp;f=false">Introduction to Machine Learning with Python</a></p>
+
+<h1 id="1-k-nearest-neighbors-classification-regression">1. K-Nearest Neighbors (Classification/ Regression)</h1>
+
+<p>Simplest machine learning algorithm. Find out the nearest training point and use it to predict. Followings are binary dataset but we can also use it from multi-class datasets.</p>
+
+<h2 id="classification-sample">Classification Sample</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">mglearn</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="p">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">"ignore"</span><span class="p">)</span>
+<span class="c1"># Only find out 1 training point which is the nearest distance from test point.
+</span><span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_knn_classification</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-KNN/output_4_0.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Find out 3 training point which is the nearest distance from test point.
+</span><span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_knn_classification</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-KNN/output_5_0.png" alt="png" /></p>
+
+<h2 id="regression-sample">Regression Sample</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Only find out 1 training point which is the nearest distance from test point.
+</span><span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_knn_regression</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-KNN/output_7_0.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Find out 3 training point which is the nearest distance from test point.
+</span><span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_knn_regression</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-KNN/output_8_0.png" alt="png" /></p>
+
+<h1 id="2-scikit-learn-knn-classification-algorithm">2. Scikit-learn: KNN Classification algorithm</h1>
+
+<h2 id="example-1-forge-dataset">Example 1: Forge Dataset</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># load and split the dataset to evalute the quality
+</span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mglearn</span><span class="p">.</span><span class="n">datasets</span><span class="p">.</span><span class="n">make_forge</span><span class="p">()</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># set the n_neighbors and the model
+# n_neighbors means using n neighbors to predict the test data
+</span><span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsClassifier</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># training
+</span><span class="n">clf</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>KNeighborsClassifier(n_neighbors=3)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># scoring
+</span><span class="k">print</span><span class="p">(</span><span class="s">"Test Accuracy: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">clf</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Test Accuracy: 0.86
+</code></pre></div></div>
+
+<h2 id="analyze-the-knn-classification-algorithm">Analyze the KNN Classification algorithm</h2>
+
+<ul>
+  <li>Above example is binary dataset so let’s draw it!</li>
+  <li>1 neighbor make the model as same as training dataset. -&gt; It can be over fitting</li>
+  <li>9 nieghbors make the decision boundary softer. -&gt; It can be under fitting</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">n_neighbors</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">9</span><span class="p">],</span> <span class="n">axes</span><span class="p">):</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">).</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_2d_separator</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="p">.</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="p">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"{} neighbors"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">n_neighbors</span><span class="p">))</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"feature0"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"feature1"</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.legend.Legend at 0x7febf2e1f250&gt;
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-KNN/output_15_1.png" alt="png" /></p>
+
+<h2 id="example-2-breast-cancer">Example 2: Breast Cancer</h2>
+
+<ul>
+  <li>from the following graph, low neighbors make high training accuracy and low test accuracy.</li>
+  <li>low neighbors: Overfitting</li>
+  <li>high neighbors looks ok but makes the test accuracy lower then middle amount neighbors.</li>
+  <li>it happens because model becomes too simple to work.</li>
+  <li>thus, best number of neighbors is 6 for following datasets and model.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># load and split the dataset to evalute the quality
+</span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_breast_cancer</span>
+<span class="n">cancer</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">()</span> <span class="c1"># type is bunch
+</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">cancer</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">cancer</span><span class="p">.</span><span class="n">target</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">cancer</span><span class="p">.</span><span class="n">target</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span><span class="mi">66</span><span class="p">)</span>
+<span class="n">training_accuracy</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">test_accuracy</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">neighbors_setting</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">neighbors_setting</span><span class="p">:</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_neighbors</span> <span class="o">=</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">clf</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">training_accuracy</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">clf</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">))</span>
+    <span class="n">test_accuracy</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">clf</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">neighbors_setting</span><span class="p">,</span> <span class="n">training_accuracy</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"training accuracy"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">neighbors_setting</span><span class="p">,</span> <span class="n">test_accuracy</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"test accuracy"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"n_neighbors"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"accuracy"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.legend.Legend at 0x7febd33bff10&gt;
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-KNN/output_17_1.png" alt="png" /></p>
+
+<h1 id="2-scikit-learn-knn-regression-algorithm">2. Scikit-learn: KNN Regression algorithm</h1>
+
+<h2 id="example-1-wave-dataset">Example 1: Wave Dataset</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsRegressor</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mglearn</span><span class="p">.</span><span class="n">datasets</span><span class="p">.</span><span class="n">make_wave</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">reg</span> <span class="o">=</span> <span class="n">KNeighborsRegressor</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">reg</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="c1"># scoring
+</span><span class="k">print</span><span class="p">(</span><span class="s">"Test Accuracy: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">reg</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Test Accuracy: 0.83
+</code></pre></div></div>
+
+<h2 id="analyse-kneighborsregressor">Analyse KNeighborsRegressor</h2>
+
+<ul>
+  <li>1 neighbor make the model as same as training dataset. -&gt; It can be over fitting</li>
+  <li>9 nieghbors make the decision boundary softer. -&gt; It can be under fitting</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="n">line</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1000</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">n_neighbors</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">9</span><span class="p">],</span> <span class="n">axes</span><span class="p">):</span>
+    <span class="n">reg</span> <span class="o">=</span> <span class="n">KNeighborsRegressor</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">)</span>
+    <span class="n">reg</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">reg</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="s">'o'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">mglearn</span><span class="p">.</span><span class="n">cm2</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="s">'x'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">mglearn</span><span class="p">.</span><span class="n">cm2</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"{}neighbor train score:{:.2f}, test score:{:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span>
+    <span class="n">n_neighbors</span><span class="p">,</span> <span class="n">reg</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="n">reg</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"feature"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"target"</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">legend</span><span class="p">([</span><span class="s">"predicted"</span><span class="p">,</span> <span class="s">"training"</span><span class="p">,</span> <span class="s">"test"</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-KNN/output_21_0.png" alt="png" /></p>
+
+<h1 id="3-conclusion">3. Conclusion</h1>
+
+<ul>
+  <li>Two important parameters
+    <ul>
+      <li>method to measure the distance between points -&gt; usually use Euclidian distance method.(default = minkowski)</li>
+      <li>number of neighbors -&gt; generally 3 or 5. It is important to control.</li>
+    </ul>
+  </li>
+  <li>Advantage
+    <ul>
+      <li>Easy to understand and use</li>
+    </ul>
+  </li>
+  <li>Disadvantage
+    <ul>
+      <li>Training set bigger(lots of feature or samples) -&gt; takes long time to get prediction</li>
+      <li>preprocessing data is important</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="more-to-do">More to do</h1>
+
+<ul>
+  <li>What is Euclidian distance?</li>
+  <li>How to overcome these disadvantages? -&gt; Linear Model</li>
+</ul>
+
+
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

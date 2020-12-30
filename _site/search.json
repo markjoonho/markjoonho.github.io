@@ -1,0 +1,195 @@
+[
+  
+    {
+      "title"    : "14. Simple Linear Regression Practice for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-14",
+      "date"     : "2020-12-29 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "13. Simple Linear Regression for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-13",
+      "date"     : "2020-12-26 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "12. Matrix Derivative for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-12",
+      "date"     : "2020-12-25 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "11. Statistic for Machine Learning (8) Likelihood",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-11",
+      "date"     : "2020-12-24 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "10. Statistic for Machine Learning (7) statistical test",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-10",
+      "date"     : "2020-12-23 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "09. Statistic for Machine Learning (6) statistical test",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-09",
+      "date"     : "2020-12-22 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "08. Statistic for Machine Learning (5) Continuous Probability Distribution",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-08",
+      "date"     : "2020-12-21 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "07. Statistic for Machine Learning (4) Discrete Probability Distribution",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-07",
+      "date"     : "2020-12-21 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "06. Statistic for Machine Learning (3)",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-06",
+      "date"     : "2020-12-21 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "05. Statistic for Machine Learning (2)",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-05",
+      "date"     : "2020-12-21 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "04. Statistic for Machine Learning (1)",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-04",
+      "date"     : "2020-12-20 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "03. Evaluate Model Performance and Build Experiment",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-03",
+      "date"     : "2020-12-18 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "02. Machine Learning and Deep Learning Models",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-02",
+      "date"     : "2020-12-18 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "01. Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-01",
+      "date"     : "2020-12-17 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "Chapter 2.3.8 Neural Network (Deep Learning)",
+      "category" : "",
+      "tags"     : "Introduction to ML with Python",
+      "url"      : "/blog/intro-to-ml-10",
+      "date"     : "2020-12-16 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "Chapter 2.3.7 Kernalized Support Vector Machine",
+      "category" : "",
+      "tags"     : "Introduction to ML with Python",
+      "url"      : "/blog/intro-to-ml-09",
+      "date"     : "2020-12-13 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "Chapter 2.3.6 Ensemble Decision Trees",
+      "category" : "",
+      "tags"     : "Introduction to ML with Python",
+      "url"      : "/blog/intro-to-ml-08",
+      "date"     : "2020-12-12 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "Chapter 2.3.5 Decision Trees",
+      "category" : "",
+      "tags"     : "Introduction to ML with Python",
+      "url"      : "/blog/intro-to-ml-07",
+      "date"     : "2020-12-12 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "Chapter 2.3.4 Naive Bayes Classifiers",
+      "category" : "",
+      "tags"     : "Introduction to ML with Python",
+      "url"      : "/blog/intro-to-ml-06",
+      "date"     : "2020-12-11 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "Chapter 2.3.3 Linear Models",
+      "category" : "",
+      "tags"     : "Introduction to ML with Python",
+      "url"      : "/blog/intro-to-ml-05",
+      "date"     : "2020-12-08 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "Chapter 2.3.2 K-Nearest Neighbors Algorithm",
+      "category" : "",
+      "tags"     : "Introduction to ML with Python",
+      "url"      : "/blog/intro-to-ml-04",
+      "date"     : "2020-12-07 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "Chapter 2.3.1 Sample Datasets",
+      "category" : "",
+      "tags"     : "Introduction to ML with Python",
+      "url"      : "/blog/intro-to-ml-03",
+      "date"     : "2020-12-03 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "Chapter 2.2 Generalization, Overfitting, Underfitting",
+      "category" : "",
+      "tags"     : "Introduction to ML with Python",
+      "url"      : "/blog/intro-to-ml-02",
+      "date"     : "2020-12-02 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "Chapter 2.1 Classification, Regression",
+      "category" : "",
+      "tags"     : "Introduction to ML with Python",
+      "url"      : "/blog/intro-to-ml-01",
+      "date"     : "2020-12-02 00:00:00 +0900"
+    } 
+  
+]

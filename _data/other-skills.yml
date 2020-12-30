@@ -1,0 +1,11 @@
+- name: MYSQL
+  percentage: 70
+  color:
+
+- name: Google Analytics
+  percentage: 75
+  color: dark
+
+- name: Google Tag Manager
+  percentage: 70
+  color: success

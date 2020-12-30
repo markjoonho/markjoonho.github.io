@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="07. Statistic for Machine Learning (4) Discrete Probability Distribution">
+  <meta property="og:description" content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different.">
+
+  <title>07. Statistic for Machine Learning (4) Discrete Probability Distribution</title>
+  <meta name="description" content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different.">
+
+  
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css" type="text/css"/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
+</head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>07. Statistic for Machine Learning (4) Discrete Probability Distribution</b></h1>
+
+<p class="post-metadata text-muted">
+  21 December 2020 -  
+  <b>less than 1 min read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-ml">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus ML</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+
+<h1 id="discrete-probability-distribution">Discrete Probability Distribution</h1>
+
+<h2 id="bernoulli-trial">Bernoulli trial</h2>
+
+<ul>
+  <li>outcomes(results) are only two categroies.</li>
+  <li>\(p = P[success]\)</li>
+  <li>X=1(success), X=0(fail)
+    <ul>
+      <li>\(f(x) = p^x(1-p)^{1-x}\)</li>
+    </ul>
+  </li>
+  <li>ex) flipping coin when the Header is success</li>
+</ul>
+
+<h2 id="binomial-distribution">Binomial Distribution</h2>
+
+<ul>
+  <li>when probability of success is p, try n times and x is amount of successes</li>
+  <li>distribution of x</li>
+  <li>\(f(x) = \frac{n!}{x!(n-x)!} p^x(1-p)^x\)</li>
+  <li>ex) flipping coin n times and the number of Header(x)</li>
+</ul>
+
+<h2 id="multinomial-distribution">Multinomial Distribution</h2>
+
+<ul>
+  <li>generalization of binomial distribution</li>
+  <li>when we try once, the possible outcome is more than two</li>
+  <li>do n times with outcomes of k categories, distribution about the number of each categories appear</li>
+  <li>\(f(x_1, x_2, … , x_k) = \frac{n!}{x_1!…x_k!}p_1^{x_1}…p_k^{x_k}\)</li>
+  <li>\(x_K = (n - \sum_{k=1}^{K-1}x_k)\)</li>
+  <li>\(p_k = 1 - \sum_{k=1}^{K-1}p_k\)</li>
+  <li>ex) throwing dice n times, number of each numbers appear</li>
+</ul>
+
+<h2 id="poisson-distribution">Poisson Distribution</h2>
+
+<ul>
+  <li>probability of a given number of events occurring in a fixed interval of time or space
+    <ul>
+      <li>number of events occuring is proportioning to the interval</li>
+      <li>propapility that the events occur at the same time is almost 0</li>
+      <li>independence with other intervals</li>
+    </ul>
+  </li>
+  <li>when the average is \(\mu\)
+    <ul>
+      <li>\(f(x) = \frac{\mu^x e^{-\mu}}{x!}, x\geq0 \), integer</li>
+    </ul>
+  </li>
+  <li>number of callings in 1 hour, number of typos in 100 pages</li>
+</ul>
+
+
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

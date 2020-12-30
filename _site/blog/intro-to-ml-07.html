@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Chapter 2.3.5 Decision Trees">
+  <meta property="og:description" content="This post is based on the book "Introduction to Machine Learning with Python" by Andreas C Muller, and Sarah Guido. Since the post is summarized by Joonho Ma...">
+
+  <title>Chapter 2.3.5 Decision Trees</title>
+  <meta name="description" content="This post is based on the book "Introduction to Machine Learning with Python" by Andreas C Muller, and Sarah Guido. Since the post is summarized by Joonho Ma...">
+
+  
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css" type="text/css"/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
+</head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>Chapter 2.3.5 Decision Trees</b></h1>
+
+<p class="post-metadata text-muted">
+  12 December 2020 -  
+  <b>5 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#introduction-to-ml-with-python">
+      <span class="tag badge badge-pill text-primary border border-primary">Introduction to ML with Python</span>
+    </a>
+    </p>
+
+<p>Source: <a href="https://books.google.co.kr/books?id=vbQlDQAAQBAJ&amp;printsec=frontcover&amp;dq=Introduction+to+Machine+Learning+with+Python&amp;hl=en&amp;sa=X&amp;ved=2ahUKEwi736X_w_TtAhUXwosBHTZJDTwQ6wEwAHoECAYQAQ#v=onepage&amp;q=Introduction%20to%20Machine%20Learning%20with%20Python&amp;f=false">Introduction to Machine Learning with Python</a></p>
+
+<h1 id="decision-trees">Decision Trees</h1>
+
+<ul>
+  <li>Decision trees are widely used model for classification and regression tasks.</li>
+  <li>Learn a hierarchy of i/else questions, leading to a decision.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">mglearn</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="p">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">"ignore"</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_animal_tree</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/decision-tree/output_2_0.png" wdith="500px" /></p>
+
+<ul>
+  <li>Each nodes either represents a question or terminal node(leaf) that contains the answer.</li>
+  <li>Instead of building models by hand, learn them from data using supervised learning.</li>
+</ul>
+
+<h2 id="building-decision-trees">Building Decision Trees</h2>
+
+<ul>
+  <li>Learning a decision tree means learning the sequence of if/else questions that gets us to the tree answer most quickly.</li>
+  <li>It forms “Is feature i larger than value a?”</li>
+</ul>
+
+<p><img src="/assets/img/decision-tree/dt1.png" width="500px" /></p>
+
+<ul>
+  <li>Algorithm searches over all possible tests and finds the one that is most informative about the target variable.</li>
+  <li>From the above graph, x[1]=0.0596 yields the most information</li>
+  <li>We classify using this line as Figure 2-24.</li>
+</ul>
+
+<p><img src="/assets/img/decision-tree/dt2.png" width="500px" /></p>
+
+<ul>
+  <li>Add one more line(more depth) to separate precisely</li>
+</ul>
+
+<p><img src="/assets/img/decision-tree/dt3.png" width="500px" /></p>
+
+<p><img src="/assets/img/decision-tree/dt4.png" width="500px" /></p>
+
+<h2 id="controlling-complexity-of-decision-trees">Controlling complexity of decision trees</h2>
+
+<ul>
+  <li>Models are very complex, then it can be highly overfit to the training data.</li>
+  <li>The overfitting can be seen on the left of Figure 2-26.</li>
+  <li>
+    <p>There are two strategies to prevent overfitting.</p>
+
+    <ul>
+      <li>Pre-pruning : stopping the creation of the tree early.</li>
+      <li>Post-pruning : building the tree but then removing or collapsing nodes that contain little information.</li>
+    </ul>
+  </li>
+  <li>Decision trees in scikit-learn only implements pre-pruning</li>
+</ul>
+
+<blockquote>
+  <p>model without pre-pruning</p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_breast_cancer</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+
+<span class="n">cancer</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">()</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">cancer</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">cancer</span><span class="p">.</span><span class="n">target</span><span class="p">,</span>
+                                                   <span class="n">stratify</span> <span class="o">=</span> <span class="n">cancer</span><span class="p">.</span><span class="n">target</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
+<span class="n">tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">tree</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on training set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">tree</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on test set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">tree</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Accuracy on training set: 1.000
+Accuracy on test set: 0.937
+</code></pre></div></div>
+
+<blockquote>
+  <p>Model with pre-puring</p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">tree</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on training set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">tree</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on test set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">tree</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Accuracy on training set: 0.988
+Accuracy on test set: 0.951
+</code></pre></div></div>
+
+<ul>
+  <li>Limiting the depth of the tree decreases overfitting.</li>
+  <li>Lower accuracy on the training set, but an improvement on the test set.</li>
+</ul>
+
+<h2 id="analyzing-decision-trees">Analyzing Decision Trees</h2>
+
+<ul>
+  <li>Visualize the tree using export_graphviz function.</li>
+  <li>Write a file in the .dot file format(text file format for storing graphs).</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">export_graphviz</span>
+<span class="n">export_graphviz</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">out_file</span><span class="o">=</span><span class="s">"tree.dot"</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="p">[</span><span class="s">"malignant"</span><span class="p">,</span> <span class="s">"benign"</span><span class="p">],</span>
+<span class="n">feature_names</span><span class="o">=</span><span class="n">cancer</span><span class="p">.</span><span class="n">feature_names</span><span class="p">,</span> <span class="n">impurity</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">filled</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"tree.dot"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> <span class="n">dot_graph</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">graphviz</span><span class="p">.</span><span class="n">Source</span><span class="p">(</span><span class="n">dot_graph</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/decision-tree/output_14_0.svg" width="500px" /></p>
+
+<ul>
+  <li>Great in-depth view of how the algorithm makes predictions.</li>
+  <li>Good example of a machine learning algorithm that is easily explained to nonexperts.
+    <ul>
+      <li>samples: number of samples in that node</li>
+      <li>value: number of samples per class</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="feature-importance-in-trees">Feature importance in trees</h2>
+
+<ul>
+  <li>Rates how important each freature is for the decision a tree makes.</li>
+  <li>Number between 0 and 1 and the sum of feature importances always sum to 1.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">"Feature importances:</span><span class="se">\n</span><span class="s">{}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">tree</span><span class="p">.</span><span class="n">feature_importances_</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Feature importances:
+[0.         0.         0.         0.         0.         0.
+ 0.         0.         0.         0.         0.01019737 0.04839825
+ 0.         0.         0.0024156  0.         0.         0.
+ 0.         0.         0.72682851 0.0458159  0.         0.
+ 0.0141577  0.         0.018188   0.1221132  0.01188548 0.        ]
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">plot_feature_importances_cancer</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="n">n_features</span> <span class="o">=</span> <span class="n">cancer</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">barh</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">),</span> <span class="n">model</span><span class="p">.</span><span class="n">feature_importances_</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s">'center'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_features</span><span class="p">),</span> <span class="n">cancer</span><span class="p">.</span><span class="n">feature_names</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Feature importance"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Feature"</span><span class="p">)</span>
+<span class="n">plot_feature_importances_cancer</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/decision-tree/output_18_0.png" width="500px" /></p>
+
+<h2 id="decision-tree-regressor">Decision Tree Regressor</h2>
+
+<ul>
+  <li>Similar to the classification trees.</li>
+  <li>Not able to extrpolate, or make predictions outside of the range of the training data.</li>
+</ul>
+
+<h2 id="parameters">Parameters</h2>
+
+<ul>
+  <li>Control model complexity.</li>
+  <li>pre-pruning parameters that stop the building of the tree.
+    <ul>
+      <li>max_depth, max_leaf_nodes, min_sample_leaf</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="strengths-weakness">Strengths, Weakness</h2>
+
+<ul>
+  <li>Easily visualized and understood by nonexperts</li>
+  <li>No preproessing like normalization, standardization of feature is needed</li>
+  <li>Even with the use of pre-pruning, they tend to overfit and poor generalization performance.</li>
+</ul>
+
+
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

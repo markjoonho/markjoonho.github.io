@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="04. Statistic for Machine Learning (1)">
+  <meta property="og:description" content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different.">
+
+  <title>04. Statistic for Machine Learning (1)</title>
+  <meta name="description" content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different.">
+
+  
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css" type="text/css"/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
+</head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>04. Statistic for Machine Learning (1)</b></h1>
+
+<p class="post-metadata text-muted">
+  20 December 2020 -  
+  <b>less than 1 min read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-ml">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus ML</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+
+<h1 id="statistics">Statistics</h1>
+
+<h2 id="population">Population:</h2>
+
+<ul>
+  <li>Every single data what we want to analyze.
+    <ul>
+      <li>Since it takes a long time, we cannot analyze whole data.</li>
+    </ul>
+  </li>
+  <li>parameter: summarized data(average, variation, etc) using sample analysis.</li>
+</ul>
+
+<h2 id="sample">Sample:</h2>
+
+<ul>
+  <li>Sampling some data from population.</li>
+  <li>statistic: to get the parameter, we calculating from sample</li>
+</ul>
+
+<p><img src="/assets/img/statistic/pop.png" width="500px" /></p>
+
+<h1 id="types-of-data">Types of Data</h1>
+
+<h2 id="numerical-data">Numerical Data</h2>
+
+<ul>
+  <li>Continuous(weight, height, etc)</li>
+  <li>Discrete(number of people, etc)</li>
+</ul>
+
+<h2 id="categorical-data">Categorical Data</h2>
+
+<ul>
+  <li>Priority(GPA, etc)</li>
+  <li>Nominal(gender, etc)</li>
+</ul>
+
+<h1 id="summarize-data---visualize">Summarize Data - Visualize</h1>
+
+<h2 id="numerical-data-1">Numerical Data</h2>
+
+<ul>
+  <li>Box Plot</li>
+  <li>Histogram</li>
+</ul>
+
+<h2 id="categorical-data-1">Categorical Data</h2>
+
+<ul>
+  <li>Frequency Table</li>
+  <li>Bar Graph</li>
+  <li>Circle Graph</li>
+</ul>
+
+<h1 id="summarize-data---numeric">Summarize Data - Numeric</h1>
+
+<ul>
+  <li>Number of Population: N</li>
+  <li>Central Tendency Value(parameter):
+    <ul>
+      <li>Population Mean: \(\mu = \frac{\sum_{i=1}^{N}x_i}{N}\)</li>
+      <li>Population Median: data in the center when we organize data.</li>
+      <li>Population Mode: data which appearas most.</li>
+    </ul>
+  </li>
+  <li>Scattering Value:
+    <ul>
+      <li>Variance: \(\sigma^2 = \frac{\sum_{i=1}^N (x_i -\mu)^2}{N}\)</li>
+      <li>Inter Quartile Range: 50% of data which locate at center.</li>
+    </ul>
+  </li>
+  <li>Gaussian Distribution
+    <ul>
+      <li>Location of center decided by mean.</li>
+      <li>Sahpe decided by variance.
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Normal_Distribution_PDF.svg/1440px-Normal_Distribution_PDF.svg.png" width="500px" /></li>
+    </ul>
+  </li>
+</ul>
+
+<p>source: <a href="https://commons.wikimedia.org/wiki/File:Normal_Distribution_PDF.svg">wikimedia</a></p>
+
+<ul>
+  <li>
+    <p>Skewness</p>
+
+    <ul>
+      <li>
+        <p>measure of the asymmetry of the probability distribution</p>
+
+        <p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Negative_and_positive_skew_diagrams_%28English%29.svg/892px-Negative_and_positive_skew_diagrams_%28English%29.svg.png" width="500px" />
+<img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Relationship_between_mean_and_median_under_different_skewness.png" width="500px" /></p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>source: <a href="https://en.wikipedia.org/wiki/Skewness">wikipedia</a></p>
+
+<ul>
+  <li>Kurtosis
+    <ul>
+      <li>measure of the proportion of the tail
+<img src="https://community.sw.siemens.com/servlet/rtaImage?eid=ka64O000000bp7D&amp;feoid=00N4O000006Yxpf&amp;refid=0EM4O00000113Pw" width="500px" /></li>
+    </ul>
+  </li>
+</ul>
+
+<p>source: <a href="https://community.sw.siemens.com/s/article/kurtosis">siemens</a></p>
+
+<ul>
+  <li>statistic: Desided by sample data
+    <ul>
+      <li>sample mean: \(\bar{X} = \frac{\sum_i^n{x_i}}{n}\)</li>
+      <li>sample variance: \(s^2 = \frac{\sum_i^n{(x_i-\bar{X})^2}}{n-1}\)</li>
+    </ul>
+  </li>
+  <li>estimator: Static which is purposing to estimate population</li>
+</ul>
+
+
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

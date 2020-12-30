@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Chapter 2.3.8 Neural Network (Deep Learning)">
+  <meta property="og:description" content="This post is based on the book "Introduction to Machine Learning with Python" by Andreas C Muller, and Sarah Guido. Since the post is summarized by Joonho Ma...">
+
+  <title>Chapter 2.3.8 Neural Network (Deep Learning)</title>
+  <meta name="description" content="This post is based on the book "Introduction to Machine Learning with Python" by Andreas C Muller, and Sarah Guido. Since the post is summarized by Joonho Ma...">
+
+  
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css" type="text/css"/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
+</head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>Chapter 2.3.8 Neural Network (Deep Learning)</b></h1>
+
+<p class="post-metadata text-muted">
+  16 December 2020 -  
+  <b>6 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#introduction-to-ml-with-python">
+      <span class="tag badge badge-pill text-primary border border-primary">Introduction to ML with Python</span>
+    </a>
+    </p>
+
+<p>Source: <a href="https://books.google.co.kr/books?id=vbQlDQAAQBAJ&amp;printsec=frontcover&amp;dq=Introduction+to+Machine+Learning+with+Python&amp;hl=en&amp;sa=X&amp;ved=2ahUKEwi736X_w_TtAhUXwosBHTZJDTwQ6wEwAHoECAYQAQ#v=onepage&amp;q=Introduction%20to%20Machine%20Learning%20with%20Python&amp;f=false">Introduction to Machine Learning with Python</a></p>
+
+<h1 id="neural-networks-deep-learning">Neural Networks (Deep Learning)</h1>
+
+<ul>
+  <li>Multilayer Perceptrons (MLPs)</li>
+</ul>
+
+<h2 id="the-neural-network-model">The neural network model</h2>
+
+<ul>
+  <li>In an MLP the process of computing weighted sums is repeated multiple times.
+    <ul>
+      <li>Computing hidden units</li>
+      <li>Combined using weighted sums to yield final result</li>
+      <li>Following picture</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">mglearn</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="p">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">"ignore"</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="n">display</span><span class="p">(</span><span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_single_hidden_layer_graph</span><span class="p">())</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/mlp/output_1_0.svg" width="500px" /></p>
+
+<ul>
+  <li>Computing a series of weighted Sums is mathematically the same as computing as just one weighted sum.</li>
+  <li>Thus, Using activation function.
+    <ul>
+      <li>After computing a weighted sum for each hidden unit, an activation function is applied to the result.</li>
+      <li>ReLU(recifying nonlinearity, tanh(tangent hyperbolicus)</li>
+    </ul>
+  </li>
+  <li>Also you can add some more hidden layers as follow.(Depp Learning)</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_two_hidden_layer_graph</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/mlp/output_3_0.svg" width="500px" /></p>
+
+<h2 id="tuning-neural-networks">Tuning neural networks</h2>
+
+<p><strong>applying the MLPClassifier to the two_moons dataset</strong></p>
+
+<ul>
+  <li>default: 100 hidden nodes.</li>
+  <li>a lot for this small datasets</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_moons</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_moons</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">noise</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
+
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">solver</span> <span class="o">=</span> <span class="s">'lbfgs'</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">).</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_2d_separator</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="p">.</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">mglearn</span><span class="p">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Feature 0"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Feature 1"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0, 0.5, 'Feature 1')
+</code></pre></div></div>
+
+<p><img src="/assets/img/mlp/output_5_1.png" width="500px" /></p>
+
+<p><strong>applying the MLPClassifier(hidden-nodes: 10) to the two_moons dataset</strong></p>
+
+<ul>
+  <li>reduce the hidden layer</li>
+  <li>decision boundary looks more ragged</li>
+  <li>want smoother decision boundary, add more hidden units, hidden layer or use tanh nonlinearity.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mlp</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">solver</span> <span class="o">=</span> <span class="s">'lbfgs'</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">]).</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_2d_separator</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="p">.</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">mglearn</span><span class="p">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Feature 0"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Feature 1"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0, 0.5, 'Feature 1')
+</code></pre></div></div>
+
+<p><img src="/assets/img/mlp/output_7_1.png" width="500px" /></p>
+
+<p><strong>using two hidden layers, with 10 units each</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mlp</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">solver</span> <span class="o">=</span> <span class="s">'lbfgs'</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">]).</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_2d_separator</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="p">.</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">mglearn</span><span class="p">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Feature 0"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Feature 1"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0, 0.5, 'Feature 1')
+</code></pre></div></div>
+
+<p><img src="/assets/img/mlp/output_9_1.png" width="500px" /></p>
+
+<p><strong>using two hidden layers, with 10 units each, now with tanh nonlinearity</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mlp</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">solver</span> <span class="o">=</span> <span class="s">'lbfgs'</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'tanh'</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">]).</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_2d_separator</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="p">.</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">mglearn</span><span class="p">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Feature 0"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Feature 1"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0, 0.5, 'Feature 1')
+</code></pre></div></div>
+
+<p><img src="/assets/img/mlp/output_11_1.png" width="500px" /></p>
+
+<p><strong>there are many ways to control the complexity</strong></p>
+
+<ul>
+  <li>number of hidden layers</li>
+  <li>number of units</li>
+  <li>regularization(alpha)
+<strong>even when using exactly the same parameters, we can obtain very different models when using different random seeds.</strong></li>
+</ul>
+
+<h2 id="practice-using-breast-cancer-data">Practice Using Breast Cancer Data</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_breast_cancer</span>
+<span class="n">cancer</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Cancer data per-feature maxima:</span><span class="se">\n</span><span class="s">{}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">cancer</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="nb">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Cancer data per-feature maxima:
+[2.811e+01 3.928e+01 1.885e+02 2.501e+03 1.634e-01 3.454e-01 4.268e-01
+ 2.012e-01 3.040e-01 9.744e-02 2.873e+00 4.885e+00 2.198e+01 5.422e+02
+ 3.113e-02 1.354e-01 3.960e-01 5.279e-02 7.895e-02 2.984e-02 3.604e+01
+ 4.954e+01 2.512e+02 4.254e+03 2.226e-01 1.058e+00 1.252e+00 2.910e-01
+ 6.638e-01 2.075e-01]
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span> <span class="n">cancer</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">cancer</span><span class="p">.</span><span class="n">target</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">mlp</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on training set: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">mlp</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on test set: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">mlp</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Accuracy on training set: 0.94
+Accuracy on test set: 0.92
+</code></pre></div></div>
+
+<ul>
+  <li>The accuracy of the MLP is quite good, but not as good as other models.</li>
+  <li>We need to do the scailing.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mean_on_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">std_on_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_train_scaled</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_train</span> <span class="o">-</span> <span class="n">mean_on_train</span><span class="p">)</span> <span class="o">/</span> <span class="n">std_on_train</span>
+<span class="n">X_test_scaled</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_test</span> <span class="o">-</span> <span class="n">mean_on_train</span><span class="p">)</span> <span class="o">/</span> <span class="n">std_on_train</span>
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">mlp</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on training set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span> <span class="n">mlp</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on test set: {:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">mlp</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test_scaled</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Accuracy on training set: 0.991
+Accuracy on test set: 0.965
+</code></pre></div></div>
+
+<h2 id="strengths-weaknesses">Strengths, Weaknesses</h2>
+
+<ul>
+  <li>capture information contained in large amounts of data</li>
+  <li>build incredibly complex models</li>
+  <li>take a long time to train</li>
+  <li>careful preprocessing of the data</li>
+</ul>
+
+
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

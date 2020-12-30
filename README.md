@@ -1,7 +1,7 @@
-<div align="center">
-    <h1>portfolYOU</h1>
-    <i>A beautiful portfolio Jekyll theme that works with GitHub Pages.</i>
-    <br><br>
-    <img src="screenshot.gif">
-    <sub><sup>© 2019 portfolYOU, licensed under the <a href="./LICENSE">MIT License</a>.</sup></sub>
-</div>
+# Joonho's Blog
+
+아직 많이 부족 하지만 저의 하루하루를 기록하기 위하여 블로그를 시작합니다.
+
+천천히 그리고 꾸준히...
+
+[Joonho's Blog](https://www.joonho.dev)

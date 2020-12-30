@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="09. Statistic for Machine Learning (6) statistical test">
+  <meta property="og:description" content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different.">
+
+  <title>09. Statistic for Machine Learning (6) statistical test</title>
+  <meta name="description" content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different.">
+
+  
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css" type="text/css"/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
+</head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>09. Statistic for Machine Learning (6) statistical test</b></h1>
+
+<p class="post-metadata text-muted">
+  22 December 2020 -  
+  <b>less than 1 min read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-ml">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus ML</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+
+<h1 id="statistical-estimation">Statistical Estimation</h1>
+
+<h2 id="point-estimation">Point estimation</h2>
+
+<ul>
+  <li>sample data to calculate the point of possible single point of an unknown population parameter</li>
+</ul>
+
+<p>\(\bar X -&gt; \mu, s^2 -&gt; \sigma ^2 \)</p>
+
+<h2 id="interval-estimation">Interval estimation</h2>
+
+<ul>
+  <li>sample data to calculate an interval of possible values of an unknown population parameter</li>
+  <li>length of interval, confidence interval -&gt; inverse proportion</li>
+</ul>
+
+<h1 id="statistical-test">Statistical Test</h1>
+
+<h2 id="alternative-hypothesish1">Alternative Hypothesis(H1)</h2>
+
+<ul>
+  <li>Hypothesis to prove</li>
+</ul>
+
+<h2 id="null-hypothesish0">Null Hypothesis(H0)</h2>
+
+<ul>
+  <li>Contrast hypothes of alternative hypothesis</li>
+  <li>To prove alternative hypothesis, use null hypothesis is false.</li>
+</ul>
+
+<h1 id="type-of-error">Type of Error</h1>
+
+<h2 id="type-1-error">Type 1 Error</h2>
+
+<ul>
+  <li>When the Null Hypthesis is correct, reject Null Hypothesis</li>
+</ul>
+
+<h2 id="type-2-error">Type 2 Error</h2>
+
+<ul>
+  <li>When the Null Hypothes is wrong, did not reject Null Hypothesis</li>
+</ul>
+
+<p><img src="https://mk0abtastybwtpirqi5t.kinstacdn.com/wp-content/uploads/type-1-2-errors.png" width="500px" /></p>
+
+<p><img src="https://dp8v87cz8a7qa.cloudfront.net/45396/5bd20d03240611540492547.png" width="500px" /></p>
+
+<p>img src = <a href="https://www.abtasty.com/blog/type-1-and-type-2-errors/">AB Tasty</a></p>
+
+<h2 id="one-sided-test">One-sided test</h2>
+
+<ul>
+  <li>\(H_1: \mu &gt; \mu_0\)</li>
+</ul>
+
+<h2 id="two-sided-test">Two-sided test</h2>
+
+<ul>
+  <li>\(H_1: \mu \neq \mu_0\)</li>
+</ul>
+
+<h2 id="p-value">P-value</h2>
+
+<ul>
+  <li>When we assume that the null-hypothesis is correct, p-value is the probability of obtaining test results is greater than or equal to the results actually observed.</li>
+  <li>alpha is the probability that the type1 error happens</li>
+  <li>p-value &lt; alpha Reject H0</li>
+  <li>P-value &gt; alpha cannor reject H0</li>
+</ul>
+
+
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

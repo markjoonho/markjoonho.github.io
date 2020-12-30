@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Chapter 2.3.3 Linear Models">
+  <meta property="og:description" content="This post is based on the book "Introduction to Machine Learning with Python" by Andreas C Muller, and Sarah Guido. Since the post is summarized by Joonho Ma...">
+
+  <title>Chapter 2.3.3 Linear Models</title>
+  <meta name="description" content="This post is based on the book "Introduction to Machine Learning with Python" by Andreas C Muller, and Sarah Guido. Since the post is summarized by Joonho Ma...">
+
+  
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css" type="text/css"/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
+</head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>Chapter 2.3.3 Linear Models</b></h1>
+
+<p class="post-metadata text-muted">
+  08 December 2020 -  
+  <b>18 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#introduction-to-ml-with-python">
+      <span class="tag badge badge-pill text-primary border border-primary">Introduction to ML with Python</span>
+    </a>
+    </p>
+
+<p>Source: <a href="https://books.google.co.kr/books?id=vbQlDQAAQBAJ&amp;printsec=frontcover&amp;dq=Introduction+to+Machine+Learning+with+Python&amp;hl=en&amp;sa=X&amp;ved=2ahUKEwi736X_w_TtAhUXwosBHTZJDTwQ6wEwAHoECAYQAQ#v=onepage&amp;q=Introduction%20to%20Machine%20Learning%20with%20Python&amp;f=false">Introduction to Machine Learning with Python</a></p>
+
+<h1 id="linear-model-for-regression">Linear Model for Regression</h1>
+
+<h4 id="generalized-predict-function">Generalized Predict Function</h4>
+
+<ul>
+  <li>\( \hat{y} = w[0] \times x[0] + w[1] \times x[1] + … + w[p] \times x[p] + b \)</li>
+  <li>\( \hat{y}\) is predict value from model</li>
+  <li>\(x[0]\) to \(x[p]\) is features (p+1 features exist)</li>
+  <li>\(w[0]\) to \(w[p]\) and \(b\) is the parameter that the model study</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">mglearn</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="p">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">"ignore"</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+</code></pre></div></div>
+
+<h1 id="regression-sample">Regression sample</h1>
+
+<ul>
+  <li>If there is only one feature, we describe it using a line.</li>
+  <li>If there are two features, we describe it using a plane.</li>
+  <li>If there are more than two features, the line become a hyperplane.</li>
+  <li>More features -&gt; better Linear Model</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_linear_regression_wave</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>w[0]: 0.393906  b: -0.031804
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-linear-model1/output_3_1.png" alt="png" /></p>
+
+<h1 id="1-linear-regression">1. Linear Regression</h1>
+
+<ul>
+  <li>Try to find the minimum value of Mean Squared Error between predict and training set’s y val.</li>
+  <li>\(LOSS = MSE = {1 \over n}\sum_{i=1}^{n}(y_i - \hat y)^2\)</li>
+  <li>Use Gradient-descent algorithm to minimize MSE.</li>
+</ul>
+
+<hr />
+
+<h2 id="example-1-wave-datasets">Example 1: Wave datasets</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mglearn</span><span class="p">.</span><span class="n">datasets</span><span class="p">.</span><span class="n">make_wave</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">lr</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LinearRegression()
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">"lr.coef_:"</span><span class="p">,</span> <span class="n">lr</span><span class="p">.</span><span class="n">coef_</span><span class="p">)</span> <span class="c1"># parameter w which means slope if there is one feature.
+</span>                             <span class="c1"># If there are more feature, there wil be more coefficient.
+</span><span class="k">print</span><span class="p">(</span><span class="s">"lr.intercept_:"</span><span class="p">,</span> <span class="n">lr</span><span class="p">.</span><span class="n">intercept_</span><span class="p">)</span> <span class="c1"># parameter b which is the intercept.
+</span>                                       <span class="c1"># intercept is only one float value.
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lr.coef_: [0.39390555]
+lr.intercept_: -0.031804343026759746
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">"training set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">lr</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"test set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">lr</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="c1"># Score is not good for both training and test set -&gt; Underfitting
+# We need more features.(this dataset only have one feature...)
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>training set score: 0.67
+test set score: 0.66
+</code></pre></div></div>
+
+<h2 id="example-2-extended-boson-datasets">Example 2: Extended Boson datasets</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mglearn</span><span class="p">.</span><span class="n">datasets</span><span class="p">.</span><span class="n">load_extended_boston</span><span class="p">()</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">lr</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LinearRegression()
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">"training set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">lr</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"test set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">lr</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="c1"># Score is not good for test set but good score for training set -&gt; Overfitting to training set.
+# We need to make our model less complex.(this dataset has too many features...)
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>training set score: 0.95
+test set score: 0.61
+</code></pre></div></div>
+
+<h1 id="2-ridge-regression">2. Ridge Regression</h1>
+
+<ul>
+  <li>Add penalty to make all \(w[i]\) is close to 0. L2 Regularization.</li>
+  <li>Try to find the minimum value of Mean Squared Error between predict and training set’s y val.</li>
+  <li>\(LOSS = MSE + penalty = {1 \over n}\sum<em>{i=1}^{n}(y_i - \hat y)^2 + \alpha \sum</em>{i=1}^{n}w_i^2\)</li>
+  <li>Control the model using \(\alpha\).</li>
+  <li>When \(\alpha\) is close to 0, similar model as linear regression.</li>
+  <li>When \(\alpha\) is bigger, most of \(w[i]\) is close to 0.</li>
+</ul>
+
+<hr />
+
+<h2 id="example-1-extended-boston-datasets-alpha--1default">Example 1: Extended Boston datasets (alpha = 1(default))</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Ridge</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mglearn</span><span class="p">.</span><span class="n">datasets</span><span class="p">.</span><span class="n">load_extended_boston</span><span class="p">()</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ridge</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">()</span>
+<span class="n">ridge</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Ridge()
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">"training set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">ridge</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"test set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">ridge</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="c1"># Better test set score than linear regression -&gt; better model
+</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>training set score: 0.89
+test set score: 0.75
+</code></pre></div></div>
+
+<h2 id="example-2-extended-boston-datasets-alpha--10">Example 2: Extended Boston datasets (alpha = 10)</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ridge10</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ridge10</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"training set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">ridge10</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"test set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">ridge10</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="c1"># More generalize, but less fitting.
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>training set score: 0.79
+test set score: 0.64
+</code></pre></div></div>
+
+<h2 id="example-3-extended-boston-datasets-alpha--01">Example 3: Extended Boston datasets (alpha = 0.1)</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ridge01</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">ridge01</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"training set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">ridge01</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"test set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">ridge01</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>training set score: 0.93
+test set score: 0.77
+</code></pre></div></div>
+
+<h2 id="analyze-how-alpha-work">Analyze How alpha Work</h2>
+
+<ul>
+  <li>Linear Regession biggest size of coef &gt; alph=0.1 &gt; alpha=1 &gt; alpha=10</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ridge10</span><span class="p">.</span><span class="n">coef_</span><span class="p">,</span> <span class="s">"x"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"Ridge alpha 10"</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s">"orange"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ridge</span><span class="p">.</span><span class="n">coef_</span><span class="p">,</span> <span class="s">"^"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"Ridge alpha 1"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"pink"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ridge01</span><span class="p">.</span><span class="n">coef_</span><span class="p">,</span> <span class="s">"v"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"Ridge alpha 0.1"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"list of coef"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"size of coef"</span><span class="p">)</span>
+<span class="n">xlims</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">xlim</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">hlines</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">xlims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">xlims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xlims</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lr</span><span class="p">.</span><span class="n">coef_</span><span class="p">,</span> <span class="s">"o"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"Linear Regression"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"red"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.legend.Legend at 0x7fdfaec6e8b0&gt;
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-linear-model1/output_19_1.png" alt="png" /></p>
+
+<h2 id="analyze-how-sample-size-work-learning-curve">Analyze How Sample Size Work (Learning Curve)</h2>
+
+<ul>
+  <li>When there is small training set, Ride has better test score.</li>
+  <li>When there is bigger training set, Linear Regression almost catch up.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_ridge_n_samples</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-linear-model1/output_21_0.png" alt="png" /></p>
+
+<h1 id="3-lasso-regression">3. Lasso Regression</h1>
+
+<ul>
+  <li>Add penalty to make some \(w[i]\) is 0. L1 Regularization</li>
+  <li>Automatically select feature.</li>
+  <li>Try to find the minimum value of Mean Squared Error between predict and training set’s y val.</li>
+  <li>\(LOSS = MSE + penalty = {1 \over n}\sum<em>{i=1}^{n}(y_i - \hat y)^2 + \alpha \sum</em>{i=1}^{n} \lvert w_i \rvert\)</li>
+  <li>Control the model using \(\alpha\).</li>
+  <li>When \(\alpha\) is close to 0, similar model as linear regression.</li>
+  <li>When \(\alpha\) is bigger, most of \(w[i]\) is 0.</li>
+</ul>
+
+<hr />
+
+<h2 id="example-1-extended-boston-datasets-alpha--1default-1">Example 1: Extended Boston datasets (alpha = 1(default))</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Lasso</span>
+<span class="n">lasso</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">().</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"training set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">lasso</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"test set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">lasso</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"used feature:"</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">lasso</span><span class="p">.</span><span class="n">coef_</span><span class="o">!=</span><span class="mi">0</span><span class="p">))</span>
+<span class="c1"># We had 104 features but lasso only use 4 features. -&gt; underfitting
+# low score model. Let's change alpha!
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>training set score: 0.29
+test set score: 0.21
+used feature: 4
+</code></pre></div></div>
+
+<h2 id="example-2-extended-boston-datasets-alpha--001">Example 2: Extended Boston datasets (alpha = 0.01)</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">lasso001</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100000</span><span class="p">).</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"training set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">lasso001</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"test set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">lasso001</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"used feature:"</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">lasso001</span><span class="p">.</span><span class="n">coef_</span><span class="o">!=</span><span class="mi">0</span><span class="p">))</span>
+<span class="c1"># better than example 1 -&gt; it looks ok
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>training set score: 0.90
+test set score: 0.77
+used feature: 33
+</code></pre></div></div>
+
+<h2 id="example-3-extended-boston-datasets-alpha--00001">Example 3: Extended Boston datasets (alpha = 0.0001)</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">lasso00001</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100000</span><span class="p">).</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"training set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">lasso00001</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"test set score: {:.2f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">lasso00001</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"used feature:"</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">lasso00001</span><span class="p">.</span><span class="n">coef_</span><span class="o">!=</span><span class="mi">0</span><span class="p">))</span>
+<span class="c1"># Too many features!! -&gt; Overfitting
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>training set score: 0.95
+test set score: 0.64
+used feature: 96
+</code></pre></div></div>
+
+<h2 id="analyze-how-alpha-work-1">Analyze How alpha Work</h2>
+
+<ul>
+  <li>Lasso:
+    <ul>
+      <li>when alpha = 1, most of coef is 0.</li>
+      <li>when alpha = 0.0001, most of coef is far away from 0.</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lasso</span><span class="p">.</span><span class="n">coef_</span><span class="p">,</span> <span class="s">'s'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"Lasso alpha=1"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lasso001</span><span class="p">.</span><span class="n">coef_</span><span class="p">,</span> <span class="s">'s'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"Lasso alpha=0.01"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lasso00001</span><span class="p">.</span><span class="n">coef_</span><span class="p">,</span> <span class="s">'s'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"Lasso alpha=0.0001"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ridge01</span><span class="p">.</span><span class="n">coef_</span><span class="p">,</span> <span class="s">'o'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"Ridge alpha=0.1"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"list of coef"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"size of coef"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0, 0.5, 'size of coef')
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-linear-model1/output_29_1.png" alt="png" /></p>
+
+<h1 id="more-to-do">More to Do</h1>
+
+<ul>
+  <li>In scikit-learn there exist ElasticNet.</li>
+  <li>ElasticNet = combination of Ridge and Lasso.</li>
+</ul>
+
+<h1 id="linear-model-for-classification">Linear Model for Classification</h1>
+
+<h2 id="generalized-predict-function-1">Generalized Predict Function</h2>
+
+<ul>
+  <li>\(\hat{y} = w[0] \times x[0] + w[1] \times x[1] + … + w[p] \times x[p] + b &gt; 0\) -&gt; binary classification</li>
+  <li>\(\hat{y}\) is decision boundary to classify (compare with 0)</li>
+  <li>\(x[0]\) to \(x[p]\) is features (p+1 features exist)</li>
+  <li>\(w[0]\) to \(w[p]\) and \(b\) is the parameter that the model study</li>
+  <li>Logistic Regression, Support Vector Machine …</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">mglearn</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="p">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">"ignore"</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+</code></pre></div></div>
+
+<h1 id="1-overall-logistic-regression-vs-linear-svc">1. Overall: Logistic Regression vs Linear SVC</h1>
+
+<h2 id="difference">Difference</h2>
+
+<ul>
+  <li>Logistic Regression
+    <ul>
+      <li>Use logistic loss function in binary classification</li>
+      <li>Use Cross entropy loss funcion in multi classification</li>
+    </ul>
+  </li>
+  <li>Linear SVC
+    <ul>
+      <li>Use Squared hinge loss function</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="example-1-forge-datasets">Example 1: forge Datasets</h2>
+
+<ul>
+  <li>Both Logistic Regression and Linear SVC use R2 Regularization</li>
+  <li>Control the model using C</li>
+  <li>when C is too large, it can be overfitting to the training set.</li>
+  <li>when C is too small, it can be underfitting model.</li>
+  <li>More featrues dataset -&gt; better model</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mglearn</span><span class="p">.</span><span class="n">datasets</span><span class="p">.</span><span class="n">make_forge</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="n">LinearSVC</span><span class="p">(),</span> <span class="n">LogisticRegression</span><span class="p">()],</span> <span class="n">axes</span><span class="p">):</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_2d_separator</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="p">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">clf</span><span class="p">.</span><span class="n">__class__</span><span class="p">.</span><span class="n">__name__</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"feature 0"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"feature 0"</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">legend</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-log/output_3_0.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Check how C works
+</span><span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_linear_svc_regularization</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-log/output_4_0.png" alt="png" /></p>
+
+<h1 id="2-binary-classification">2. Binary Classification</h1>
+
+<h2 id="example-1-breast-cancer-datasets">Example 1: Breast Cancer Datasets</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Logistic Regression
+</span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_breast_cancer</span>
+<span class="n">cancer</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">()</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">cancer</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">cancer</span><span class="p">.</span><span class="n">target</span><span class="p">,</span>
+                                                    <span class="n">stratify</span><span class="o">=</span><span class="n">cancer</span><span class="p">.</span><span class="n">target</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">logreg</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mi">1</span><span class="p">).</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Score for Training Set:{:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">logreg</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Score for Testing Set:{:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">logreg</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Score for Training Set:0.946
+Score for Testing Set:0.958
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Logistic Regression with c = 100
+</span><span class="n">logreg100</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mi">100</span><span class="p">).</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Score for Training Set:{:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">logreg100</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Score for Testing Set:{:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">logreg100</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Score for Training Set:0.946
+Score for Testing Set:0.958
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Logistic Regression with c = 0.01
+</span><span class="n">logreg001</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">0.01</span><span class="p">).</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Score for Training Set:{:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">logreg001</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Score for Testing Set:{:.3f}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">logreg001</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Score for Training Set:0.934
+Score for Testing Set:0.930
+</code></pre></div></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<ul>
+  <li>Logistic Regression is as same as Ridge Regression. (L2 Regularization)</li>
+  <li>Coefficient cannot be 0. (close to 0)</li>
+  <li>Control the model using C</li>
+  <li>when C is too large, it can be overfitting to the training set.</li>
+  <li>when C is too small, it can be underfitting model.</li>
+</ul>
+
+<h1 id="3-multi-classification">3. Multi Classification</h1>
+
+<ul>
+  <li>In logistic classification, use the softmax function.
+    <ul>
+      <li>\( Pr( Y _ i =c) = \frac{e^{W_c \times X_i}}{\sum_{n=1}^{\infty} e^{W_c \times X_i}}\)</li>
+    </ul>
+  </li>
+  <li>In Linear SVC, nothing… Thus, we will use one vs rest to do multi classification</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_blobs</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">mglearn</span><span class="p">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"feature 0"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"feature 1"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">([</span><span class="s">"a"</span><span class="p">,</span> <span class="s">"b"</span><span class="p">,</span> <span class="s">"c"</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.legend.Legend at 0x7f92f94bfe20&gt;
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-log/output_11_1.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Linear SVC
+</span><span class="n">linear_svm</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">().</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mglearn</span><span class="p">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">line</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">coef</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">linear_svm</span><span class="p">.</span><span class="n">coef_</span><span class="p">,</span> <span class="n">linear_svm</span><span class="p">.</span><span class="n">intercept_</span><span class="p">,</span>
+                                  <span class="n">mglearn</span><span class="p">.</span><span class="n">cm3</span><span class="p">.</span><span class="n">colors</span><span class="p">):</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">line</span> <span class="o">*</span> <span class="n">coef</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">intercept</span><span class="p">)</span> <span class="o">/</span> <span class="n">coef</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"feature 0"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"feature 1"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">([</span><span class="s">'class 0'</span><span class="p">,</span> <span class="s">'class 1'</span><span class="p">,</span> <span class="s">'class 2'</span><span class="p">,</span> <span class="s">'class 0 boundary'</span><span class="p">,</span> <span class="s">'class 1 boundary'</span><span class="p">,</span>
+            <span class="s">'class 2 boundary'</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="p">(</span><span class="mf">1.01</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.legend.Legend at 0x7f92f96f7ee0&gt;
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-log/output_13_1.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mglearn</span><span class="p">.</span><span class="n">plots</span><span class="p">.</span><span class="n">plot_2d_classification</span><span class="p">(</span><span class="n">linear_svm</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="p">.</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">mglearn</span><span class="p">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">line</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">coef</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">linear_svm</span><span class="p">.</span><span class="n">coef_</span><span class="p">,</span> <span class="n">linear_svm</span><span class="p">.</span><span class="n">intercept_</span><span class="p">,</span>
+                                  <span class="n">mglearn</span><span class="p">.</span><span class="n">cm3</span><span class="p">.</span><span class="n">colors</span><span class="p">):</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">line</span> <span class="o">*</span> <span class="n">coef</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">intercept</span><span class="p">)</span> <span class="o">/</span> <span class="n">coef</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">([</span><span class="s">'class 0'</span><span class="p">,</span> <span class="s">'class 1'</span><span class="p">,</span> <span class="s">'class 2'</span><span class="p">,</span> <span class="s">'class 0 boundary'</span><span class="p">,</span> <span class="s">'class 1 boundary'</span><span class="p">,</span>
+            <span class="s">'class 2 boundary'</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="p">(</span><span class="mf">1.01</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"feature 0"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"feature 1"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0, 0.5, 'feature 1')
+</code></pre></div></div>
+
+<p><img src="/assets/img/supervised-log/output_14_1.png" alt="png" /></p>
+
+<h2 id="conclusion-1">Conclusion</h2>
+
+<ul>
+  <li>Decide the attributes.
+    <ul>
+      <li>alpha from regression model</li>
+      <li>C from linear svc and logistic regression</li>
+    </ul>
+  </li>
+  <li>Decide using L2 Regularization or L1 Regularization
+    <ul>
+      <li>There are so many trash features, use L1</li>
+      <li>Generally use L2</li>
+    </ul>
+  </li>
+  <li>Linear Models are good for large dataset
+    <ul>
+      <li>To make our dataset even faster use <strong>solver=’sag’</strong> Stochastic Average Gradient Descent</li>
+      <li>Other way is using SGDClassifier or SGDRegressor
+        <ul>
+          <li>SGD = Stochastic Gradient Descent</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>
