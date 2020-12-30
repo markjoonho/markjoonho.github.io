@@ -1,18 +1,24 @@
 <head>
-  {% assign title = page.title | default: site.title | escape %} {% assign
-  description = page.description | default: site.description | strip_html |
-  strip_newlines | truncate: 160 %} {% if page.name %} {% assign title =
-  page.name | escape %} {% endif %}
-
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="{% if page.description %}{{ page.description | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}"
+  />
+  <meta
+    property="og:title"
+    content="{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}"
+  />
+  <meta
+    property="og:description"
+    content="{% if page.description %}{{ page.description | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}"
+  />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="{{ title }}" />
-  <meta property="og:description" content="{{ description }}" />
-
-  <title>{{ page.title }}</title>
-  <meta name="description" content="{{ description }}" />
+  <title>
+    {% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape
+    }}{% endif %}
+  </title>
 
   <link
     rel="shortcut icon"
@@ -25,11 +31,13 @@
     rel="stylesheet"
     href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
   />
+
   <!-- Bootstrap CSS CDN -->
   <link
     rel="stylesheet"
     href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
   />
+
   <!-- Animate CSS CDN -->
   <link
     rel="stylesheet"
@@ -43,4 +51,21 @@
     href="{{ '/assets/css/style.css' | relative_url }}"
     type="text/css"
   />
+
+  {%- if site.analytics.enabled == true -%}
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id={{ site.analytics.google.tracking_id }}"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "{{ site.analytics.google.tracking_id }}");
+  </script>
+  {%- endif -%}
 </head>
