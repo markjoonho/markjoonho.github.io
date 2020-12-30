@@ -18,7 +18,7 @@
   />
   <meta
     property="og:title"
-    content="13. Simple Linear Regression for Machine Learning"
+    content="15. Multi Linear Regression for Machine Learning"
   />
   <meta
     property="og:description"
@@ -26,7 +26,7 @@
   />
   <meta property="og:type" content="website" />
   <title>
-    13. Simple Linear Regression for Machine Learning
+    15. Multi Linear Regression for Machine Learning
   </title>
 
   <link
@@ -100,11 +100,11 @@
 
 </nav>
   <div class="col-lg-10 mx-auto mt-5 post">
-  <h1><b>13. Simple Linear Regression for Machine Learning</b></h1>
+  <h1><b>15. Multi Linear Regression for Machine Learning</b></h1>
 
 <p class="post-metadata text-muted">
-  26 December 2020 -  
-  <b>2 mins read time</b>
+  30 December 2020 -  
+  <b>less than 1 min read time</b>
 
   <br>Tags: 
     
@@ -117,74 +117,32 @@
 
 <p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
 
-<h1 id="regression">Regression</h1>
+<h2 id="multi-linear-regression-predicting">Multi Linear Regression Predicting</h2>
 
-<ul>
-  <li>Statistical processes for estimating the relationships between a dependent variable(outcome) and one or more independent varaiable(input).</li>
-  <li>Following image is linear regression which is the most common method.</li>
-</ul>
+<p>There are various variables. This is the equation what we want to know.</p>
 
-<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Linear_regression.svg/2560px-Linear_regression.svg.png" width="500px" /></p>
-
-<p>source: <a href="https://en.wikipedia.org/wiki/">WIKIPEDIA</a></p>
-
-<h2 id="simple-linear-regression">Simple Linear Regression</h2>
-
-<p>There is only one variable. This is the equation what we want to know.</p>
-
-\[Y = \beta_0 + \beta_1 X + \epsilon\]
-
-<ul>
-  <li>\(X\) : independent variable(input)</li>
-  <li>\(Y\) : dependent variable(output)</li>
-  <li>\(\beta_0\) : intercept(coefficient)</li>
-  <li>\(\beta_1\) : slope(coefficient)</li>
-  <li>\(\epsilon\) : whitenoise</li>
-</ul>
-
-<h2 id="predicting">Predicting</h2>
-
-\[\hat{Y} = \hat{\beta_0} + \hat{\beta_1} X\]
+\[\hat{Y} = \hat{\beta_0} + \hat{\beta_1} X_1 + \hat{\beta_2} X_2 + ... + \hat{\beta_p} X_p\]
 
 <ul>
   <li>Smallest average distance between line and data(residual).
     <ul>
       <li>Find the smallest residual: \(e_i = y_i - \hat{y_i}\)</li>
-      <li>SSE(sum of squares error): \(SSE = \sum\_{i=1}^{n}e_i^2\)</li>
-      <li>MSE(mean squared error): \(\sqrt{\frac{1}{n-2}SSE}\)</li>
-      <li>Least Square Method</li>
+      <li>SSE(sum of squares error): \(SSE = \sum_{i=1}^{n}e_i^2\)</li>
     </ul>
   </li>
 </ul>
 
-<blockquote>
-  <p>Why are we using SSE or MSE?</p>
+<p><img src="/assets/img/fc-multi-linear/2020-11-27.png" width="1000px" /></p>
 
-  <ul>
-    <li>MSE is a standardization model of SSE</li>
-    <li>Easy to derivative</li>
-    <li>Only one result exists</li>
-  </ul>
-</blockquote>
+<h2 id="multi-linear-regression-coefficient-analysis">Multi Linear Regression Coefficient Analysis</h2>
 
-<p><img src="/assets/img/linear-regression-2020-11-27.png" width="1000px" /></p>
+<p><strong>EXAMPLE</strong></p>
 
-<h2 id="simple-linear-regression-coefficient-analysis">Simple Linear Regression Coefficient Analysis</h2>
+\[\hat{Y}=\hat{\beta_0} + \hat{\beta_1}X_1 + \hat{\beta_2}X_2 + \hat{\beta_3}X_3\]
 
-<p><strong>\(\hat{\beta_1}\)</strong>: When X1 increases by 1, y increases by \(\hat{\beta_1}\)</p>
-
-<ol>
-  <li>Null Hypothesis: \(\beta_1 = 0\) (coefficient is 0, variable does not have meaingful relationship)</li>
-  <li>Alternative Hypothesis: \(\beta_1 \neq 0\) (coefficient is not 0, variable have meaingful relationship)</li>
-</ol>
-
-\[t = \frac{\hat{\beta_1}}{\frac{s}{\sqrt{S_{XX}}}} = \frac{\hat{\beta_1}}{std error(\hat{\beta_1})}\]
-
-<blockquote>
-  <p>Most of all when t-value is greater than 3, p-value is small and have meaningful relationship.</p>
-</blockquote>
-
-<p><strong>EXAMPLE 1</strong>: relationship between radio ads’ budget and sales.</p>
+<ul>
+  <li>\(X_1\): TV, \(X_2\): radio, \(X_3\): newspaper</li>
+</ul>
 
 <table>
   <thead>
@@ -199,113 +157,95 @@
   <tbody>
     <tr>
       <td>Intercept</td>
-      <td>9.312</td>
-      <td>0.563</td>
-      <td>16.54</td>
+      <td>2.939</td>
+      <td>0.3119</td>
+      <td>9.42</td>
+      <td>&lt; 0.0001</td>
+    </tr>
+    <tr>
+      <td>TV</td>
+      <td>0.046</td>
+      <td>0.0014</td>
+      <td>32.81</td>
       <td>&lt; 0.0001</td>
     </tr>
     <tr>
       <td>radio</td>
-      <td>0.203</td>
-      <td>0.020</td>
-      <td>9.92</td>
-      <td>&lt; 0.0001</td>
-    </tr>
-  </tbody>
-</table>
-
-<ul>
-  <li>when budget of radio increases by 1, sales increase by 0.2 unit.</li>
-  <li>when budget is 35, \(sales = 9.123+0.203 * 35 = 16.42 unit\).</li>
-</ul>
-
-<p><strong>EXAMPLE 2</strong>: relationship between newspaper ads’ budget and sales.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th> </th>
-      <th>Coefficient</th>
-      <th>Std error</th>
-      <th>t-statistic</th>
-      <th>p-value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Intercept</td>
-      <td>12.351</td>
-      <td>0.621</td>
-      <td>19.88</td>
+      <td>0.189</td>
+      <td>0.0086</td>
+      <td>21.89</td>
       <td>&lt; 0.0001</td>
     </tr>
     <tr>
       <td>newspaper</td>
-      <td>0.055</td>
-      <td>0.017</td>
-      <td>3.30</td>
-      <td>&lt; 0.0001</td>
+      <td>-0.001</td>
+      <td>0.0059</td>
+      <td>-0.18</td>
+      <td>0.8599</td>
     </tr>
   </tbody>
 </table>
 
 <ul>
-  <li>when budget of newspaper increases by 1, sales increase by 0.055 unit.</li>
+  <li>advertisement through newspaper does not affet meaningfully, since p-value is high (0.86).</li>
+  <li>From the simple linear regression(post 13), since we ignored TV and radio advertisement, it seems like newspaper affect the sales.</li>
+  <li>However, when we do the multi linear regression, it does not.</li>
 </ul>
 
-<h2 id="simple-linear-regression-accuracy-evaluation">Simple Linear Regression Accuracy Evaluation</h2>
+<h2 id="multi-linear-regression-model-evaluation">Multi Linear Regression Model Evaluation</h2>
 
-<ul>
-  <li>Using SSE or MSE(RSE): When SSE and MSE is small, we can say it is a good model.</li>
-</ul>
+<ol>
+  <li>Null Hypothesis: \(\beta_1 = \beta_2 = ...=\beta_p = 0\) (coefficients are 0. there exists no meaningful variables)</li>
+  <li>Alternative Hypothesis: At least one of coefficients are not 0. (there exists meaningful variables)</li>
+</ol>
 
-<p><img src="/assets/img/linear-regression-2020-11-27-2.png" width="1000px" /></p>
+<p><strong>Evalutate using the F-Statistics</strong></p>
+
+\[F = \frac{V_1/k_1}{V_2/k_2} \sim F(k_1, k_2)\]
+
+<blockquote>
+  <p>When F-Statistics value is bigger, P-value is getting smaller.
+If there are many variables, F-statistics are getting bigger since F-statistics are made by square. Thus, when there are many variables, we cannot 100% trust F-Statistics.</p>
+</blockquote>
 
 <table>
   <thead>
     <tr>
       <th>Source of Variation</th>
       <th>Sum of Squares</th>
-      <th>Degree of Freedom</th>
-      <th>Mean Square</th>
+      <th>DF</th>
+      <th>Mean Squares</th>
+      <th>F-Statistics</th>
+      <th>P-value</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>Regression</td>
       <td>SSR</td>
-      <td>1</td>
-      <td>SSR</td>
+      <td>P</td>
+      <td>MSR(SSR/p)</td>
+      <td>MSR/MSE</td>
+      <td>P -value</td>
     </tr>
     <tr>
       <td>Error</td>
       <td>SSE</td>
-      <td>N-2</td>
-      <td>MSE</td>
+      <td>N-p-1</td>
+      <td>MSE(SSE/(N-p-1))</td>
+      <td> </td>
+      <td> </td>
     </tr>
     <tr>
       <td>Total</td>
       <td>SST</td>
       <td>N-1</td>
       <td> </td>
+      <td> </td>
+      <td> </td>
     </tr>
   </tbody>
 </table>
-
-<ul>
-  <li>Variation of Y is consist of expalained variation(SSE: Residual) and unexplained variation(SSR)</li>
-</ul>
-
-<p><strong>\(R^2\) Evaluation Method</strong></p>
-
-<ul>
-  <li>\(R^2\) is value between 0 and 1.</li>
-  <li>\(R^2\) shows the amount of Y, that can be explained by X.</li>
-  <li>When \(R^2\) is close to 1, it can be explained well on linear regregression</li>
-  <li>Hence R-square does not have minus value, when there exists lots of features, it increases. Thus, sometimes R-square become a meaningless value.</li>
-</ul>
-
-\[R^2 = 1 - \frac{SSE}{SST}\]
 
 
 
