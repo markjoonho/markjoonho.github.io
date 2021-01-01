@@ -1,7 +1,15 @@
 [
   
     {
-      "title"    : "18. Regression Model Performance for Machine Learning",
+      "title"    : "19. Model Performance for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-19",
+      "date"     : "2021-01-02 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "18. Regression Model Performance Check for Machine Learning",
       "category" : "",
       "tags"     : "Fast Campus ML",
       "url"      : "/blog/ml-18",

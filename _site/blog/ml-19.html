@@ -18,7 +18,7 @@
   />
   <meta
     property="og:title"
-    content="18. Regression Model Performance Check for Machine Learning"
+    content="19. Model Performance for Machine Learning"
   />
   <meta
     property="og:description"
@@ -26,7 +26,7 @@
   />
   <meta property="og:type" content="website" />
   <title>
-    18. Regression Model Performance Check for Machine Learning
+    19. Model Performance for Machine Learning
   </title>
 
   <link
@@ -100,10 +100,10 @@
 
 </nav>
   <div class="col-lg-10 mx-auto mt-5 post">
-  <h1><b>18. Regression Model Performance Check for Machine Learning</b></h1>
+  <h1><b>19. Model Performance for Machine Learning</b></h1>
 
 <p class="post-metadata text-muted">
-  01 January 2021 -  
+  02 January 2021 -  
   <b>less than 1 min read time</b>
 
   <br>Tags: 
@@ -115,68 +115,65 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
 
-<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a>, <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">WikiPedia</a>, <a href="https://en.wikipedia.org/wiki/Confusion_matrix">WikiPedia</a></p>
 
-<h2 id="r-squared">R-squared</h2>
+<h2 id="msemean-squared-error">MSE(Mean Squared Error)</h2>
 
-\[R^2 = \frac{SSR}{SST}\]
+\[MSE = \frac{1}{n} \sum_{i=1}^n [y_i - \hat{f}(x_i)]^2\]
 
-<p><img src="/assets/img/ml18/note.png" width="1000px" /></p>
-
-<p><strong>Problem</strong></p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Since SSR is squared value, when the number of variable is increasing, R-squared value is increasing.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>n: size of data
+MSE is from 0 to infinity
 </code></pre></div></div>
 
-<h2 id="adjusted-r-squared">Adjusted R-squared</h2>
+\[RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^n [y_i - \hat{f}(x_i)]^2}\]
 
 <ul>
-  <li>Give penalty to R-squared as the number of variables.</li>
+  <li>Difference between real output value and predicted output value.</li>
+  <li>When \(MSE\) is smaller than it is better, but be careful about overfitting.</li>
+  <li>Thus, we need to predict \(f\) to reduce validation set’s MSE smaller.</li>
 </ul>
 
-\[R^2 = 1 - \frac{SSE}{SST}\]
+<h2 id="mapemean-absolute-percentage-error">MAPE(mean absolute percentage error)</h2>
 
-\[Adjusted \space R^2 = 1 - \frac{SSE / {(n-p)}}{SST / {(n-1)}}\]
+\[MAPE = \frac{100}{n} \sum_{i=1}^n|\frac{y_i-\hat{f}(x_i)}{y_i}| \space (y_i \neq 0)\]
 
-<blockquote>
-  <p>n: sample size</p>
-
-  <p>p: number of variables</p>
-</blockquote>
-
-<h2 id="aic-akaike-information-criterion">AIC (Akaike Information Criterion)</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MAPE is from 0% ~ 100%
+n:sample size
+</code></pre></div></div>
 
 <ul>
-  <li>Give penalty to MSE as the number of variables.</li>
-  <li>Generally use AIC a lot at regression Model Selection.</li>
+  <li>MAPE is percentage value.</li>
+  <li>When it is close to 0, better regression model performance</li>
 </ul>
 
-\[AIC = n \ln(\frac{SSE}{n}) + 2(p+1)\]
+<h2 id="accuracy">Accuracy</h2>
 
-<blockquote>
-  <p>n: sample size</p>
+<p><img src="/assets/img/ml19/accuracy.png" /></p>
 
-  <p>p: number of variables</p>
-</blockquote>
+\[Accuracy = \frac{corrected\space data}{overall} = \frac{TP+TN}{TP+FN+FP+TN}\]
+
+\[Precision = \frac{corrected \space data}{predicted \space negative \space classes} = \frac{TN}{TN + FN}\]
+
+\[Recall = \frac{corrected \space negative \space data}{actual \space negative \space classes} = \frac{TN}{FP + TN}\]
+
+\[Specificity = \frac{corrected \space positive \space data}{actual \space positive \space classes} = \frac{TP}{TP+FN}\]
+
+<h2 id="mix-accuracy-precision-recall-specificity">Mix Accuracy, precision, recall, specificity</h2>
+
+<p><strong>G-means, F1 measure</strong></p>
+
+\[G-mean = \sqrt{specificity * recall}\]
+
+\[F_1 measure = \frac{2}{\frac{1}{precision}+\frac{1}{recall}} = 2 * \frac{precision * recall}{precision + recall}\]
+
+<p><strong>ROC curve, AUC</strong></p>
 
 <ul>
-  <li>When value of AIC is small, it means better model.</li>
-  <li>Inaccurate when sample size, n, is increasing.</li>
+  <li>x-axis is specificity, y-axis is recall.</li>
+  <li>AUC is area of ROC curve</li>
 </ul>
 
-<h2 id="bic-bayes-information-criteria">BIC (Bayes Information Criteria)</h2>
-
-<ul>
-  <li>To overcome AIC’s drawback, use BIC</li>
-</ul>
-
-\[BIC = n \ln(\frac{SSE}{n}) + 2(p+1)\ln(n)\]
-
-<blockquote>
-  <p>n: sample size</p>
-
-  <p>p: number of variables</p>
-</blockquote>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Roc-draft-xkcd-style.svg/2560px-Roc-draft-xkcd-style.svg.png" /></p>
 
 
 
