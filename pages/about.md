@@ -42,6 +42,12 @@ Hi I am **{{ site.author.name }}** :wave:,<br>
 
 ## Certification
 
+#### _AI Researcher Process_
+
+- [Korea IT Business Promotion Association](https://koipa.or.kr/index.php), Published: December 2020
+
+<br>
+
 ##### _Llyd Auckland Invitational Mathematics Workshop_
 
 - University of Waterloo, Published: May 2016
