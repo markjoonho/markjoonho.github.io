@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "20. Multi Linear Regression Practice(2) for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-20",
+      "date"     : "2021-01-03 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "19. Model Performance for Machine Learning",
       "category" : "",
       "tags"     : "Fast Campus ML",
@@ -25,7 +33,7 @@
     } ,
   
     {
-      "title"    : "16. Multi Linear Regression Practice for Machine Learning",
+      "title"    : "16. Multi Linear Regression Practice(1) for Machine Learning",
       "category" : "",
       "tags"     : "Fast Campus ML",
       "url"      : "/blog/ml-16",

@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta
+    property="og:title"
+    content="20. Multi Linear Regression Practice(2) for Machine Learning"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    20. Multi Linear Regression Practice(2) for Machine Learning
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>20. Multi Linear Regression Practice(2) for Machine Learning</b></h1>
+
+<p class="post-metadata text-muted">
+  03 January 2021 -  
+  <b>20 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-ml">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus ML</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="n">sm</span>
+<span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="n">smf</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># data load
+</span><span class="n">boston</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">"./data/Boston_house.csv"</span><span class="p">)</span>
+<span class="n">boston</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AGE</th>
+      <th>B</th>
+      <th>RM</th>
+      <th>CRIM</th>
+      <th>DIS</th>
+      <th>INDUS</th>
+      <th>LSTAT</th>
+      <th>NOX</th>
+      <th>PTRATIO</th>
+      <th>RAD</th>
+      <th>ZN</th>
+      <th>TAX</th>
+      <th>CHAS</th>
+      <th>Target</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>65.2</td>
+      <td>396.90</td>
+      <td>6.575</td>
+      <td>0.00632</td>
+      <td>4.0900</td>
+      <td>2.31</td>
+      <td>4.98</td>
+      <td>0.538</td>
+      <td>15.3</td>
+      <td>1</td>
+      <td>18.0</td>
+      <td>296</td>
+      <td>0</td>
+      <td>24.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>78.9</td>
+      <td>396.90</td>
+      <td>6.421</td>
+      <td>0.02731</td>
+      <td>4.9671</td>
+      <td>7.07</td>
+      <td>9.14</td>
+      <td>0.469</td>
+      <td>17.8</td>
+      <td>2</td>
+      <td>0.0</td>
+      <td>242</td>
+      <td>0</td>
+      <td>21.6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>61.1</td>
+      <td>392.83</td>
+      <td>7.185</td>
+      <td>0.02729</td>
+      <td>4.9671</td>
+      <td>7.07</td>
+      <td>4.03</td>
+      <td>0.469</td>
+      <td>17.8</td>
+      <td>2</td>
+      <td>0.0</td>
+      <td>242</td>
+      <td>0</td>
+      <td>34.7</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>45.8</td>
+      <td>394.63</td>
+      <td>6.998</td>
+      <td>0.03237</td>
+      <td>6.0622</td>
+      <td>2.18</td>
+      <td>2.94</td>
+      <td>0.458</td>
+      <td>18.7</td>
+      <td>3</td>
+      <td>0.0</td>
+      <td>222</td>
+      <td>0</td>
+      <td>33.4</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>54.2</td>
+      <td>396.90</td>
+      <td>7.147</td>
+      <td>0.06905</td>
+      <td>6.0622</td>
+      <td>2.18</td>
+      <td>5.33</td>
+      <td>0.458</td>
+      <td>18.7</td>
+      <td>3</td>
+      <td>0.0</td>
+      <td>222</td>
+      <td>0</td>
+      <td>36.2</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>501</th>
+      <td>69.1</td>
+      <td>391.99</td>
+      <td>6.593</td>
+      <td>0.06263</td>
+      <td>2.4786</td>
+      <td>11.93</td>
+      <td>9.67</td>
+      <td>0.573</td>
+      <td>21.0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>273</td>
+      <td>0</td>
+      <td>22.4</td>
+    </tr>
+    <tr>
+      <th>502</th>
+      <td>76.7</td>
+      <td>396.90</td>
+      <td>6.120</td>
+      <td>0.04527</td>
+      <td>2.2875</td>
+      <td>11.93</td>
+      <td>9.08</td>
+      <td>0.573</td>
+      <td>21.0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>273</td>
+      <td>0</td>
+      <td>20.6</td>
+    </tr>
+    <tr>
+      <th>503</th>
+      <td>91.0</td>
+      <td>396.90</td>
+      <td>6.976</td>
+      <td>0.06076</td>
+      <td>2.1675</td>
+      <td>11.93</td>
+      <td>5.64</td>
+      <td>0.573</td>
+      <td>21.0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>273</td>
+      <td>0</td>
+      <td>23.9</td>
+    </tr>
+    <tr>
+      <th>504</th>
+      <td>89.3</td>
+      <td>393.45</td>
+      <td>6.794</td>
+      <td>0.10959</td>
+      <td>2.3889</td>
+      <td>11.93</td>
+      <td>6.48</td>
+      <td>0.573</td>
+      <td>21.0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>273</td>
+      <td>0</td>
+      <td>22.0</td>
+    </tr>
+    <tr>
+      <th>505</th>
+      <td>80.8</td>
+      <td>396.90</td>
+      <td>6.030</td>
+      <td>0.04741</td>
+      <td>2.5050</td>
+      <td>11.93</td>
+      <td>7.88</td>
+      <td>0.573</td>
+      <td>21.0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>273</td>
+      <td>0</td>
+      <td>11.9</td>
+    </tr>
+  </tbody>
+</table>
+<p>506 rows × 14 columns</p>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">boston_data</span> <span class="o">=</span> <span class="n">boston</span><span class="p">.</span><span class="n">drop</span><span class="p">([</span><span class="s">'Target'</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># boston_data
+</span></code></pre></div></div>
+
+<h2 id="crim-rm-lstat---multi-linear-regression">crim, rm, lstat - multi linear regression</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_data</span><span class="o">=</span><span class="n">boston</span><span class="p">[[</span><span class="s">'CRIM'</span><span class="p">,</span><span class="s">'RM'</span><span class="p">,</span><span class="s">'LSTAT'</span><span class="p">]]</span> <span class="c1"># various variables
+</span><span class="n">target</span> <span class="o">=</span> <span class="n">boston</span><span class="p">[[</span><span class="s">'Target'</span><span class="p">]]</span>
+<span class="n">x_data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CRIM</th>
+      <th>RM</th>
+      <th>LSTAT</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.00632</td>
+      <td>6.575</td>
+      <td>4.98</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.02731</td>
+      <td>6.421</td>
+      <td>9.14</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.02729</td>
+      <td>7.185</td>
+      <td>4.03</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.03237</td>
+      <td>6.998</td>
+      <td>2.94</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.06905</td>
+      <td>7.147</td>
+      <td>5.33</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># add constant for intersection
+</span><span class="n">x_data1</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">has_constant</span><span class="o">=</span><span class="s">'add'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># model fitting
+</span><span class="n">multi_model</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">target</span><span class="p">,</span><span class="n">x_data1</span><span class="p">)</span>
+<span class="n">fitted_multi_model</span><span class="o">=</span><span class="n">multi_model</span><span class="p">.</span><span class="n">fit</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fitted_multi_model</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>         <td>Target</td>      <th>  R-squared:         </th> <td>   0.646</td> 
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.644</td> 
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   305.2</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Sun, 03 Jan 2021</td> <th>  Prob (F-statistic):</th> <td>1.01e-112</td>
+</tr>
+<tr>
+  <th>Time:</th>                 <td>07:40:51</td>     <th>  Log-Likelihood:    </th> <td> -1577.6</td> 
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>   506</td>      <th>  AIC:               </th> <td>   3163.</td> 
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>   502</td>      <th>  BIC:               </th> <td>   3180.</td> 
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     3</td>      <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+    <td></td>       <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P&gt;|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>const</th> <td>   -2.5623</td> <td>    3.166</td> <td>   -0.809</td> <td> 0.419</td> <td>   -8.783</td> <td>    3.658</td>
+</tr>
+<tr>
+  <th>CRIM</th>  <td>   -0.1029</td> <td>    0.032</td> <td>   -3.215</td> <td> 0.001</td> <td>   -0.166</td> <td>   -0.040</td>
+</tr>
+<tr>
+  <th>RM</th>    <td>    5.2170</td> <td>    0.442</td> <td>   11.802</td> <td> 0.000</td> <td>    4.348</td> <td>    6.085</td>
+</tr>
+<tr>
+  <th>LSTAT</th> <td>   -0.5785</td> <td>    0.048</td> <td>  -12.135</td> <td> 0.000</td> <td>   -0.672</td> <td>   -0.485</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td>171.754</td> <th>  Durbin-Watson:     </th> <td>   0.822</td> 
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td> 628.308</td> 
+</tr>
+<tr>
+  <th>Skew:</th>          <td> 1.535</td>  <th>  Prob(JB):          </th> <td>3.67e-137</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 7.514</td>  <th>  Cond. No.          </th> <td>    216.</td> 
+</tr>
+</table>
+<p><br /><br />Warnings:<br />[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</p>
+
+<h2 id="crim-rm-lstat-b-tax-age-zn-nox-indus---multi-linear-regression">crim, rm, lstat, b, tax, age, zn, nox, indus - multi linear regression</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_data2</span><span class="o">=</span><span class="n">boston</span><span class="p">[[</span><span class="s">'CRIM'</span><span class="p">,</span><span class="s">'RM'</span><span class="p">,</span><span class="s">'LSTAT'</span><span class="p">,</span><span class="s">'B'</span><span class="p">,</span><span class="s">'TAX'</span><span class="p">,</span><span class="s">'AGE'</span><span class="p">,</span><span class="s">'ZN'</span><span class="p">,</span><span class="s">'NOX'</span><span class="p">,</span><span class="s">'INDUS'</span><span class="p">]]</span>  <span class="c1"># add variables
+</span><span class="n">x_data2</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CRIM</th>
+      <th>RM</th>
+      <th>LSTAT</th>
+      <th>B</th>
+      <th>TAX</th>
+      <th>AGE</th>
+      <th>ZN</th>
+      <th>NOX</th>
+      <th>INDUS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.00632</td>
+      <td>6.575</td>
+      <td>4.98</td>
+      <td>396.90</td>
+      <td>296</td>
+      <td>65.2</td>
+      <td>18.0</td>
+      <td>0.538</td>
+      <td>2.31</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.02731</td>
+      <td>6.421</td>
+      <td>9.14</td>
+      <td>396.90</td>
+      <td>242</td>
+      <td>78.9</td>
+      <td>0.0</td>
+      <td>0.469</td>
+      <td>7.07</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.02729</td>
+      <td>7.185</td>
+      <td>4.03</td>
+      <td>392.83</td>
+      <td>242</td>
+      <td>61.1</td>
+      <td>0.0</td>
+      <td>0.469</td>
+      <td>7.07</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.03237</td>
+      <td>6.998</td>
+      <td>2.94</td>
+      <td>394.63</td>
+      <td>222</td>
+      <td>45.8</td>
+      <td>0.0</td>
+      <td>0.458</td>
+      <td>2.18</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.06905</td>
+      <td>7.147</td>
+      <td>5.33</td>
+      <td>396.90</td>
+      <td>222</td>
+      <td>54.2</td>
+      <td>0.0</td>
+      <td>0.458</td>
+      <td>2.18</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_data2_</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x_data2</span><span class="p">,</span> <span class="n">has_constant</span><span class="o">=</span><span class="s">'add'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">multi_model2</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">target</span><span class="p">,</span><span class="n">x_data2_</span><span class="p">)</span>
+<span class="n">fitted_multi_model2</span><span class="o">=</span><span class="n">multi_model2</span><span class="p">.</span><span class="n">fit</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fitted_multi_model2</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>         <td>Target</td>      <th>  R-squared:         </th> <td>   0.662</td> 
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.656</td> 
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   108.1</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Sun, 03 Jan 2021</td> <th>  Prob (F-statistic):</th> <td>5.76e-111</td>
+</tr>
+<tr>
+  <th>Time:</th>                 <td>07:40:52</td>     <th>  Log-Likelihood:    </th> <td> -1565.5</td> 
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>   506</td>      <th>  AIC:               </th> <td>   3151.</td> 
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>   496</td>      <th>  BIC:               </th> <td>   3193.</td> 
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     9</td>      <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+    <td></td>       <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P&gt;|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>const</th> <td>   -7.1088</td> <td>    3.828</td> <td>   -1.857</td> <td> 0.064</td> <td>  -14.631</td> <td>    0.413</td>
+</tr>
+<tr>
+  <th>CRIM</th>  <td>   -0.0453</td> <td>    0.036</td> <td>   -1.269</td> <td> 0.205</td> <td>   -0.115</td> <td>    0.025</td>
+</tr>
+<tr>
+  <th>RM</th>    <td>    5.0922</td> <td>    0.458</td> <td>   11.109</td> <td> 0.000</td> <td>    4.192</td> <td>    5.993</td>
+</tr>
+<tr>
+  <th>LSTAT</th> <td>   -0.5651</td> <td>    0.057</td> <td>   -9.854</td> <td> 0.000</td> <td>   -0.678</td> <td>   -0.452</td>
+</tr>
+<tr>
+  <th>B</th>     <td>    0.0090</td> <td>    0.003</td> <td>    2.952</td> <td> 0.003</td> <td>    0.003</td> <td>    0.015</td>
+</tr>
+<tr>
+  <th>TAX</th>   <td>   -0.0060</td> <td>    0.002</td> <td>   -2.480</td> <td> 0.013</td> <td>   -0.011</td> <td>   -0.001</td>
+</tr>
+<tr>
+  <th>AGE</th>   <td>    0.0236</td> <td>    0.014</td> <td>    1.653</td> <td> 0.099</td> <td>   -0.004</td> <td>    0.052</td>
+</tr>
+<tr>
+  <th>ZN</th>    <td>    0.0294</td> <td>    0.013</td> <td>    2.198</td> <td> 0.028</td> <td>    0.003</td> <td>    0.056</td>
+</tr>
+<tr>
+  <th>NOX</th>   <td>    3.4838</td> <td>    3.833</td> <td>    0.909</td> <td> 0.364</td> <td>   -4.047</td> <td>   11.014</td>
+</tr>
+<tr>
+  <th>INDUS</th> <td>    0.0293</td> <td>    0.065</td> <td>    0.449</td> <td> 0.654</td> <td>   -0.099</td> <td>    0.157</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td>195.490</td> <th>  Durbin-Watson:     </th> <td>   0.848</td> 
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td> 872.873</td> 
+</tr>
+<tr>
+  <th>Skew:</th>          <td> 1.686</td>  <th>  Prob(JB):          </th> <td>2.87e-190</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 8.479</td>  <th>  Cond. No.          </th> <td>1.04e+04</td> 
+</tr>
+</table>
+<p><br /><br />Warnings:<br />[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br />[2] The condition number is large, 1.04e+04. This might indicate that there are<br />strong multicollinearity or other numerical problems.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fitted_multi_model</span><span class="p">.</span><span class="n">params</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const   -2.562251
+CRIM    -0.102941
+RM       5.216955
+LSTAT   -0.578486
+dtype: float64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fitted_multi_model2</span><span class="p">.</span><span class="n">params</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const   -7.108827
+CRIM    -0.045293
+RM       5.092238
+LSTAT   -0.565133
+B        0.008974
+TAX     -0.006025
+AGE      0.023619
+ZN       0.029377
+NOX      3.483832
+INDUS    0.029270
+dtype: float64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">fitted_multi_model</span><span class="p">.</span><span class="n">resid</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">"Three Variables"</span><span class="p">)</span>
+<span class="n">fitted_multi_model2</span><span class="p">.</span><span class="n">resid</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">"More Variables"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.legend.Legend at 0x7f8b932d17f0&gt;
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml20/output_15_1.png" /></p>
+
+<h2 id="multicollinearity-using-correlationscatter-plot">Multicollinearity using correlation/scatter plot</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_data2</span><span class="p">.</span><span class="n">corr</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CRIM</th>
+      <th>RM</th>
+      <th>LSTAT</th>
+      <th>B</th>
+      <th>TAX</th>
+      <th>AGE</th>
+      <th>ZN</th>
+      <th>NOX</th>
+      <th>INDUS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>CRIM</th>
+      <td>1.000000</td>
+      <td>-0.219247</td>
+      <td>0.455621</td>
+      <td>-0.385064</td>
+      <td>0.582764</td>
+      <td>0.352734</td>
+      <td>-0.200469</td>
+      <td>0.420972</td>
+      <td>0.406583</td>
+    </tr>
+    <tr>
+      <th>RM</th>
+      <td>-0.219247</td>
+      <td>1.000000</td>
+      <td>-0.613808</td>
+      <td>0.128069</td>
+      <td>-0.292048</td>
+      <td>-0.240265</td>
+      <td>0.311991</td>
+      <td>-0.302188</td>
+      <td>-0.391676</td>
+    </tr>
+    <tr>
+      <th>LSTAT</th>
+      <td>0.455621</td>
+      <td>-0.613808</td>
+      <td>1.000000</td>
+      <td>-0.366087</td>
+      <td>0.543993</td>
+      <td>0.602339</td>
+      <td>-0.412995</td>
+      <td>0.590879</td>
+      <td>0.603800</td>
+    </tr>
+    <tr>
+      <th>B</th>
+      <td>-0.385064</td>
+      <td>0.128069</td>
+      <td>-0.366087</td>
+      <td>1.000000</td>
+      <td>-0.441808</td>
+      <td>-0.273534</td>
+      <td>0.175520</td>
+      <td>-0.380051</td>
+      <td>-0.356977</td>
+    </tr>
+    <tr>
+      <th>TAX</th>
+      <td>0.582764</td>
+      <td>-0.292048</td>
+      <td>0.543993</td>
+      <td>-0.441808</td>
+      <td>1.000000</td>
+      <td>0.506456</td>
+      <td>-0.314563</td>
+      <td>0.668023</td>
+      <td>0.720760</td>
+    </tr>
+    <tr>
+      <th>AGE</th>
+      <td>0.352734</td>
+      <td>-0.240265</td>
+      <td>0.602339</td>
+      <td>-0.273534</td>
+      <td>0.506456</td>
+      <td>1.000000</td>
+      <td>-0.569537</td>
+      <td>0.731470</td>
+      <td>0.644779</td>
+    </tr>
+    <tr>
+      <th>ZN</th>
+      <td>-0.200469</td>
+      <td>0.311991</td>
+      <td>-0.412995</td>
+      <td>0.175520</td>
+      <td>-0.314563</td>
+      <td>-0.569537</td>
+      <td>1.000000</td>
+      <td>-0.516604</td>
+      <td>-0.533828</td>
+    </tr>
+    <tr>
+      <th>NOX</th>
+      <td>0.420972</td>
+      <td>-0.302188</td>
+      <td>0.590879</td>
+      <td>-0.380051</td>
+      <td>0.668023</td>
+      <td>0.731470</td>
+      <td>-0.516604</td>
+      <td>1.000000</td>
+      <td>0.763651</td>
+    </tr>
+    <tr>
+      <th>INDUS</th>
+      <td>0.406583</td>
+      <td>-0.391676</td>
+      <td>0.603800</td>
+      <td>-0.356977</td>
+      <td>0.720760</td>
+      <td>0.644779</td>
+      <td>-0.533828</td>
+      <td>0.763651</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span><span class="p">;</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">sns</span><span class="p">.</span><span class="n">light_palette</span><span class="p">(</span><span class="s">"darkgray"</span><span class="p">,</span> <span class="n">as_cmap</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">x_data2</span><span class="p">.</span><span class="n">corr</span><span class="p">(),</span> <span class="n">annot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml20/output_18_0.png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sns</span><span class="p">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">x_data2</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml20/output_19_0.png" /></p>
+
+<h2 id="multicollinearity-using-vif">Multicollinearity using VIF</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">statsmodels.stats.outliers_influence</span> <span class="kn">import</span> <span class="n">variance_inflation_factor</span>
+
+<span class="n">vif</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">vif</span><span class="p">[</span><span class="s">"VIF Factor"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">variance_inflation_factor</span><span class="p">(</span>
+    <span class="n">x_data2</span><span class="p">.</span><span class="n">values</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x_data2</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+<span class="n">vif</span><span class="p">[</span><span class="s">"features"</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_data2</span><span class="p">.</span><span class="n">columns</span>
+<span class="n">vif</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>VIF Factor</th>
+      <th>features</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.917332</td>
+      <td>CRIM</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>46.535369</td>
+      <td>RM</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>8.844137</td>
+      <td>LSTAT</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>16.856737</td>
+      <td>B</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>19.923044</td>
+      <td>TAX</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>18.457503</td>
+      <td>AGE</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2.086502</td>
+      <td>ZN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>72.439753</td>
+      <td>NOX</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>12.642137</td>
+      <td>INDUS</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Remove Nox and try again
+</span><span class="n">vif</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">x_data3</span><span class="o">=</span> <span class="n">x_data2</span><span class="p">.</span><span class="n">drop</span><span class="p">(</span><span class="s">'NOX'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">vif</span><span class="p">[</span><span class="s">"VIF Factor"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">variance_inflation_factor</span><span class="p">(</span>
+    <span class="n">x_data3</span><span class="p">.</span><span class="n">values</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x_data3</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+<span class="n">vif</span><span class="p">[</span><span class="s">"features"</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_data3</span><span class="p">.</span><span class="n">columns</span>
+<span class="n">vif</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>VIF Factor</th>
+      <th>features</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.916648</td>
+      <td>CRIM</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>30.806301</td>
+      <td>RM</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>8.171214</td>
+      <td>LSTAT</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>16.735751</td>
+      <td>B</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>18.727105</td>
+      <td>TAX</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>16.339792</td>
+      <td>AGE</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2.074500</td>
+      <td>ZN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>11.217461</td>
+      <td>INDUS</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Remove RM and try again
+</span>
+<span class="n">vif</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">x_data4</span><span class="o">=</span> <span class="n">x_data3</span><span class="p">.</span><span class="n">drop</span><span class="p">(</span><span class="s">'RM'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">vif</span><span class="p">[</span><span class="s">"VIF Factor"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">variance_inflation_factor</span><span class="p">(</span>
+    <span class="n">x_data4</span><span class="p">.</span><span class="n">values</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x_data4</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+<span class="n">vif</span><span class="p">[</span><span class="s">"features"</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_data4</span><span class="p">.</span><span class="n">columns</span>
+<span class="n">vif</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>VIF Factor</th>
+      <th>features</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.907517</td>
+      <td>CRIM</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>7.933529</td>
+      <td>LSTAT</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>7.442569</td>
+      <td>B</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>16.233237</td>
+      <td>TAX</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>13.765377</td>
+      <td>AGE</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1.820070</td>
+      <td>ZN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>11.116823</td>
+      <td>INDUS</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Add constant and model fitting
+</span><span class="n">x_data5</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x_data4</span><span class="p">,</span> <span class="n">has_constant</span><span class="o">=</span><span class="s">'add'</span><span class="p">)</span>
+<span class="n">model_vif</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">target</span><span class="p">,</span><span class="n">x_data5</span><span class="p">)</span>
+<span class="n">fitted_model_vif</span><span class="o">=</span><span class="n">model_vif</span><span class="p">.</span><span class="n">fit</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fitted_model_vif</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>         <td>Target</td>      <th>  R-squared:         </th> <td>   0.577</td>
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.571</td>
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   97.20</td>
+</tr>
+<tr>
+  <th>Date:</th>             <td>Sun, 03 Jan 2021</td> <th>  Prob (F-statistic):</th> <td>5.53e-89</td>
+</tr>
+<tr>
+  <th>Time:</th>                 <td>07:41:08</td>     <th>  Log-Likelihood:    </th> <td> -1622.3</td>
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>   506</td>      <th>  AIC:               </th> <td>   3261.</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>   498</td>      <th>  BIC:               </th> <td>   3294.</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     7</td>      <th>                     </th>     <td> </td>   
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>   
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+    <td></td>       <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P&gt;|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>const</th> <td>   29.6634</td> <td>    1.844</td> <td>   16.087</td> <td> 0.000</td> <td>   26.041</td> <td>   33.286</td>
+</tr>
+<tr>
+  <th>CRIM</th>  <td>   -0.0329</td> <td>    0.040</td> <td>   -0.825</td> <td> 0.410</td> <td>   -0.111</td> <td>    0.045</td>
+</tr>
+<tr>
+  <th>LSTAT</th> <td>   -0.9256</td> <td>    0.053</td> <td>  -17.589</td> <td> 0.000</td> <td>   -1.029</td> <td>   -0.822</td>
+</tr>
+<tr>
+  <th>B</th>     <td>    0.0046</td> <td>    0.003</td> <td>    1.384</td> <td> 0.167</td> <td>   -0.002</td> <td>    0.011</td>
+</tr>
+<tr>
+  <th>TAX</th>   <td>   -0.0048</td> <td>    0.003</td> <td>   -1.814</td> <td> 0.070</td> <td>   -0.010</td> <td>    0.000</td>
+</tr>
+<tr>
+  <th>AGE</th>   <td>    0.0703</td> <td>    0.014</td> <td>    4.993</td> <td> 0.000</td> <td>    0.043</td> <td>    0.098</td>
+</tr>
+<tr>
+  <th>ZN</th>    <td>    0.0513</td> <td>    0.015</td> <td>    3.490</td> <td> 0.001</td> <td>    0.022</td> <td>    0.080</td>
+</tr>
+<tr>
+  <th>INDUS</th> <td>   -0.0357</td> <td>    0.068</td> <td>   -0.523</td> <td> 0.601</td> <td>   -0.170</td> <td>    0.098</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td>138.742</td> <th>  Durbin-Watson:     </th> <td>   0.960</td>
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td> 316.077</td>
+</tr>
+<tr>
+  <th>Skew:</th>          <td> 1.427</td>  <th>  Prob(JB):          </th> <td>2.32e-69</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 5.617</td>  <th>  Cond. No.          </th> <td>3.85e+03</td>
+</tr>
+</table>
+<p><br /><br />Warnings:<br />[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br />[2] The condition number is large, 3.85e+03. This might indicate that there are<br />strong multicollinearity or other numerical problems.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fitted_multi_model2</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>         <td>Target</td>      <th>  R-squared:         </th> <td>   0.662</td> 
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.656</td> 
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   108.1</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Sun, 03 Jan 2021</td> <th>  Prob (F-statistic):</th> <td>5.76e-111</td>
+</tr>
+<tr>
+  <th>Time:</th>                 <td>07:41:08</td>     <th>  Log-Likelihood:    </th> <td> -1565.5</td> 
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>   506</td>      <th>  AIC:               </th> <td>   3151.</td> 
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>   496</td>      <th>  BIC:               </th> <td>   3193.</td> 
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     9</td>      <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+    <td></td>       <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P&gt;|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>const</th> <td>   -7.1088</td> <td>    3.828</td> <td>   -1.857</td> <td> 0.064</td> <td>  -14.631</td> <td>    0.413</td>
+</tr>
+<tr>
+  <th>CRIM</th>  <td>   -0.0453</td> <td>    0.036</td> <td>   -1.269</td> <td> 0.205</td> <td>   -0.115</td> <td>    0.025</td>
+</tr>
+<tr>
+  <th>RM</th>    <td>    5.0922</td> <td>    0.458</td> <td>   11.109</td> <td> 0.000</td> <td>    4.192</td> <td>    5.993</td>
+</tr>
+<tr>
+  <th>LSTAT</th> <td>   -0.5651</td> <td>    0.057</td> <td>   -9.854</td> <td> 0.000</td> <td>   -0.678</td> <td>   -0.452</td>
+</tr>
+<tr>
+  <th>B</th>     <td>    0.0090</td> <td>    0.003</td> <td>    2.952</td> <td> 0.003</td> <td>    0.003</td> <td>    0.015</td>
+</tr>
+<tr>
+  <th>TAX</th>   <td>   -0.0060</td> <td>    0.002</td> <td>   -2.480</td> <td> 0.013</td> <td>   -0.011</td> <td>   -0.001</td>
+</tr>
+<tr>
+  <th>AGE</th>   <td>    0.0236</td> <td>    0.014</td> <td>    1.653</td> <td> 0.099</td> <td>   -0.004</td> <td>    0.052</td>
+</tr>
+<tr>
+  <th>ZN</th>    <td>    0.0294</td> <td>    0.013</td> <td>    2.198</td> <td> 0.028</td> <td>    0.003</td> <td>    0.056</td>
+</tr>
+<tr>
+  <th>NOX</th>   <td>    3.4838</td> <td>    3.833</td> <td>    0.909</td> <td> 0.364</td> <td>   -4.047</td> <td>   11.014</td>
+</tr>
+<tr>
+  <th>INDUS</th> <td>    0.0293</td> <td>    0.065</td> <td>    0.449</td> <td> 0.654</td> <td>   -0.099</td> <td>    0.157</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td>195.490</td> <th>  Durbin-Watson:     </th> <td>   0.848</td> 
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td> 872.873</td> 
+</tr>
+<tr>
+  <th>Skew:</th>          <td> 1.686</td>  <th>  Prob(JB):          </th> <td>2.87e-190</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 8.479</td>  <th>  Cond. No.          </th> <td>1.04e+04</td> 
+</tr>
+</table>
+<p><br /><br />Warnings:<br />[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br />[2] The condition number is large, 1.04e+04. This might indicate that there are<br />strong multicollinearity or other numerical problems.</p>
+
+<h1 id="train--test-data-split">Train / Test Data Split</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">x_data2_</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">target</span>
+<span class="n">train_x</span><span class="p">,</span> <span class="n">test_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">test_y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">random_state</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">train_x</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test_x</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">train_y</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test_y</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(354, 10) (152, 10) (354, 1) (152, 1)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># add constant and fitting model
+</span><span class="n">train_x2</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">has_constant</span><span class="o">=</span><span class="s">'add'</span><span class="p">)</span>
+<span class="n">fit_1</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">train_y</span><span class="p">,</span><span class="n">train_x</span><span class="p">)</span>
+<span class="n">fit_1</span><span class="o">=</span><span class="n">fit_1</span><span class="p">.</span><span class="n">fit</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">fit_1</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)),</span><span class="n">label</span><span class="o">=</span><span class="s">"Prediction"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_y</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s">"Actual"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml20/output_30_0.png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># data without nox
+</span><span class="n">X</span> <span class="o">=</span> <span class="n">x_data3</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">target</span>
+<span class="n">train_x2</span><span class="p">,</span> <span class="n">test_x2</span><span class="p">,</span> <span class="n">train_y2</span><span class="p">,</span> <span class="n">test_y2</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">random_state</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">train_x2</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test_x2</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">train_y2</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test_y2</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># data without now and rm
+</span><span class="n">X</span> <span class="o">=</span> <span class="n">x_data4</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">target</span>
+<span class="n">train_x3</span><span class="p">,</span> <span class="n">test_x3</span><span class="p">,</span> <span class="n">train_y3</span><span class="p">,</span> <span class="n">test_y3</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">random_state</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">train_x2</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test_x2</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">train_y2</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test_y2</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(354, 8) (152, 8) (354, 1) (152, 1)
+(354, 8) (152, 8) (354, 1) (152, 1)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># add constant and fitting model
+</span><span class="n">fit_2</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">train_y2</span><span class="p">,</span><span class="n">train_x2</span><span class="p">)</span>
+<span class="n">fit_2</span><span class="o">=</span><span class="n">fit_2</span><span class="p">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">fit_3</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">train_y3</span><span class="p">,</span><span class="n">train_x3</span><span class="p">)</span>
+<span class="n">fit_3</span><span class="o">=</span><span class="n">fit_3</span><span class="p">.</span><span class="n">fit</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># compare precition and actual value
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">fit_2</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x2</span><span class="p">)),</span><span class="n">label</span><span class="o">=</span><span class="s">"Prediction without nox"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">fit_3</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x3</span><span class="p">)),</span><span class="n">label</span><span class="o">=</span><span class="s">"Prediction without nox,rm"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_y2</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s">"Actual"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml20/output_33_0.png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># add full model(no excepted vaiables)
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">fit_1</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)),</span><span class="n">label</span><span class="o">=</span><span class="s">"Prediction All"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">fit_2</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x2</span><span class="p">)),</span><span class="n">label</span><span class="o">=</span><span class="s">"Prediction without nox"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">fit_2</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x2</span><span class="p">)),</span><span class="n">label</span><span class="o">=</span><span class="s">"Prediction without nox,rm"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_y2</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s">"Actual"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml20/output_34_0.png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># difference between Actual and prediction
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_y2</span><span class="p">[</span><span class="s">'Target'</span><span class="p">]</span><span class="o">-</span><span class="n">fit_1</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)),</span><span class="n">label</span><span class="o">=</span><span class="s">"Prediction All"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_y2</span><span class="p">[</span><span class="s">'Target'</span><span class="p">]</span><span class="o">-</span><span class="n">fit_2</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x2</span><span class="p">)),</span><span class="n">label</span><span class="o">=</span><span class="s">"Prediction without nox"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_y2</span><span class="p">[</span><span class="s">'Target'</span><span class="p">]</span><span class="o">-</span><span class="n">fit_3</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x3</span><span class="p">)),</span><span class="n">label</span><span class="o">=</span><span class="s">"Prediction without nox,rm"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml20/output_35_0.png" /></p>
+
+<h1 id="mse-to-check-performance">MSE to check performance</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Full model
+</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span> <span class="n">test_y2</span><span class="p">[</span><span class="s">'Target'</span><span class="p">],</span> <span class="n">y_pred</span><span class="o">=</span> <span class="n">fit_1</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>26.148631468819854
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Model without Nox
+</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span> <span class="n">test_y2</span><span class="p">[</span><span class="s">'Target'</span><span class="p">],</span> <span class="n">y_pred</span><span class="o">=</span> <span class="n">fit_2</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x2</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>25.59481329225319
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Model without Nox and RM
+</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span> <span class="n">test_y2</span><span class="p">[</span><span class="s">'Target'</span><span class="p">],</span> <span class="n">y_pred</span><span class="o">=</span> <span class="n">fit_3</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x3</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>57.71900270631699
+</code></pre></div></div>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>
