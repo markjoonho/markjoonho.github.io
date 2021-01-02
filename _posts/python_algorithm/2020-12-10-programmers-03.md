@@ -1,6 +1,6 @@
 ---
 title: LV 2. The Largest Number
-tags: [Fast Campus ML]
+tags: [Algorithm]
 style: border
 color: info
 description: This question is from Programmers and code is by Joonho Lee. If you have any other ideas or questions about my code, please leave a comment below.

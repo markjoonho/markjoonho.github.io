@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This question is from Programmers and code is by Joonho Lee. If you have any other ideas or questions about my code, please leave a comment below."
+  />
+  <meta
+    property="og:title"
+    content="LV 1. Athelete who could not Finish"
+  />
+  <meta
+    property="og:description"
+    content="This question is from Programmers and code is by Joonho Lee. If you have any other ideas or questions about my code, please leave a comment below."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    LV 1. Athelete who could not Finish
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>LV 1. Athelete who could not Finish</b></h1>
+
+<p class="post-metadata text-muted">
+  10 December 2020 -  
+  <b>2 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#algorithm">
+      <span class="tag badge badge-pill text-primary border border-primary">Algorithm</span>
+    </a>
+    </p>
+
+<p>Source: <a href="https://programmers.co.kr/">Programmers</a></p>
+
+<hr />
+
+<h2 id="problem-description">Problem Description</h2>
+
+<p>Lots of maraton runners participate the marathon. All but one athlete completed the marathon.</p>
+
+<p>There is given array <strong>participant</strong> which contains the names of the atheletes who participated in the maraton and <strong>completion</strong> which contains the names of the atheletes who finished the marathon. Please write the function that return the name of an athlete who could not finish the marathon.</p>
+
+<h2 id="restrictions">Restrictions</h2>
+
+<ul>
+  <li>The number of atheletes participating in the marathon is greater than or equal to 1, and less than or equal to 10,0000.</li>
+  <li>The length of completion is always 1 less than the length of the participant.</li>
+  <li>The length of names in participant are greater than or equal to 1 and less than or equal to 20. (all names are writeen by lowercase alphabetic characters).</li>
+  <li>Some of the participants may have the same name.</li>
+</ul>
+
+<h2 id="io-example">I/O Example</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>participant</th>
+      <th>completion</th>
+      <th>return</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>[“leo”, “kiki”, “eden”]</td>
+      <td>[“eden”, “kiki”]</td>
+      <td>“leo”</td>
+    </tr>
+    <tr>
+      <td>[“marina”, “josipa”, “nikola”, “vinko”, “filipa”]</td>
+      <td>[“josipa”, “filipa”, “marina”, “nikola”]</td>
+      <td>“vinko”</td>
+    </tr>
+    <tr>
+      <td>[“mislav”, “stanko”, “mislav”, “ana”]</td>
+      <td>[“stanko”, “ana”, “mislav”]</td>
+      <td>“mislav”</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="io-example-explanation">I/O Example Explanation</h2>
+
+<h6 id="example-1">Example #1</h6>
+
+<p>“leo” was on the list of participant, but could not finish because “leo” was not on the list of completion.</p>
+
+<h6 id="example-2">Example #2</h6>
+
+<p>“vinko” was on the list of participant, but could not finish because “vinko” was not on the list of completion.</p>
+
+<h6 id="example-3">Example #3</h6>
+
+<p>two “mislav” was on the list of participant, but one could not finish because there is only one “mislav” on the list of completion.</p>
+
+<h2 id="code">Code</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">solution</span><span class="p">(</span><span class="n">participant</span><span class="p">,</span> <span class="n">completion</span><span class="p">):</span>
+
+    <span class="n">participant</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">completion</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">participant</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">length</span><span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">participant</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">completion</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">participant</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="test">Test</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">solution</span><span class="p">([</span><span class="s">"leo"</span><span class="p">,</span> <span class="s">"kiki"</span><span class="p">,</span> <span class="s">"eden"</span><span class="p">],</span> <span class="p">[</span><span class="s">"eden"</span><span class="p">,</span> <span class="s">"kiki"</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">solution</span><span class="p">([</span><span class="s">"marina"</span><span class="p">,</span> <span class="s">"josipa"</span><span class="p">,</span> <span class="s">"nikola"</span><span class="p">,</span> <span class="s">"vinko"</span><span class="p">,</span> <span class="s">"filipa"</span><span class="p">],</span> <span class="p">[</span><span class="s">"josipa"</span><span class="p">,</span> <span class="s">"filipa"</span><span class="p">,</span> <span class="s">"marina"</span><span class="p">,</span> <span class="s">"nikola"</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">solution</span><span class="p">([</span><span class="s">"mislav"</span><span class="p">,</span> <span class="s">"stanko"</span><span class="p">,</span> <span class="s">"mislav"</span><span class="p">,</span> <span class="s">"ana"</span><span class="p">],</span> <span class="p">[</span><span class="s">"stanko"</span><span class="p">,</span> <span class="s">"ana"</span><span class="p">,</span> <span class="s">"mislav"</span><span class="p">]))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"leo"
+"vinko"
+"mislav"
+</code></pre></div></div>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

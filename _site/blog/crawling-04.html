@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta
+    property="og:title"
+    content="04. Beautifulsoup module 크롤링 연습 기본"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    04. Beautifulsoup module 크롤링 연습 기본
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>04. Beautifulsoup module 크롤링 연습 기본</b></h1>
+
+<p class="post-metadata text-muted">
+  06 December 2020 -  
+  <b>4 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-crawling">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus Crawling</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+
+<h1 id="다음-뉴스-데이터-추출">다음 뉴스 데이터 추출</h1>
+
+<ul>
+  <li>뉴스기사에서 제목, 작성자, 작성일, 댓글 개수 추출</li>
+  <li><a href="https://news.v.daum.net/v/20190728165812603">뉴스링크</a></li>
+</ul>
+
+<h1 id="1-개발자-도구로-추출-하고자-하는-영역의-tag-id-class-등의-정보를-분석한다">1. 개발자 도구로 추출 하고자 하는 영역의 tag, id, class 등의 정보를 분석한다.</h1>
+
+<h1 id="2-requrest-모듈로-해당-페이지를-불러온다">2. requrest 모듈로 해당 페이지를 불러온다.</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s">'https://news.v.daum.net/v/20190728165812603'</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">resp</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
+<span class="n">soup</span>
+</code></pre></div></div>
+
+<h1 id="3-id-class-속성으로-tag를-찾는다">3. id, class 속성으로 tag를 찾는다.</h1>
+
+<ul>
+  <li>기사의 타이틀, 작성자, 작성일을 찾아보자</li>
+  <li>HTML을 이용하여 찾는 방법, CSS를 이용하여 찾는 방법, 정규 표현식을 이용해 찾는 방법이 있다.</li>
+</ul>
+
+<h2 id="3-1-html을-이용하여-tag-찾기">3-1. HTML을 이용하여 tag 찾기.</h2>
+
+<p>이전 <a href="https://joonho.dev/posts/crawling-03/">게시물</a>에 자세히 설명되어져 있다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">title</span> <span class="o">=</span> <span class="n">soup</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">'h3'</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s">'tit_view'</span><span class="p">)</span>
+<span class="n">title</span><span class="p">.</span><span class="n">get_text</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'일론머스크 "테슬라에서 넷플릭스·유튜브 즐길 날 온다"'
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">info</span> <span class="o">=</span> <span class="n">soup</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">'span'</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s">'info_view'</span><span class="p">)</span>
+<span class="n">writer</span> <span class="o">=</span> <span class="n">info</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">'span'</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s">'txt_info'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">writer</span><span class="p">.</span><span class="n">get_text</span><span class="p">())</span>
+<span class="n">date</span> <span class="o">=</span> <span class="n">info</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">'span'</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s">'num_date'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">date</span><span class="p">.</span><span class="n">get_text</span><span class="p">())</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>이민우
+2019.07.28. 16:58
+</code></pre></div></div>
+
+<h2 id="3-2-css를-이용하여-tag-찾기-css에-대한-기본-지식이-있다면-아래-내용을-이해하기-쉬울것이다">3-2. CSS를 이용하여 tag 찾기. (CSS에 대한 기본 지식이 있다면 아래 내용을 이해하기 쉬울것이다.)</h2>
+
+<ul>
+  <li>select, select_one 함수 사용</li>
+  <li>tag 이름 찾기
+    <ul>
+      <li>자손 태그 찾기 (tag tag)</li>
+      <li>자식 태그 찾기 (tag &gt; tag)</li>
+      <li>id 찾기 #id</li>
+      <li>클래스 찾기 .class</li>
+      <li>속성값 갖기 [name = ‘test’]
+        <ul>
+          <li>prefix [name ^= ‘test’]</li>
+          <li>suffix [name $= ‘test’]</li>
+          <li>substring [name *= ‘test’]</li>
+        </ul>
+      </li>
+      <li>n번째 자식 tag 찾기 :nth-child(n)</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">url</span> <span class="o">=</span> <span class="s">'https://news.v.daum.net/v/20190728165812603'</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">resp</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
+<span class="n">title1</span> <span class="o">=</span> <span class="n">soup</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="s">'h3.tit_view'</span><span class="p">)</span> <span class="c1"># tag + class
+</span>
+<span class="n">title2</span> <span class="o">=</span> <span class="n">soup</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="s">'#cSub .tit_view'</span><span class="p">)</span> <span class="c1"># id + class
+</span>
+<span class="n">title3</span> <span class="o">=</span> <span class="n">soup</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="s">'[class="tit_view"]'</span><span class="p">)</span> <span class="c1"># attribute
+</span>
+<span class="n">title4</span> <span class="o">=</span> <span class="n">soup</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="s">'h3[class="tit_view"]'</span><span class="p">)</span> <span class="c1"># tag + attribute
+</span><span class="k">print</span><span class="p">(</span> <span class="n">title1</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">title2</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">title3</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">title4</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[&lt;h3 class="tit_view" data-translation="true"&gt;일론머스크 "테슬라에서 넷플릭스·유튜브 즐길 날 온다"&lt;/h3&gt;]
+[&lt;h3 class="tit_view" data-translation="true"&gt;일론머스크 "테슬라에서 넷플릭스·유튜브 즐길 날 온다"&lt;/h3&gt;]
+[&lt;h3 class="tit_view" data-translation="true"&gt;일론머스크 "테슬라에서 넷플릭스·유튜브 즐길 날 온다"&lt;/h3&gt;]
+[&lt;h3 class="tit_view" data-translation="true"&gt;일론머스크 "테슬라에서 넷플릭스·유튜브 즐길 날 온다"&lt;/h3&gt;]
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">writer</span> <span class="o">=</span> <span class="n">soup</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="s">'span.txt_info:nth-child(1)'</span><span class="p">)</span> <span class="c1"># tag + class + nth-child
+</span><span class="n">date</span> <span class="o">=</span> <span class="n">soup</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="s">'span .txt_info:nth-child(2) .num_date'</span><span class="p">)</span> <span class="c1"># tag + class + nth-child + class
+</span><span class="k">print</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[&lt;span class="txt_info"&gt;이민우&lt;/span&gt;]
+[&lt;span class="num_date"&gt;2019.07.28. 16:58&lt;/span&gt;]
+</code></pre></div></div>
+
+<h2 id="주의사항">주의사항</h2>
+
+<ul>
+  <li>find_all 과 select는 리스트 형태로 나온다.</li>
+  <li>따라서 get_text()를 사용할때 아래 처럼 해주어야 한다.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">writer</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">element</span><span class="p">.</span><span class="n">get_text</span><span class="p">())</span>
+<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">date</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">element</span><span class="p">.</span><span class="n">get_text</span><span class="p">())</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>이민우
+2019.07.28. 16:58
+</code></pre></div></div>
+
+<h1 id="3-3-정규표현식을-이용하여-tag-찾기">3-3. 정규표현식을 이용하여 tag 찾기</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">re</span>
+<span class="n">soup</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">re</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span><span class="s">'h\d'</span><span class="p">),</span> <span class="n">class_</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span><span class="s">'^tit_v.+'</span><span class="p">))</span> <span class="c1"># h+숫자로 구성된 태그 찾기, class로 제목 찾기
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;h3 class="tit_view" data-translation="true"&gt;일론머스크 "테슬라에서 넷플릭스·유튜브 즐길 날 온다"&lt;/h3&gt;
+</code></pre></div></div>
+
+<h1 id="4-댓글-개수-추출">4. 댓글 개수 추출</h1>
+
+<ul>
+  <li>댓글의 경우, 최초 로딩시에 전달되지 않음</li>
+  <li>이 경우는 추가적으로 AJAX로 비동기적 호출(사이트의 전체가 아닌 일부분만 업데이트)을 하여 따로 data 전송을 함
+    <ul>
+      <li>개발자 도구 &gt; network &gt; XHR(아닌 경우도 있음) &gt; response 확인 &gt; headers에서 url 추출</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">requests</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s">'https://comment.daum.net/apis/v1/ui/single/main/@20190728165812603'</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">"Authorization"</span><span class="p">:</span> <span class="s">"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb3J1bV9rZXkiOiJuZXdzIiwiZ3JhbnRfdHlwZSI6ImFsZXhfY3JlZGVudGlhbHMiLCJzY29wZSI6W10sImV4cCI6MTYwNzI0ODU0MywiYXV0aG9yaXRpZXMiOlsiUk9MRV9DTElFTlQiXSwianRpIjoiM2NmNDllZDctN2EzMi00MWQ5LWEyZjUtMmVlNTExY2E5OTJjIiwiZm9ydW1faWQiOi05OSwiY2xpZW50X2lkIjoiMjZCWEF2S255NVdGNVowOWxyNWs3N1k4In0.cbOniMqPdgymsyYhvkETcbuZw8JGneDoF2OwVymFHkg"</span><span class="p">,</span>
+    <span class="s">"Referer"</span><span class="p">:</span> <span class="s">"https://news.v.daum.net/v/20190728165812603"</span><span class="p">,</span>
+    <span class="s">"User-Agent"</span><span class="p">:</span> <span class="s">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"</span>
+<span class="p">}</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span> <span class="c1">#4**오류는 클라이언트 오류: header를 dict형태로 저장하여 요청
+</span><span class="n">resp</span><span class="p">.</span><span class="n">json</span><span class="p">()[</span><span class="s">'post'</span><span class="p">][</span><span class="s">'commentCount'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>42
+</code></pre></div></div>
+
+<hr />
+
+<p>위 내용은 <a href="https://www.fastcampus.co.kr/">FastCampus</a> 머신러닝과 데이터분석 강의를 참고하여 작성된 글입니다.</p>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

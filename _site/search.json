@@ -129,6 +129,14 @@
     } ,
   
     {
+      "title"    : "LV 2. English Endings",
+      "category" : "",
+      "tags"     : "Algorithm",
+      "url"      : "/blog/programmers-05",
+      "date"     : "2020-12-18 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "03. Evaluate Model Performance and Build Experiment",
       "category" : "",
       "tags"     : "Fast Campus ML",
@@ -161,10 +169,106 @@
     } ,
   
     {
+      "title"    : "15. Pandas Module (merge, join)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-15",
+      "date"     : "2020-12-16 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "14. Pandas Module (concat)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-14",
+      "date"     : "2020-12-16 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "13. Pandas Module (pivot, pivot_table, stack, unstack)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-13",
+      "date"     : "2020-12-15 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "12. Pandas Module (transform)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-12",
+      "date"     : "2020-12-15 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "11. Pandas Module (Groupby)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-11",
+      "date"     : "2020-12-14 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "10. Pandas Module (Numerical Type, Categorical Type)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-10",
+      "date"     : "2020-12-14 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "Chapter 2.3.7 Kernalized Support Vector Machine",
       "category" : "",
       "tags"     : "Introduction to ML with Python",
       "url"      : "/blog/intro-to-ml-09",
+      "date"     : "2020-12-13 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "09. Pandas Module (DataFrame, NaN Data)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-09",
+      "date"     : "2020-12-13 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "08. Pandas Module (DataFrame, Correlation)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-08",
+      "date"     : "2020-12-13 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "07. Pandas Module (DataFrame, Add/Delete Data)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-07",
+      "date"     : "2020-12-13 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "06. Pandas Module (DataFrame, Select Data)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-06",
+      "date"     : "2020-12-13 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "05. Pandas Module (Create DataFrame)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-05",
+      "date"     : "2020-12-13 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "04. Pandas Module (DataFrame, Index, Column)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-04",
       "date"     : "2020-12-13 00:00:00 +0900"
     } ,
   
@@ -185,11 +289,99 @@
     } ,
   
     {
+      "title"    : "03. Pandas Module (Boolean Selection, Data Change, Sliding)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-03",
+      "date"     : "2020-12-12 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "02. Pandas Module (Series Simple Analysis, Calculation)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-02",
+      "date"     : "2020-12-12 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "01. Pandas Module (Series)",
+      "category" : "",
+      "tags"     : "Fast Campus Pandas",
+      "url"      : "/blog/pandas-01",
+      "date"     : "2020-12-12 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "Chapter 2.3.4 Naive Bayes Classifiers",
       "category" : "",
       "tags"     : "Introduction to ML with Python",
       "url"      : "/blog/intro-to-ml-06",
       "date"     : "2020-12-11 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "06. Numpy 모듈 (연습문제)",
+      "category" : "",
+      "tags"     : "Fast Campus Numpy",
+      "url"      : "/blog/numpy-06",
+      "date"     : "2020-12-11 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "05. Numpy 모듈 (ndarray를 그래프로 나타내기)",
+      "category" : "",
+      "tags"     : "Fast Campus Numpy",
+      "url"      : "/blog/numpy-05",
+      "date"     : "2020-12-11 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "04. Numpy 모듈 (브로드캐스팅, Boolean indexing, linalg)",
+      "category" : "",
+      "tags"     : "Fast Campus Numpy",
+      "url"      : "/blog/numpy-04",
+      "date"     : "2020-12-11 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "03. Numpy 모듈 (기본 함수, axis)",
+      "category" : "",
+      "tags"     : "Fast Campus Numpy",
+      "url"      : "/blog/numpy-03",
+      "date"     : "2020-12-11 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "LV 1. Athelete who could not Finish",
+      "category" : "",
+      "tags"     : "Algorithm",
+      "url"      : "/blog/programmers-04",
+      "date"     : "2020-12-10 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "LV 2. The Largest Number",
+      "category" : "",
+      "tags"     : "Algorithm",
+      "url"      : "/blog/programmers-03",
+      "date"     : "2020-12-10 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "02. Numpy module (Indexing, Slicing, Reshaping)",
+      "category" : "",
+      "tags"     : "Fast Campus Numpy",
+      "url"      : "/blog/numpy-02",
+      "date"     : "2020-12-09 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "01. Numpy module (Create ndarray)",
+      "category" : "",
+      "tags"     : "Fast Campus Numpy",
+      "url"      : "/blog/numpy-01",
+      "date"     : "2020-12-09 00:00:00 +0900"
     } ,
   
     {
@@ -201,11 +393,83 @@
     } ,
   
     {
+      "title"    : "07. selenium module로 웹사이트 크롤링 연습",
+      "category" : "",
+      "tags"     : "Fast Campus Crawling",
+      "url"      : "/blog/crawling-07",
+      "date"     : "2020-12-08 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "06. selenium module로 웹사이트 크롤링 기본",
+      "category" : "",
+      "tags"     : "Fast Campus Crawling",
+      "url"      : "/blog/crawling-06",
+      "date"     : "2020-12-08 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "Chapter 2.3.2 K-Nearest Neighbors Algorithm",
       "category" : "",
       "tags"     : "Introduction to ML with Python",
       "url"      : "/blog/intro-to-ml-04",
       "date"     : "2020-12-07 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "05. Beautifulsoup module 로그인 후 크롤링 연습 기본",
+      "category" : "",
+      "tags"     : "Fast Campus Crawling",
+      "url"      : "/blog/crawling-05",
+      "date"     : "2020-12-07 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "LV 2. Lifeboat",
+      "category" : "",
+      "tags"     : "Algorithm",
+      "url"      : "/blog/programmers-02",
+      "date"     : "2020-12-06 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "04. Beautifulsoup module 크롤링 연습 기본",
+      "category" : "",
+      "tags"     : "Fast Campus Crawling",
+      "url"      : "/blog/crawling-04",
+      "date"     : "2020-12-06 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "03. Beautifulsoup module 기본기",
+      "category" : "",
+      "tags"     : "Fast Campus Crawling",
+      "url"      : "/blog/crawling-03",
+      "date"     : "2020-12-06 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "02. API의 활용",
+      "category" : "",
+      "tags"     : "Fast Campus Crawling",
+      "url"      : "/blog/crawling-02",
+      "date"     : "2020-12-04 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "01. 웹 기본 지식",
+      "category" : "",
+      "tags"     : "Fast Campus Crawling",
+      "url"      : "/blog/crawling-01",
+      "date"     : "2020-12-04 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "LV 2. Phone Number List",
+      "category" : "",
+      "tags"     : "Algorithm",
+      "url"      : "/blog/programmers-01",
+      "date"     : "2020-12-03 00:00:00 +0900"
     } ,
   
     {

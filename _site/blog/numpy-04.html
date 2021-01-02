@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta
+    property="og:title"
+    content="04. Numpy 모듈 (브로드캐스팅, Boolean indexing, linalg)"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    04. Numpy 모듈 (브로드캐스팅, Boolean indexing, linalg)
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>04. Numpy 모듈 (브로드캐스팅, Boolean indexing, linalg)</b></h1>
+
+<p class="post-metadata text-muted">
+  11 December 2020 -  
+  <b>5 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-numpy">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus Numpy</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+
+<h1 id="1-브로드캐스팅의-이해">1. 브로드캐스팅의 이해</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+</code></pre></div></div>
+
+<h2 id="브로드캐스팅">브로드캐스팅</h2>
+
+<ul>
+  <li>연산되는 두 ndarray가 다른 Shape을 갖는 경우 브로드 캐스팅(Shape을 맞춤) 후 진행</li>
+</ul>
+
+<h2 id="브로드캐스팅-rule">브로드캐스팅 Rule</h2>
+
+<ul>
+  <li><a href="https://docs.scipy.org/doc/numpy/user/basics.broadcasting.html#general-broadcasting-rules">공식문서</a></li>
+  <li>뒷 차원에서 부터 비교하여 Shape이 같거나, 차원 중 값이 1인 것이 존재하면 가능</li>
+</ul>
+
+<p><img src="https://www.tutorialspoint.com/numpy/images/array.jpg" width="500px" /></p>
+
+<p>이미지 출처: <a href="https://www.tutorialspoint.com/numpy/images/array.jpg">https://www.tutorialspoint.com/numpy/images/array.jpg</a></p>
+
+<h2 id="shape이-같은-경우의-연산">Shape이 같은 경우의 연산</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">15</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">15</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[[ 0  1  2  3  4]
+ [ 5  6  7  8  9]
+ [10 11 12 13 14]]
+[[0.26091156 0.90770473 0.10571557 0.01352919 0.7094853 ]
+ [0.17113939 0.13348689 0.36258685 0.5164027  0.19563896]
+ [0.59507056 0.953185   0.53464213 0.67855905 0.61816429]]
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([[ 0.26091156,  1.90770473,  2.10571557,  3.01352919,  4.7094853 ],
+       [ 5.17113939,  6.13348689,  7.36258685,  8.5164027 ,  9.19563896],
+       [10.59507056, 11.953185  , 12.53464213, 13.67855905, 14.61816429]])
+</code></pre></div></div>
+
+<h2 id="scalar상수와의-연산">Scalar(상수)와의 연산</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">+</span> <span class="mi">2</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([[ 2,  3,  4,  5,  6],
+       [ 7,  8,  9, 10, 11],
+       [12, 13, 14, 15, 16]])
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([[ True, False,  True, False,  True],
+       [False,  True, False,  True, False],
+       [ True, False,  True, False,  True]])
+</code></pre></div></div>
+
+<h2 id="shape이-다른-경우-연산">Shape이 다른 경우 연산</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">z</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([0, 1, 2, 3, 4])
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">+</span> <span class="n">z</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([[ 0,  2,  4,  6,  8],
+       [ 5,  7,  9, 11, 13],
+       [10, 12, 14, 16, 18]])
+</code></pre></div></div>
+
+<h1 id="2-boolean-indexing">2. Boolean indexing</h1>
+
+<ul>
+  <li>ndarry 인덱싱 시, bool 리스트를 전달하여 True인 경우만 필터링</li>
+</ul>
+
+<h2 id="브로드캐스팅을-활용하여-ndarray로-부터-bool-list-얻기">브로드캐스팅을 활용하여 ndarray로 부터 bool list 얻기</h2>
+
+<ul>
+  <li>예) 짝수인 경우만 찾아보기</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[37  4 70 42 99 22 51 87 27 70]
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">even_mask</span> <span class="o">=</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="k">print</span><span class="p">(</span><span class="n">even_mask</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[False  True  True  True False  True False False False  True]
+</code></pre></div></div>
+
+<h2 id="bool-리스트를-인덱스로-전달하기">bool 리스트를 인덱스로 전달하기</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span><span class="p">[</span><span class="n">even_mask</span><span class="p">]</span> <span class="c1"># true 인 지점의 값만 나온다.
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([ 4, 70, 42, 22, 70])
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span><span class="p">[</span><span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># 짝수만 가져오기
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([ 4, 70, 42, 22, 70])
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span><span class="p">[</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">]</span> <span class="c1"># 30보다 큰 수만 가져오기
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([37, 70, 42, 99, 51, 87, 70])
+</code></pre></div></div>
+
+<h2 id="다중조건-사용하기">다중조건 사용하기</h2>
+
+<ul>
+  <li>&amp; - AND</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>- OR</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span><span class="p">[(</span><span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">)]</span> <span class="c1"># 짝수 이면서 30보다 큰 수만 가져오기
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([70, 42, 70])
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span><span class="p">[(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">)]</span> <span class="c1"># x &lt; 30 or x &gt; 50
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([ 4, 70, 99, 22, 51, 87, 27, 70])
+</code></pre></div></div>
+
+<h2 id="예-2019년-7월-서울-평균기온-데이터">예) 2019년 7월 서울 평균기온 데이터</h2>
+
+<ul>
+  <li>평균기온이 25도를 넘는 날수는?</li>
+  <li>평균기온이 25를 넘는 날의 평균 기온은?</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span><span class="mf">23.9</span><span class="p">,</span> <span class="mf">24.4</span><span class="p">,</span> <span class="mf">24.1</span><span class="p">,</span> <span class="mf">25.4</span><span class="p">,</span> <span class="mf">27.6</span><span class="p">,</span> <span class="mf">29.7</span><span class="p">,</span>
+         <span class="mf">26.7</span><span class="p">,</span> <span class="mf">25.1</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">,</span> <span class="mf">22.7</span><span class="p">,</span> <span class="mf">21.9</span><span class="p">,</span> <span class="mf">23.6</span><span class="p">,</span>
+         <span class="mf">24.9</span><span class="p">,</span> <span class="mf">25.9</span><span class="p">,</span> <span class="mf">23.8</span><span class="p">,</span> <span class="mf">24.7</span><span class="p">,</span> <span class="mf">25.6</span><span class="p">,</span> <span class="mf">26.9</span><span class="p">,</span>
+         <span class="mf">28.6</span><span class="p">,</span> <span class="mf">28.0</span><span class="p">,</span> <span class="mf">25.1</span><span class="p">,</span> <span class="mf">26.7</span><span class="p">,</span> <span class="mf">28.1</span><span class="p">,</span> <span class="mf">26.5</span><span class="p">,</span>
+         <span class="mf">26.3</span><span class="p">,</span> <span class="mf">25.9</span><span class="p">,</span> <span class="mf">28.4</span><span class="p">,</span> <span class="mf">26.1</span><span class="p">,</span> <span class="mf">27.5</span><span class="p">,</span> <span class="mf">28.1</span><span class="p">,</span> <span class="mf">25.8</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 평균기온이 25도를 넘는 날의 수
+</span><span class="nb">len</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="n">temp</span> <span class="o">&gt;</span> <span class="mf">25.0</span><span class="p">])</span> <span class="c1"># np.sum(temp &gt; 25.0)
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>21
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 평균기온이 25를 넘는 날의 평균 기온
+</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="n">temp</span> <span class="o">&gt;</span> <span class="mf">25.0</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>26.857142857142858
+</code></pre></div></div>
+
+<h1 id="3-linalg-서브모듈-함수-활용여-선형대수-연산하기">3. linalg 서브모듈 함수 활용여 선형대수 연산하기</h1>
+
+<h2 id="nplinalginv">np.linalg.inv</h2>
+
+<ul>
+  <li>역행렬을 구할 때 사용</li>
+  <li>모든 차원의 값이 같아야 함</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># n*n matrix만 역행렬을 가질 수 있다.
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">inv</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[[0.89411729 0.88716133 0.83081796]
+ [0.09590024 0.33462503 0.86935932]
+ [0.00142707 0.56337691 0.85855675]]
+
+
+
+
+
+array([[ 1.00000000e+00, -1.25867612e-16, -2.38908151e-16],
+       [ 4.32618023e-17,  1.00000000e+00,  1.60205807e-16],
+       [ 1.05762318e-20,  5.75659118e-17,  1.00000000e+00]])
+</code></pre></div></div>
+
+<h2 id="nplinalgsolve">np.linalg.solve</h2>
+
+<ul>
+  <li>Ax = B 형태의 선형대수식 솔루션을 제공</li>
+  <li>예제) 호랑이와 홍합의 합 : 25 호랑이 다리와 홍합 다리의 합은 64
+    <ul>
+      <li>x + y = 25</li>
+      <li>2x + 4y = 64</li>
+    </ul>
+  </li>
+</ul>
+
+\[\begin{pmatrix} 1 &amp; 1 \\ 2 &amp; 4 \end{pmatrix}\begin{pmatrix} x \\ y \end{pmatrix}= \begin{pmatrix} 25 \\ 64 \end{pmatrix}\]
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span><span class="mi">64</span><span class="p">])</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span> <span class="c1"># Ax = B
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[18.  7.]
+</code></pre></div></div>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

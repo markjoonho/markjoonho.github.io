@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta
+    property="og:title"
+    content="01. 웹 기본 지식"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    01. 웹 기본 지식
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>01. 웹 기본 지식</b></h1>
+
+<p class="post-metadata text-muted">
+  04 December 2020 -  
+  <b>less than 1 min read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-crawling">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus Crawling</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+
+<h1 id="1-개발자-도구로-웹사이트-분석하기">1. 개발자 도구로 웹사이트 분석하기</h1>
+
+<p>사용자가 요청을 하면 서버는 사용자의 요청에 대한 응답을 HTML 페이지로 보낸다. 모든 웹 사이트는 HTML로 구성되어 있고 우리가 보는 모든 부분은 HHTML 태그가 달려있다. 또한 페이지가 로딩될때 우리의 웹사이트는 다양한 형태의 요청들이 이루어 진다. 따라서 우리는 추출 하고 싶은 부분이 어떤식으로 호출 되고 어떤 태그로 HTML에 저장이 되어 있는지 확인해야한다.</p>
+
+<ul>
+  <li>추출 하려는 내용의 HTML 태그 확인 하기 (웹 페이지 &gt; 개발자 도구(developer tool) &gt; element에서 확인)</li>
+  <li>추출 하려는 내용이 어떻게 호출 되는지 확인 하기 (웹 페이지 &gt; 개발자 도구(developer tool) &gt; network에서 확인)</li>
+</ul>
+
+<h1 id="2-http-methodgetpost-이해하기">2. HTTP method(Get,Post) 이해하기</h1>
+
+<p><img src="https://miro.medium.com/max/1400/1*GwB-MdlAdURidqOOs4hi-g.png" width="500px" /></p>
+
+<p>이미지 출처: <a href="https://medium.com/@lidiach217/web-%EA%B8%B0%EB%B3%B8%EA%B0%9C%EB%85%90-http-%ED%86%B5%EC%8B%A0-cf5f89906c8e">Lidia Chung</a></p>
+
+<p>HTTP(Hyper Text Transfer Protocol)를 쉽게 설명하자면 HTML(Hyper Text Markup Language) 문서등의 리소스 전송 규약이다 (서버와 클라이언트 사이의 통신 규약). 클라이언트가 서버에 요청 하는 방법에 get 과 post 등 다양한 방식이 있다.</p>
+
+<ul>
+  <li>Get 방식: URL에 데이터를 포함하여 전송
+    <ul>
+      <li>주로 리소스 요청에 사용</li>
+      <li>예시: https://search.naver.com/search.naver?where=nexearch&amp;sm=top_hty&amp;fbm=0&amp;ie=utf8&amp;query=example</li>
+    </ul>
+  </li>
+  <li>Post 방식: Form Data에 데이터를 포함하여 전송
+    <ul>
+      <li>데이터를 숨겨서 전달</li>
+      <li>주로 로그인시 사용</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="3-html-tag-이해하기">3. HTML tag 이해하기</h1>
+
+<p>크롤링 할때 우리가 찾을려고 하는 내용은 대부분 아례 예시 처럼 태그와 태그 사이에 들어 있다.</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h3</span> <span class="na">class=</span><span class="s">"example"</span><span class="nt">&gt;</span>Title<span class="nt">&lt;/h3&gt;</span>
+<span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"example-paragraph"</span><span class="nt">&gt;</span>Paragraph<span class="nt">&lt;/p&gt;</span>
+</code></pre></div></div>
+
+<p>위 예시에서 “Title”을 불러오기 위해서는 h3 태그를 이용하여야하고 Paragraph를 불러오기 위해서 p 태그를 이용하여야 한다.</p>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

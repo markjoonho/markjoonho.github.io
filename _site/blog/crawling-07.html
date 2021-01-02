@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta
+    property="og:title"
+    content="07. selenium module로 웹사이트 크롤링 연습"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    07. selenium module로 웹사이트 크롤링 연습
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>07. selenium module로 웹사이트 크롤링 연습</b></h1>
+
+<p class="post-metadata text-muted">
+  08 December 2020 -  
+  <b>4 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-crawling">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus Crawling</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+
+<h1 id="다음-뉴스-기사와-댓글-모두-크롤링하기">다음 뉴스 기사와 댓글 모두 크롤링하기</h1>
+
+<ul>
+  <li><a href="https://news.v.daum.net/v/20190728165812603">사용할 뉴스 기사</a></li>
+</ul>
+
+<h2 id="뉴스-제목-크롤링">뉴스 제목 크롤링</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_daum_news_title</span><span class="p">(</span><span class="n">news_id</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s">'https://news.v.daum.net/v/{}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">news_id</span><span class="p">)</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">resp</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="n">title_tag</span> <span class="o">=</span> <span class="n">soup</span><span class="p">.</span><span class="n">select_one</span><span class="p">(</span><span class="s">'h3.tit_view'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">title_tag</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">title_tag</span><span class="p">.</span><span class="n">get_text</span><span class="p">()</span>
+    <span class="k">return</span> <span class="s">""</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get_daum_news_title</span><span class="p">(</span><span class="s">'20190728165812603'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'일론머스크 "테슬라에서 넷플릭스·유튜브 즐길 날 온다"'
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get_daum_news_title</span><span class="p">(</span><span class="s">'20190801114158041'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'5G 2∼3위 경쟁 치열..LGU+, 6월 가입자 순증 KT 앞서'
+</code></pre></div></div>
+
+<h2 id="뉴스-몬문-크롤링">뉴스 몬문 크롤링</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_daum_news_content</span><span class="p">(</span><span class="n">news_id</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s">'https://news.v.daum.net/v/{}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">news_id</span><span class="p">)</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">resp</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="n">content</span> <span class="o">=</span> <span class="s">''</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">soup</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="s">'div#harmonyContainer p'</span><span class="p">):</span>
+        <span class="n">content</span> <span class="o">+=</span> <span class="n">p</span><span class="p">.</span><span class="n">get_text</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">content</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get_daum_news_content</span><span class="p">(</span><span class="s">'20190728165812603'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'[아시아경제 이민우 기자] 일론 머스크 테슬라 최고경영자(CEO)가 자사 전기 자동차 모델에 넷플릭스와 유튜브 등 온라인동영상서비스(OTT)를 탑재할 것이라고 예고했다. 단순히 자율 주행 전기차가 단순히 주행을 위한 정보를 알려주는 것을 넘어 각종 영상 콘텐츠를 즐기는 공간으로도 확장하겠다는 전략으로 풀이된다.27일(현지시간) 더버지 등 주요 외신들에 따르면 머스크 CEO는 자신의 트위터를 통해 이 같은 계획을 밝혔다. 그는 "자동차가 정차했을 때 넷플릭스와 유튜브를 감상할 수 있는 기능이 조만간 추가될 것"이라며 "편안한 좌석과 서라운드 사운드 오디오를 통해 영화관과 같은 느낌을 받을 수 있을 것"이라고 강조했다.테슬라가 이처럼 콘텐츠 방면으로 확장하려 든 것은 이번이 처음이 아니다. 지난달 세계 최대 게임쇼 E3에서는 이미 운전자가 \'폴아웃 쉘터\'라는 게임을 할 수 있을 것이라고 발표한 바 있다. 이후에도 최근 게임업체 아타리사(社)의 자동차 경주 게임 ‘폴포지션’, 슈팅게임 ‘템페스트’, ‘미사일커맨드’ 등 고전 게임을 제공하기도 했다. 운전대로 게임을 조작하는 방식으로, 차가 주차돼 있을 경우에만 즐길 수 있다.이번 영상 콘텐츠는 주행 중에도 감상할 수 있도록 하는 방안을 고려하고 있다. 테슬라 측은 규제당국이 자율주행에 대해 완전히 승인하면 차량이 움직일 때에도 승객이 동영상을 즐길 수 있을 것이라고 설명했다.하지만 아직까지 자율주행차의 안전에 대한 우려는 완전히 걷혀지지 않은 상황이다. 지난 2017년 차량공유 서비스 우버의 자율주행 시범차량이 보행자와 충돌한 사고가 발생한 바 있다. 게다가 당시 시험 운전자는 디즈니의 동영상 스트리밍 서비스인 \'훌루\'를 이용하고 있던 것으로 밝혀졌다.이민우 기자 letzwin@asiae.co.kr'
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get_daum_news_content</span><span class="p">(</span><span class="s">'20190728165812603'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'(서울=연합뉴스) 채새롬 기자 = LG유플러스가 6월 한 달간 KT보다 5G 가입자 순증 수가 더 많았던 것으로 집계됐다.1일 과학기술정보통신부와 통신업계에 따르면 6월 말 기준 국내 5G 가입자는 133만 6천865명으로 한 달간 55만2천650명이 늘어났다.통신사별로는 SK텔레콤이 53만346명, KT가 41만9천316명, LG유플러스가 38만7천203명이었다. SK텔레콤의 점유율은 5월 40.8%에서 6월 39.7%, KT는 32.1%에서 31.4%로 다소 줄어든 반면 LG유플러스는 점유율이 27.1%에서 29.0%로 늘었다. 5대 3대 2 구도에서 4대 3대 3 구도가 고착화하는 양상이다.특히 LG유플러스는 월별 순증 가입자 기준 KT를 처음으로 앞질렀다. KT가 6월 16만7천775명 증가한 데 비해 LG유플러스는 17만4천505명을 늘렸다. SK텔레콤은 21만370명을 모집했다.이에 따라 5월 5%포인트였던 LG유플러스와 KT의 점유율 차는 6월 2.4%포인트로 좁혀졌다.6월 공격적인 마케팅을 펼친 LG유플러스가 마케팅 재원이 바닥나자 경쟁사 발목 잡기에 나섰다는 지적도 제기된다. LG유플러스는 지난달 24일 방송통신위원회에 SK텔레콤과 KT를 불법 보조금 살포 혐의로 신고했다.업계 관계자는 "KT와 LG유플러스의 가입자 순증 격차가 좁혀짐에 따라 양사가 3위로 떨어지지 않기 위해 갤럭시노트10이 나오는 8월 치열한 마케팅 싸움을 전개할 것으로 보인다"고 말했다.다음 달 삼성전자 갤럭시노트10 출시를 앞두고 이통사들은 일찌감치 프로모션을 발표하며 5G 가입자 유치 전에 나서고 있다. 7월말 현재 5G 가입자는 180만명 수준으로 파악된다. SK텔레콤 점유율이 41%, KT 31%, LG유플러스 28% 수준으로 알려졌다. 업계에서는 갤럭시노트10이 출시되는 8월 5G 가입자가 200만명을 넘기고 9월부터 갤럭시A90, 갤럭시 폴드, LG전자 5G 스마트폰 등이 출시되면 연말 5G 가입자가 400만명을 넘기리라는 예상이 나온다. SK텔레콤은 1일 5G 가입자 80만명을 넘길 것으로 관측된다. 국내 5G 가입자가 5∼6월 약 100만명 순증하는 동안 LTE 가입자는 약 32만명이 감소해 5G 가입자 이동이 가속화되고 있다. 6월 5G 데이터트래픽은 약 24GB(23,988MB)로 전월 대비 약 28% 늘었다.srchae@yna.co.kr'
+</code></pre></div></div>
+
+<h2 id="뉴스-댓글-크롤링">뉴스 댓글 크롤링</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_daum_news_comments</span><span class="p">():</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'Authorization'</span><span class="p">:</span> <span class="s">'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb3J1bV9rZXkiOiJuZXdzIiwiZ3JhbnRfdHlwZSI6ImFsZXhfY3JlZGVudGlhbHMiLCJzY29wZSI6W10sImV4cCI6MTYwNzQzNzk3MCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9DTElFTlQiXSwianRpIjoiNTdhNTczMGUtMTY2NC00ZTc0LWJjNWMtYjdmMDU4YzJhOWUyIiwiZm9ydW1faWQiOi05OSwiY2xpZW50X2lkIjoiMjZCWEF2S255NVdGNVowOWxyNWs3N1k4In0.cbXibvUQbSZjrmp_phhD6ww5DQ7vfnyWVQdYG7yVbbM'</span><span class="p">,</span>
+        <span class="s">'Origin'</span><span class="p">:</span> <span class="s">'https://news.v.daum.net'</span><span class="p">,</span>
+        <span class="s">'Referer'</span><span class="p">:</span> <span class="s">'https://news.v.daum.net/v/20190728165812603'</span><span class="p">,</span>
+        <span class="s">'User-Agent'</span><span class="p">:</span> <span class="s">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'</span>
+    <span class="p">}</span>
+    <span class="n">url_template</span> <span class="o">=</span> <span class="s">'https://comment.daum.net/apis/v1/posts/133493400/comments?parentId=0&amp;offset={}&amp;limit=10&amp;sort=LATEST&amp;isInitial=false&amp;hasNext=true'</span>
+
+    <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">comments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">url_template</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="p">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="n">comments</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">offset</span> <span class="o">+=</span> <span class="mi">10</span>
+
+    <span class="k">return</span> <span class="n">comments</span>
+
+
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">len</span><span class="p">(</span><span class="n">get_daum_news_comments</span><span class="p">())</span> <span class="c1"># 삭제된 댓글은 크롤링 하지 않는다!
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>33
+</code></pre></div></div>
+
+<hr />
+
+<p>위 내용은 <a href="https://www.fastcampus.co.kr/">FastCampus</a> 머신러닝과 데이터분석 강의를 참고하여 작성된 글입니다.</p>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

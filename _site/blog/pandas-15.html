@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta
+    property="og:title"
+    content="15. Pandas Module (merge, join)"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    15. Pandas Module (merge, join)
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>15. Pandas Module (merge, join)</b></h1>
+
+<p class="post-metadata text-muted">
+  16 December 2020 -  
+  <b>9 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-pandas">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus Pandas</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+
+<hr />
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+</code></pre></div></div>
+
+<h1 id="dataframe-merge">dataframe merge</h1>
+
+<ul>
+  <li>same as SQL’s join(merge by specific column)
+    <ul>
+      <li>join method: using how parameter
+        <ul>
+          <li>inner: default, if there are same value</li>
+          <li>left: left outer join</li>
+          <li>right: right outer join</li>
+          <li>outer: full outer join</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>pandas.merge</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">customer</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">'customer_id'</span> <span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span>
+                    <span class="s">'name'</span> <span class="p">:</span> <span class="p">[</span><span class="s">'charles'</span><span class="p">,</span> <span class="s">'mark'</span><span class="p">,</span> <span class="s">'ethan'</span><span class="p">,</span> <span class="s">'jin'</span><span class="p">,</span> <span class="s">'eiden'</span><span class="p">,</span> <span class="s">'tk'</span><span class="p">],</span>
+                    <span class="s">'age'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">18</span><span class="p">]})</span>
+
+<span class="n">customer</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>customer_id</th>
+      <th>name</th>
+      <th>age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>charles</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>mark</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>ethan</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>jin</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>eiden</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>5</td>
+      <td>tk</td>
+      <td>18</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">orders</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">'customer_id'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
+                    <span class="s">'item'</span> <span class="p">:</span> <span class="p">[</span><span class="s">'toothpaste'</span><span class="p">,</span> <span class="s">'toothbrush'</span><span class="p">,</span> <span class="s">'earphone'</span><span class="p">,</span> <span class="s">'headset'</span><span class="p">,</span> <span class="s">'towel'</span><span class="p">,</span> <span class="s">'water'</span><span class="p">,</span> <span class="s">'towel'</span><span class="p">,</span> <span class="s">'toothpaste'</span><span class="p">,</span> <span class="s">'water'</span><span class="p">,</span> <span class="s">'case'</span><span class="p">],</span>
+                    <span class="s">'quantity'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]})</span>
+<span class="n">orders</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>customer_id</th>
+      <th>item</th>
+      <th>quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>toothpaste</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>toothbrush</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>earphone</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>headset</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>towel</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="on">on</h2>
+
+<ul>
+  <li>describe the column that is going to be join</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">customer</span><span class="p">,</span><span class="n">orders</span><span class="p">,</span><span class="n">on</span><span class="o">=</span><span class="s">"customer_id"</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">'inner'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>customer_id</th>
+      <th>name</th>
+      <th>age</th>
+      <th>item</th>
+      <th>quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>mark</td>
+      <td>20</td>
+      <td>toothpaste</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>mark</td>
+      <td>20</td>
+      <td>toothbrush</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>mark</td>
+      <td>20</td>
+      <td>toothpaste</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>ethan</td>
+      <td>21</td>
+      <td>earphone</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>ethan</td>
+      <td>21</td>
+      <td>headset</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2</td>
+      <td>ethan</td>
+      <td>21</td>
+      <td>towel</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>3</td>
+      <td>jin</td>
+      <td>30</td>
+      <td>water</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>3</td>
+      <td>jin</td>
+      <td>30</td>
+      <td>towel</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>4</td>
+      <td>eiden</td>
+      <td>31</td>
+      <td>water</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">customer</span><span class="p">,</span><span class="n">orders</span><span class="p">,</span><span class="n">on</span><span class="o">=</span><span class="s">"customer_id"</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">'left'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>customer_id</th>
+      <th>name</th>
+      <th>age</th>
+      <th>item</th>
+      <th>quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>charles</td>
+      <td>40</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>mark</td>
+      <td>20</td>
+      <td>toothpaste</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>mark</td>
+      <td>20</td>
+      <td>toothbrush</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>mark</td>
+      <td>20</td>
+      <td>toothpaste</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>ethan</td>
+      <td>21</td>
+      <td>earphone</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2</td>
+      <td>ethan</td>
+      <td>21</td>
+      <td>headset</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2</td>
+      <td>ethan</td>
+      <td>21</td>
+      <td>towel</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>3</td>
+      <td>jin</td>
+      <td>30</td>
+      <td>water</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>3</td>
+      <td>jin</td>
+      <td>30</td>
+      <td>towel</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>4</td>
+      <td>eiden</td>
+      <td>31</td>
+      <td>water</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>5</td>
+      <td>tk</td>
+      <td>18</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">customer</span><span class="p">,</span><span class="n">orders</span><span class="p">,</span><span class="n">on</span><span class="o">=</span><span class="s">"customer_id"</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">'right'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>customer_id</th>
+      <th>name</th>
+      <th>age</th>
+      <th>item</th>
+      <th>quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>mark</td>
+      <td>20.0</td>
+      <td>toothpaste</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>mark</td>
+      <td>20.0</td>
+      <td>toothbrush</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>mark</td>
+      <td>20.0</td>
+      <td>toothpaste</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>ethan</td>
+      <td>21.0</td>
+      <td>earphone</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>ethan</td>
+      <td>21.0</td>
+      <td>headset</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2</td>
+      <td>ethan</td>
+      <td>21.0</td>
+      <td>towel</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>3</td>
+      <td>jin</td>
+      <td>30.0</td>
+      <td>water</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>3</td>
+      <td>jin</td>
+      <td>30.0</td>
+      <td>towel</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>4</td>
+      <td>eiden</td>
+      <td>31.0</td>
+      <td>water</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>9</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>case</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">customer</span><span class="p">,</span><span class="n">orders</span><span class="p">,</span><span class="n">on</span><span class="o">=</span><span class="s">"customer_id"</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">'outer'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>customer_id</th>
+      <th>name</th>
+      <th>age</th>
+      <th>item</th>
+      <th>quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>charles</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>mark</td>
+      <td>20.0</td>
+      <td>toothpaste</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>mark</td>
+      <td>20.0</td>
+      <td>toothbrush</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>mark</td>
+      <td>20.0</td>
+      <td>toothpaste</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>ethan</td>
+      <td>21.0</td>
+      <td>earphone</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2</td>
+      <td>ethan</td>
+      <td>21.0</td>
+      <td>headset</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2</td>
+      <td>ethan</td>
+      <td>21.0</td>
+      <td>towel</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>3</td>
+      <td>jin</td>
+      <td>30.0</td>
+      <td>water</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>3</td>
+      <td>jin</td>
+      <td>30.0</td>
+      <td>towel</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>4</td>
+      <td>eiden</td>
+      <td>31.0</td>
+      <td>water</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>5</td>
+      <td>tk</td>
+      <td>18.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>9</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>case</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="join-by-index">join by index</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cust1</span> <span class="o">=</span> <span class="n">customer</span><span class="p">.</span><span class="n">set_index</span><span class="p">(</span><span class="s">'customer_id'</span><span class="p">)</span>
+<span class="n">order1</span> <span class="o">=</span> <span class="n">orders</span><span class="p">.</span><span class="n">set_index</span><span class="p">(</span><span class="s">'customer_id'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cust1</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>age</th>
+    </tr>
+    <tr>
+      <th>customer_id</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>charles</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>mark</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ethan</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>jin</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>eiden</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>tk</td>
+      <td>18</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">order1</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>item</th>
+      <th>quantity</th>
+    </tr>
+    <tr>
+      <th>customer_id</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>toothpaste</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>toothbrush</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>earphone</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>headset</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>towel</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>water</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>towel</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>toothpaste</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>water</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>case</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">cust1</span><span class="p">,</span> <span class="n">order1</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>age</th>
+      <th>item</th>
+      <th>quantity</th>
+    </tr>
+    <tr>
+      <th>customer_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>mark</td>
+      <td>20</td>
+      <td>toothpaste</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>mark</td>
+      <td>20</td>
+      <td>toothbrush</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>mark</td>
+      <td>20</td>
+      <td>toothpaste</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ethan</td>
+      <td>21</td>
+      <td>earphone</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ethan</td>
+      <td>21</td>
+      <td>headset</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ethan</td>
+      <td>21</td>
+      <td>towel</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>jin</td>
+      <td>30</td>
+      <td>water</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>jin</td>
+      <td>30</td>
+      <td>towel</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>eiden</td>
+      <td>31</td>
+      <td>water</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="practice">Practice</h2>
+
+<ol>
+  <li>Most selled item?</li>
+  <li>Find item that marke buy the most.</li>
+</ol>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">new_df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">customer</span><span class="p">,</span> <span class="n">orders</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s">'customer_id'</span><span class="p">)</span>
+<span class="n">new_df</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">'item'</span><span class="p">).</span><span class="nb">sum</span><span class="p">()</span>
+<span class="n">new_df</span><span class="p">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">'quantity'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>customer_id</th>
+      <th>age</th>
+      <th>quantity</th>
+    </tr>
+    <tr>
+      <th>item</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>towel</th>
+      <td>5</td>
+      <td>51</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>toothpaste</th>
+      <td>2</td>
+      <td>40</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>water</th>
+      <td>7</td>
+      <td>61</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>toothbrush</th>
+      <td>1</td>
+      <td>20</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>earphone</th>
+      <td>2</td>
+      <td>21</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>headset</th>
+      <td>2</td>
+      <td>21</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">new_df2</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">customer</span><span class="p">,</span> <span class="n">orders</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s">'customer_id'</span><span class="p">)</span>
+<span class="n">new_df2</span> <span class="o">=</span> <span class="n">new_df2</span><span class="p">.</span><span class="n">groupby</span><span class="p">([</span><span class="s">'name'</span><span class="p">,</span> <span class="s">'item'</span><span class="p">]).</span><span class="nb">sum</span><span class="p">()</span>
+<span class="n">new_df2</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="s">'mark'</span><span class="p">,</span><span class="s">'quantity'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>item
+toothbrush    2
+toothpaste    4
+Name: quantity, dtype: int64
+</code></pre></div></div>
+
+<h2 id="join">join</h2>
+
+<ul>
+  <li>default: left join by index</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cust1</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">order1</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">'inner'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>age</th>
+      <th>item</th>
+      <th>quantity</th>
+    </tr>
+    <tr>
+      <th>customer_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>mark</td>
+      <td>20</td>
+      <td>toothpaste</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>mark</td>
+      <td>20</td>
+      <td>toothbrush</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>mark</td>
+      <td>20</td>
+      <td>toothpaste</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ethan</td>
+      <td>21</td>
+      <td>earphone</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ethan</td>
+      <td>21</td>
+      <td>headset</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ethan</td>
+      <td>21</td>
+      <td>towel</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>jin</td>
+      <td>30</td>
+      <td>water</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>jin</td>
+      <td>30</td>
+      <td>towel</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>eiden</td>
+      <td>31</td>
+      <td>water</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>
