@@ -18,7 +18,7 @@
   />
   <meta
     property="og:title"
-    content="18. Regression Model Performance Check for Machine Learning"
+    content="22. Interaction Term, Dummy Variables for Machine Learning"
   />
   <meta
     property="og:description"
@@ -26,7 +26,7 @@
   />
   <meta property="og:type" content="website" />
   <title>
-    18. Regression Model Performance Check for Machine Learning
+    22. Interaction Term, Dummy Variables for Machine Learning
   </title>
 
   <link
@@ -100,10 +100,10 @@
 
 </nav>
   <div class="col-lg-10 mx-auto mt-5 post">
-  <h1><b>18. Regression Model Performance Check for Machine Learning</b></h1>
+  <h1><b>22. Interaction Term, Dummy Variables for Machine Learning</b></h1>
 
 <p class="post-metadata text-muted">
-  01 January 2021 -  
+  04 January 2021 -  
   <b>less than 1 min read time</b>
 
   <br>Tags: 
@@ -117,67 +117,109 @@
 
 <p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
 
-<h2 id="r-squared">R-squared</h2>
-
-\[R^2 = \frac{SSR}{SST}\]
-
-<p><img src="/assets/img/linear-regression-2020-11-27-2.png" width="1000px" />
-<img src="/assets/img/ml18/note.png" width="1000px" /></p>
-
-<p><strong>Problem</strong></p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Since SSR is squared value, when the number of variable is increasing, R-squared value is increasing.
-</code></pre></div></div>
-
-<h2 id="adjusted-r-squared">Adjusted R-squared</h2>
+<h2 id="interaction-term">Interaction Term</h2>
 
 <ul>
-  <li>Give penalty to R-squared as the number of variables.</li>
+  <li>
+    <p>Synergy Effect:</p>
+
+    <p>\(X_1\) and \(X_2\) do not effect on Y.
+However, when \(X_1\) and \(X_2\) combine, it can effect dramatically.</p>
+  </li>
+  <li>
+    <p>Equation of Interaction Term is as follow.</p>
+
+\[\hat Y = \hat \beta_0 + \hat \beta_1X_1 +\hat \beta_2X_2 + \hat \beta_3X_1X_2\]
+  </li>
 </ul>
 
-\[R^2 = 1 - \frac{SSE}{SST}\]
-
-\[Adjusted \space R^2 = 1 - \frac{SSE / {(n-p)}}{SST / {(n-1)}}\]
-
-<blockquote>
-  <p>n: sample size</p>
-
-  <p>p: number of variables</p>
-</blockquote>
-
-<h2 id="aic-akaike-information-criterion">AIC (Akaike Information Criterion)</h2>
+<h2 id="dummy-variable">Dummy Variable</h2>
 
 <ul>
-  <li>Give penalty to MSE as the number of variables.</li>
-  <li>Generally use AIC a lot at regression Model Selection.</li>
+  <li>Pre-processing is needed for dummy variables</li>
 </ul>
 
-\[AIC = n \ln(\frac{SSE}{n}) + 2(p+1)\]
+<p><strong>EXAMPLE</strong> X(Education Level) and Y(Income)</p>
 
-<blockquote>
-  <p>n: sample size</p>
+<table>
+  <thead>
+    <tr>
+      <th>Person</th>
+      <th>Final Education Level</th>
+      <th>Income</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Highschool</td>
+      <td>2,000</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>University</td>
+      <td>3,500</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>University</td>
+      <td>4,500</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Highschool</td>
+      <td>3,700</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Ph.D</td>
+      <td>7,000</td>
+    </tr>
+  </tbody>
+</table>
 
-  <p>p: number of variables</p>
-</blockquote>
-
-<ul>
-  <li>When value of AIC is small, it means better model.</li>
-  <li>Inaccurate when sample size, n, is increasing.</li>
-</ul>
-
-<h2 id="bic-bayes-information-criteria">BIC (Bayes Information Criteria)</h2>
-
-<ul>
-  <li>To overcome AIC’s drawback, use BIC</li>
-</ul>
-
-\[BIC = n \ln(\frac{SSE}{n}) + 2(p+1)\ln(n)\]
-
-<blockquote>
-  <p>n: sample size</p>
-
-  <p>p: number of variables</p>
-</blockquote>
+<table>
+  <thead>
+    <tr>
+      <th>Person</th>
+      <th>University</th>
+      <th>Ph.D</th>
+      <th>Income</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2,000</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3,500</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>4,500</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3,700</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>0</td>
+      <td>1</td>
+      <td>7,000</td>
+    </tr>
+  </tbody>
+</table>
 
 
 
