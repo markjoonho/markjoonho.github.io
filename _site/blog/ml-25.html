@@ -1,0 +1,2628 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta
+    property="og:title"
+    content="25. Multi Linear Regression Feature Selection Practice(3) for Machine Learning"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    25. Multi Linear Regression Feature Selection Practice(3) for Machine Learning
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>25. Multi Linear Regression Feature Selection Practice(3) for Machine Learning</b></h1>
+
+<p class="post-metadata text-muted">
+  06 January 2021 -  
+  <b>58 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-ml">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus ML</span>
+    </a>
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-ml-practice">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus ML practice</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="n">sm</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.outliers_influence</span> <span class="kn">import</span> <span class="n">variance_inflation_factor</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Read Data
+</span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">"./data/toyotacorolla.csv"</span><span class="p">)</span>
+<span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Id</th>
+      <th>Model</th>
+      <th>Price</th>
+      <th>Age_08_04</th>
+      <th>Mfg_Month</th>
+      <th>Mfg_Year</th>
+      <th>KM</th>
+      <th>Fuel_Type</th>
+      <th>HP</th>
+      <th>Met_Color</th>
+      <th>...</th>
+      <th>Central_Lock</th>
+      <th>Powered_Windows</th>
+      <th>Power_Steering</th>
+      <th>Radio</th>
+      <th>Mistlamps</th>
+      <th>Sport_Model</th>
+      <th>Backseat_Divider</th>
+      <th>Metallic_Rim</th>
+      <th>Radio_cassette</th>
+      <th>Tow_Bar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>TOYOTA Corolla 2.0 D4D HATCHB TERRA 2/3-Doors</td>
+      <td>13500</td>
+      <td>23</td>
+      <td>10</td>
+      <td>2002</td>
+      <td>46986</td>
+      <td>Diesel</td>
+      <td>90</td>
+      <td>1</td>
+      <td>...</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>TOYOTA Corolla 2.0 D4D HATCHB TERRA 2/3-Doors</td>
+      <td>13750</td>
+      <td>23</td>
+      <td>10</td>
+      <td>2002</td>
+      <td>72937</td>
+      <td>Diesel</td>
+      <td>90</td>
+      <td>1</td>
+      <td>...</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>?TOYOTA Corolla 2.0 D4D HATCHB TERRA 2/3-Doors</td>
+      <td>13950</td>
+      <td>24</td>
+      <td>9</td>
+      <td>2002</td>
+      <td>41711</td>
+      <td>Diesel</td>
+      <td>90</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>TOYOTA Corolla 2.0 D4D HATCHB TERRA 2/3-Doors</td>
+      <td>14950</td>
+      <td>26</td>
+      <td>7</td>
+      <td>2002</td>
+      <td>48000</td>
+      <td>Diesel</td>
+      <td>90</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>TOYOTA Corolla 2.0 D4D HATCHB SOL 2/3-Doors</td>
+      <td>13750</td>
+      <td>30</td>
+      <td>3</td>
+      <td>2002</td>
+      <td>38500</td>
+      <td>Diesel</td>
+      <td>90</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 37 columns</p>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Shape of Data
+</span><span class="n">rows</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"cars: {}, features: {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cars: 1436, features: 37
+</code></pre></div></div>
+
+<h2 id="feature-engineering">Feature Engineering</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Find Dummy Variables
+</span><span class="n">data</span><span class="p">[</span><span class="s">'Fuel_Type'</span><span class="p">].</span><span class="n">unique</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array(['Diesel', 'Petrol', 'CNG'], dtype=object)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create new Columns to make Dummy to Numerical
+</span><span class="n">dummy_d</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rows</span><span class="p">)</span>
+<span class="n">dummy_p</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rows</span><span class="p">)</span>
+<span class="n">dummy_c</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rows</span><span class="p">)</span>
+<span class="n">dummy_d</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([0, 0, 0, ..., 0, 0, 0])
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">d_index</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">"Fuel_Type"</span><span class="p">]</span> <span class="o">==</span> <span class="s">"Diesel"</span><span class="p">)</span>
+<span class="n">p_index</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">"Fuel_Type"</span><span class="p">]</span> <span class="o">==</span> <span class="s">"Petro"</span><span class="p">)</span>
+<span class="n">c_index</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">"Fuel_Type"</span><span class="p">]</span> <span class="o">==</span> <span class="s">"CNG"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">d_index</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([ True,  True,  True, ..., False, False, False])
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dummy_d</span><span class="p">[</span><span class="n">d_index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">dummy_p</span><span class="p">[</span><span class="n">p_index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">dummy_c</span><span class="p">[</span><span class="n">c_index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dummy_d</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([1, 1, 1, ..., 0, 0, 0])
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Add dummies
+</span><span class="n">new_data</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">'Diesel'</span><span class="p">:</span><span class="n">dummy_d</span><span class="p">,</span> <span class="s">'Petro'</span><span class="p">:</span><span class="n">dummy_p</span><span class="p">,</span> <span class="s">'CNG'</span><span class="p">:</span><span class="n">dummy_c</span><span class="p">})</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">concat</span><span class="p">((</span><span class="n">data</span><span class="p">,</span><span class="n">new_data</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Id</th>
+      <th>Model</th>
+      <th>Price</th>
+      <th>Age_08_04</th>
+      <th>Mfg_Month</th>
+      <th>Mfg_Year</th>
+      <th>KM</th>
+      <th>Fuel_Type</th>
+      <th>HP</th>
+      <th>Met_Color</th>
+      <th>...</th>
+      <th>Radio</th>
+      <th>Mistlamps</th>
+      <th>Sport_Model</th>
+      <th>Backseat_Divider</th>
+      <th>Metallic_Rim</th>
+      <th>Radio_cassette</th>
+      <th>Tow_Bar</th>
+      <th>Diesel</th>
+      <th>Petro</th>
+      <th>CNG</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>TOYOTA Corolla 2.0 D4D HATCHB TERRA 2/3-Doors</td>
+      <td>13500</td>
+      <td>23</td>
+      <td>10</td>
+      <td>2002</td>
+      <td>46986</td>
+      <td>Diesel</td>
+      <td>90</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>TOYOTA Corolla 2.0 D4D HATCHB TERRA 2/3-Doors</td>
+      <td>13750</td>
+      <td>23</td>
+      <td>10</td>
+      <td>2002</td>
+      <td>72937</td>
+      <td>Diesel</td>
+      <td>90</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>?TOYOTA Corolla 2.0 D4D HATCHB TERRA 2/3-Doors</td>
+      <td>13950</td>
+      <td>24</td>
+      <td>9</td>
+      <td>2002</td>
+      <td>41711</td>
+      <td>Diesel</td>
+      <td>90</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>TOYOTA Corolla 2.0 D4D HATCHB TERRA 2/3-Doors</td>
+      <td>14950</td>
+      <td>26</td>
+      <td>7</td>
+      <td>2002</td>
+      <td>48000</td>
+      <td>Diesel</td>
+      <td>90</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>TOYOTA Corolla 2.0 D4D HATCHB SOL 2/3-Doors</td>
+      <td>13750</td>
+      <td>30</td>
+      <td>3</td>
+      <td>2002</td>
+      <td>38500</td>
+      <td>Diesel</td>
+      <td>90</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 40 columns</p>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># drop useless columns
+</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">drop</span><span class="p">([</span><span class="s">'Id'</span><span class="p">,</span> <span class="s">'Model'</span><span class="p">,</span> <span class="s">'Fuel_Type'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Price</th>
+      <th>Age_08_04</th>
+      <th>Mfg_Month</th>
+      <th>Mfg_Year</th>
+      <th>KM</th>
+      <th>HP</th>
+      <th>Met_Color</th>
+      <th>Automatic</th>
+      <th>cc</th>
+      <th>Doors</th>
+      <th>...</th>
+      <th>Radio</th>
+      <th>Mistlamps</th>
+      <th>Sport_Model</th>
+      <th>Backseat_Divider</th>
+      <th>Metallic_Rim</th>
+      <th>Radio_cassette</th>
+      <th>Tow_Bar</th>
+      <th>Diesel</th>
+      <th>Petro</th>
+      <th>CNG</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>13500</td>
+      <td>23</td>
+      <td>10</td>
+      <td>2002</td>
+      <td>46986</td>
+      <td>90</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>3</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>13750</td>
+      <td>23</td>
+      <td>10</td>
+      <td>2002</td>
+      <td>72937</td>
+      <td>90</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>3</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>13950</td>
+      <td>24</td>
+      <td>9</td>
+      <td>2002</td>
+      <td>41711</td>
+      <td>90</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>3</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>14950</td>
+      <td>26</td>
+      <td>7</td>
+      <td>2002</td>
+      <td>48000</td>
+      <td>90</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>3</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>13750</td>
+      <td>30</td>
+      <td>3</td>
+      <td>2002</td>
+      <td>38500</td>
+      <td>90</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>3</td>
+      <td>...</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 37 columns</p>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">has_constant</span><span class="o">=</span><span class="s">'add'</span><span class="p">)</span>
+<span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>const</th>
+      <th>Price</th>
+      <th>Age_08_04</th>
+      <th>Mfg_Month</th>
+      <th>Mfg_Year</th>
+      <th>KM</th>
+      <th>HP</th>
+      <th>Met_Color</th>
+      <th>Automatic</th>
+      <th>cc</th>
+      <th>...</th>
+      <th>Radio</th>
+      <th>Mistlamps</th>
+      <th>Sport_Model</th>
+      <th>Backseat_Divider</th>
+      <th>Metallic_Rim</th>
+      <th>Radio_cassette</th>
+      <th>Tow_Bar</th>
+      <th>Diesel</th>
+      <th>Petro</th>
+      <th>CNG</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.0</td>
+      <td>13500</td>
+      <td>23</td>
+      <td>10</td>
+      <td>2002</td>
+      <td>46986</td>
+      <td>90</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.0</td>
+      <td>13750</td>
+      <td>23</td>
+      <td>10</td>
+      <td>2002</td>
+      <td>72937</td>
+      <td>90</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1.0</td>
+      <td>13950</td>
+      <td>24</td>
+      <td>9</td>
+      <td>2002</td>
+      <td>41711</td>
+      <td>90</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.0</td>
+      <td>14950</td>
+      <td>26</td>
+      <td>7</td>
+      <td>2002</td>
+      <td>48000</td>
+      <td>90</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.0</td>
+      <td>13750</td>
+      <td>30</td>
+      <td>3</td>
+      <td>2002</td>
+      <td>38500</td>
+      <td>90</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>...</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 38 columns</p>
+</div>
+
+<h2 id="test-and-train-data-split">Test and Train Data Split</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">feature_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">'Price'</span><span class="p">]))</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">feature_columns</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">Price</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">X_train</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">X_test</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_test</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_train</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(1077, 37) (359, 37) (359,) (1077,)
+</code></pre></div></div>
+
+<h2 id="fitting-linear-model">Fitting Linear Model</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>          <td>Price</td>      <th>  R-squared:         </th> <td>   0.912</td> 
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.910</td> 
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   329.1</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Wed, 06 Jan 2021</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
+</tr>
+<tr>
+  <th>Time:</th>                 <td>07:28:42</td>     <th>  Log-Likelihood:    </th> <td> -9067.6</td> 
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>  1077</td>      <th>  AIC:               </th> <td>1.820e+04</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>  1043</td>      <th>  BIC:               </th> <td>1.837e+04</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>    33</td>      <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+          <td></td>            <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P&gt;|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>ABS</th>              <td> -239.4726</td> <td>  129.038</td> <td>   -1.856</td> <td> 0.064</td> <td> -492.677</td> <td>   13.732</td>
+</tr>
+<tr>
+  <th>Age_08_04</th>        <td> -114.6684</td> <td>    3.994</td> <td>  -28.713</td> <td> 0.000</td> <td> -122.505</td> <td> -106.832</td>
+</tr>
+<tr>
+  <th>Airbag_1</th>         <td>   -3.4944</td> <td>  267.652</td> <td>   -0.013</td> <td> 0.990</td> <td> -528.693</td> <td>  521.704</td>
+</tr>
+<tr>
+  <th>Airbag_2</th>         <td> -140.5638</td> <td>  134.204</td> <td>   -1.047</td> <td> 0.295</td> <td> -403.904</td> <td>  122.776</td>
+</tr>
+<tr>
+  <th>Airco</th>            <td>  182.8716</td> <td>   93.410</td> <td>    1.958</td> <td> 0.051</td> <td>   -0.422</td> <td>  366.165</td>
+</tr>
+<tr>
+  <th>Automatic</th>        <td>  154.1821</td> <td>  160.696</td> <td>    0.959</td> <td> 0.338</td> <td> -161.142</td> <td>  469.507</td>
+</tr>
+<tr>
+  <th>Automatic_airco</th>  <td> 2222.0387</td> <td>  199.107</td> <td>   11.160</td> <td> 0.000</td> <td> 1831.342</td> <td> 2612.735</td>
+</tr>
+<tr>
+  <th>BOVAG_Guarantee</th>  <td>  650.7842</td> <td>  131.883</td> <td>    4.935</td> <td> 0.000</td> <td>  391.999</td> <td>  909.570</td>
+</tr>
+<tr>
+  <th>Backseat_Divider</th> <td> -198.9886</td> <td>  135.868</td> <td>   -1.465</td> <td> 0.143</td> <td> -465.595</td> <td>   67.618</td>
+</tr>
+<tr>
+  <th>Boardcomputer</th>    <td> -216.4128</td> <td>  120.438</td> <td>   -1.797</td> <td> 0.073</td> <td> -452.741</td> <td>   19.915</td>
+</tr>
+<tr>
+  <th>CD_Player</th>        <td>  174.6466</td> <td>  102.506</td> <td>    1.704</td> <td> 0.089</td> <td>  -26.496</td> <td>  375.789</td>
+</tr>
+<tr>
+  <th>CNG</th>              <td>-2344.8552</td> <td>  392.228</td> <td>   -5.978</td> <td> 0.000</td> <td>-3114.501</td> <td>-1575.209</td>
+</tr>
+<tr>
+  <th>Central_Lock</th>     <td>  -33.4122</td> <td>  149.924</td> <td>   -0.223</td> <td> 0.824</td> <td> -327.600</td> <td>  260.775</td>
+</tr>
+<tr>
+  <th>Cylinders</th>        <td>   -0.0365</td> <td>    0.002</td> <td>  -15.420</td> <td> 0.000</td> <td>   -0.041</td> <td>   -0.032</td>
+</tr>
+<tr>
+  <th>Diesel</th>           <td>-1625.7633</td> <td>  324.610</td> <td>   -5.008</td> <td> 0.000</td> <td>-2262.727</td> <td> -988.800</td>
+</tr>
+<tr>
+  <th>Doors</th>            <td>  -20.4607</td> <td>   42.063</td> <td>   -0.486</td> <td> 0.627</td> <td> -102.999</td> <td>   62.077</td>
+</tr>
+<tr>
+  <th>Gears</th>            <td>   99.3918</td> <td>  220.447</td> <td>    0.451</td> <td> 0.652</td> <td> -333.179</td> <td>  531.962</td>
+</tr>
+<tr>
+  <th>Guarantee_Period</th> <td>   68.6848</td> <td>   14.043</td> <td>    4.891</td> <td> 0.000</td> <td>   41.129</td> <td>   96.241</td>
+</tr>
+<tr>
+  <th>HP</th>               <td>   15.0466</td> <td>    3.635</td> <td>    4.139</td> <td> 0.000</td> <td>    7.913</td> <td>   22.180</td>
+</tr>
+<tr>
+  <th>KM</th>               <td>   -0.0164</td> <td>    0.001</td> <td>  -12.462</td> <td> 0.000</td> <td>   -0.019</td> <td>   -0.014</td>
+</tr>
+<tr>
+  <th>Met_Color</th>        <td>   52.2596</td> <td>   77.726</td> <td>    0.672</td> <td> 0.502</td> <td> -100.257</td> <td>  204.776</td>
+</tr>
+<tr>
+  <th>Metallic_Rim</th>     <td>  224.0572</td> <td>   97.258</td> <td>    2.304</td> <td> 0.021</td> <td>   33.213</td> <td>  414.902</td>
+</tr>
+<tr>
+  <th>Mfg_Month</th>        <td>  -91.3501</td> <td>   10.564</td> <td>   -8.648</td> <td> 0.000</td> <td> -112.078</td> <td>  -70.622</td>
+</tr>
+<tr>
+  <th>Mfg_Year</th>         <td>   -1.1144</td> <td>    0.923</td> <td>   -1.208</td> <td> 0.227</td> <td>   -2.925</td> <td>    0.696</td>
+</tr>
+<tr>
+  <th>Mfr_Guarantee</th>    <td>  274.9608</td> <td>   76.022</td> <td>    3.617</td> <td> 0.000</td> <td>  125.786</td> <td>  424.135</td>
+</tr>
+<tr>
+  <th>Mistlamps</th>        <td>  -42.5015</td> <td>  112.007</td> <td>   -0.379</td> <td> 0.704</td> <td> -262.287</td> <td>  177.284</td>
+</tr>
+<tr>
+  <th>Petro</th>            <td>-1.601e-13</td> <td> 3.54e-14</td> <td>   -4.519</td> <td> 0.000</td> <td> -2.3e-13</td> <td>-9.06e-14</td>
+</tr>
+<tr>
+  <th>Power_Steering</th>   <td>  -53.8472</td> <td>  295.133</td> <td>   -0.182</td> <td> 0.855</td> <td> -632.969</td> <td>  525.275</td>
+</tr>
+<tr>
+  <th>Powered_Windows</th>  <td>  332.8326</td> <td>  148.362</td> <td>    2.243</td> <td> 0.025</td> <td>   41.711</td> <td>  623.954</td>
+</tr>
+<tr>
+  <th>Quarterly_Tax</th>    <td>   13.7851</td> <td>    1.897</td> <td>    7.266</td> <td> 0.000</td> <td>   10.062</td> <td>   17.508</td>
+</tr>
+<tr>
+  <th>Radio</th>            <td>  610.2789</td> <td>  662.761</td> <td>    0.921</td> <td> 0.357</td> <td> -690.218</td> <td> 1910.776</td>
+</tr>
+<tr>
+  <th>Radio_cassette</th>   <td> -668.7840</td> <td>  663.182</td> <td>   -1.008</td> <td> 0.313</td> <td>-1970.106</td> <td>  632.538</td>
+</tr>
+<tr>
+  <th>Sport_Model</th>      <td>  292.1513</td> <td>   92.605</td> <td>    3.155</td> <td> 0.002</td> <td>  110.439</td> <td>  473.864</td>
+</tr>
+<tr>
+  <th>Tow_Bar</th>          <td> -274.9117</td> <td>   81.228</td> <td>   -3.384</td> <td> 0.001</td> <td> -434.300</td> <td> -115.524</td>
+</tr>
+<tr>
+  <th>Weight</th>           <td>   16.1431</td> <td>    1.472</td> <td>   10.964</td> <td> 0.000</td> <td>   13.254</td> <td>   19.032</td>
+</tr>
+<tr>
+  <th>cc</th>               <td>   -0.0763</td> <td>    0.079</td> <td>   -0.971</td> <td> 0.332</td> <td>   -0.231</td> <td>    0.078</td>
+</tr>
+<tr>
+  <th>const</th>            <td>   -0.0091</td> <td>    0.001</td> <td>  -15.420</td> <td> 0.000</td> <td>   -0.010</td> <td>   -0.008</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td>91.553</td> <th>  Durbin-Watson:     </th> <td>   2.066</td> 
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.000</td> <th>  Jarque-Bera (JB):  </th> <td> 459.943</td> 
+</tr>
+<tr>
+  <th>Skew:</th>          <td> 0.182</td> <th>  Prob(JB):          </th> <td>1.33e-100</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 6.181</td> <th>  Cond. No.          </th> <td>1.32e+16</td> 
+</tr>
+</table>
+<p><br /><br />Warnings:<br />[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br />[2] The smallest eigenvalue is 3.73e-20. This might indicate that there are<br />strong multicollinearity problems or that the design matrix is singular.</p>
+
+<h2 id="using-vif-check-multicollinearity">Using VIF, Check Multicollinearity</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">statsmodels.stats.outliers_influence</span> <span class="kn">import</span> <span class="n">variance_inflation_factor</span>
+<span class="n">vif</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">vif</span><span class="p">[</span><span class="s">'VIF Factor'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">variance_inflation_factor</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">values</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+<span class="n">vif</span><span class="p">[</span><span class="s">"Features"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">columns</span>
+<span class="n">vif</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/Users/joonholee/opt/anaconda3/lib/python3.8/site-packages/statsmodels/regression/linear_model.py:1685: RuntimeWarning: divide by zero encountered in double_scalars
+  return 1 - self.ssr/self.centered_tss
+/Users/joonholee/opt/anaconda3/lib/python3.8/site-packages/statsmodels/stats/outliers_influence.py:193: RuntimeWarning: divide by zero encountered in double_scalars
+  vif = 1. / (1. - r_squared_i)
+/Users/joonholee/opt/anaconda3/lib/python3.8/site-packages/statsmodels/regression/linear_model.py:1685: RuntimeWarning: invalid value encountered in double_scalars
+  return 1 - self.ssr/self.centered_tss
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>VIF Factor</th>
+      <th>Features</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.000000</td>
+      <td>const</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10.953474</td>
+      <td>Price</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>inf</td>
+      <td>Age_08_04</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>inf</td>
+      <td>Mfg_Month</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>inf</td>
+      <td>Mfg_Year</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2.400334</td>
+      <td>KM</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2.621514</td>
+      <td>HP</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1.143778</td>
+      <td>Met_Color</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1.121303</td>
+      <td>Automatic</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1.258641</td>
+      <td>cc</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1.352288</td>
+      <td>Doors</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>0.000000</td>
+      <td>Cylinders</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>1.271814</td>
+      <td>Gears</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>5.496805</td>
+      <td>Quarterly_Tax</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>4.487491</td>
+      <td>Weight</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>1.210815</td>
+      <td>Mfr_Guarantee</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>1.392485</td>
+      <td>BOVAG_Guarantee</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>1.573026</td>
+      <td>Guarantee_Period</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>2.276617</td>
+      <td>ABS</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>1.612758</td>
+      <td>Airbag_1</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>3.106933</td>
+      <td>Airbag_2</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>1.846429</td>
+      <td>Airco</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>2.009866</td>
+      <td>Automatic_airco</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>2.647036</td>
+      <td>Boardcomputer</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>1.564446</td>
+      <td>CD_Player</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>4.593157</td>
+      <td>Central_Lock</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>4.676311</td>
+      <td>Powered_Windows</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>1.582829</td>
+      <td>Power_Steering</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>62.344621</td>
+      <td>Radio</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>2.076846</td>
+      <td>Mistlamps</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>1.510131</td>
+      <td>Sport_Model</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>2.702141</td>
+      <td>Backseat_Divider</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>1.349642</td>
+      <td>Metallic_Rim</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>62.172860</td>
+      <td>Radio_cassette</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>1.153760</td>
+      <td>Tow_Bar</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>8.094391</td>
+      <td>Diesel</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>NaN</td>
+      <td>Petro</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>1.531541</td>
+      <td>CNG</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Check Residual Using QQ-plot
+</span><span class="n">residual</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">resid</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">qqplot</span><span class="p">(</span><span class="n">residual</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s">'45'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml25/output_23_0.png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Residual Pattern Check For Train Data
+</span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">residual</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">4000</span><span class="p">,</span><span class="mi">30000</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Fitted Values'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Residual'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0, 0.5, 'Residual')
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml25/output_24_1.png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Prediction For Test Data
+</span><span class="n">y_pred_2</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Residual Plot for Test Data
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_test</span> <span class="o">-</span> <span class="n">y_pred_2</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s">"Prediction for Test"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">12000</span><span class="p">,</span> <span class="mi">6000</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml25/output_26_0.png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Mean Squared Error
+</span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+<span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_true</span> <span class="o">=</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">y_pred_2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1302808.6100696896
+</code></pre></div></div>
+
+<h2 id="feature-selection-using-aic">Feature Selection Using AIC</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Function that fits model and return AIC
+</span><span class="k">def</span> <span class="nf">processSubset</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">feature_set</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">feature_set</span><span class="p">)])</span> <span class="c1"># modeling
+</span>    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">()</span> <span class="c1"># fitting
+</span>    <span class="n">AIC</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">aic</span> <span class="c1"># AIC
+</span>    <span class="k">return</span> <span class="p">{</span><span class="s">'model'</span><span class="p">:</span><span class="n">model</span><span class="p">,</span> <span class="s">'AIC'</span><span class="p">:</span><span class="n">AIC</span><span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">processSubset</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">feature_set</span><span class="o">=</span><span class="n">feature_columns</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{'model': &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff39de5d1c0&gt;, 'AIC': 18203.1686998716}
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="c1"># Function that returns best model(lowest AIC)
+</span><span class="k">def</span> <span class="nf">getBest</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">k</span><span class="p">):</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span> <span class="c1"># Starting Time
+</span>    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">itertools</span><span class="p">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">X</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">'const'</span><span class="p">]),</span> <span class="n">k</span><span class="p">):</span>
+        <span class="n">combo</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">combo</span><span class="p">)</span><span class="o">+</span><span class="p">[</span><span class="s">'const'</span><span class="p">])</span>
+        <span class="n">results</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">processSubset</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">feature_set</span><span class="o">=</span><span class="n">combo</span><span class="p">))</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    <span class="n">best_model</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">models</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">].</span><span class="n">argmin</span><span class="p">()]</span>
+    <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Processed"</span><span class="p">,</span> <span class="n">models</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">"Models on"</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="s">"Predictors in"</span><span class="p">,</span>
+          <span class="p">(</span><span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span><span class="p">),</span> <span class="s">"Seconds"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">best_model</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">getBest</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Processed 630 Models on 2 Predictors in 0.7494561672210693 Seconds
+model    &lt;statsmodels.regression.linear_model.Regressio...
+AIC                                                18856.5
+Name: 211, dtype: object
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">itertools</span><span class="p">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">X</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">'const'</span><span class="p">]),</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">combo</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">combo</span><span class="p">)</span><span class="o">+</span><span class="p">[</span><span class="s">'const'</span><span class="p">])</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">combo</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>['ABS', 'Age_08_04', 'const']
+['ABS', 'Airbag_1', 'const']
+['ABS', 'Airbag_2', 'const']
+['ABS', 'Airco', 'const']
+['ABS', 'Automatic', 'const']
+['ABS', 'Automatic_airco', 'const']
+['ABS', 'BOVAG_Guarantee', 'const']
+['ABS', 'Backseat_Divider', 'const']
+['ABS', 'Boardcomputer', 'const']
+['ABS', 'CD_Player', 'const']
+['ABS', 'CNG', 'const']
+['ABS', 'Central_Lock', 'const']
+['ABS', 'Cylinders', 'const']
+['ABS', 'Diesel', 'const']
+['ABS', 'Doors', 'const']
+['ABS', 'Gears', 'const']
+['ABS', 'Guarantee_Period', 'const']
+['ABS', 'HP', 'const']
+['ABS', 'KM', 'const']
+['ABS', 'Met_Color', 'const']
+['ABS', 'Metallic_Rim', 'const']
+['ABS', 'Mfg_Month', 'const']
+['ABS', 'Mfg_Year', 'const']
+['ABS', 'Mfr_Guarantee', 'const']
+['ABS', 'Mistlamps', 'const']
+['ABS', 'Petro', 'const']
+['ABS', 'Power_Steering', 'const']
+['ABS', 'Powered_Windows', 'const']
+['ABS', 'Quarterly_Tax', 'const']
+['ABS', 'Radio', 'const']
+['ABS', 'Radio_cassette', 'const']
+['ABS', 'Sport_Model', 'const']
+['ABS', 'Tow_Bar', 'const']
+['ABS', 'Weight', 'const']
+['ABS', 'cc', 'const']
+['Age_08_04', 'Airbag_1', 'const']
+['Age_08_04', 'Airbag_2', 'const']
+['Age_08_04', 'Airco', 'const']
+['Age_08_04', 'Automatic', 'const']
+['Age_08_04', 'Automatic_airco', 'const']
+['Age_08_04', 'BOVAG_Guarantee', 'const']
+['Age_08_04', 'Backseat_Divider', 'const']
+['Age_08_04', 'Boardcomputer', 'const']
+['Age_08_04', 'CD_Player', 'const']
+['Age_08_04', 'CNG', 'const']
+['Age_08_04', 'Central_Lock', 'const']
+['Age_08_04', 'Cylinders', 'const']
+['Age_08_04', 'Diesel', 'const']
+['Age_08_04', 'Doors', 'const']
+['Age_08_04', 'Gears', 'const']
+['Age_08_04', 'Guarantee_Period', 'const']
+['Age_08_04', 'HP', 'const']
+['Age_08_04', 'KM', 'const']
+['Age_08_04', 'Met_Color', 'const']
+['Age_08_04', 'Metallic_Rim', 'const']
+['Age_08_04', 'Mfg_Month', 'const']
+['Age_08_04', 'Mfg_Year', 'const']
+['Age_08_04', 'Mfr_Guarantee', 'const']
+['Age_08_04', 'Mistlamps', 'const']
+['Age_08_04', 'Petro', 'const']
+['Age_08_04', 'Power_Steering', 'const']
+['Age_08_04', 'Powered_Windows', 'const']
+['Age_08_04', 'Quarterly_Tax', 'const']
+['Age_08_04', 'Radio', 'const']
+['Age_08_04', 'Radio_cassette', 'const']
+['Age_08_04', 'Sport_Model', 'const']
+['Age_08_04', 'Tow_Bar', 'const']
+['Age_08_04', 'Weight', 'const']
+['Age_08_04', 'cc', 'const']
+['Airbag_1', 'Airbag_2', 'const']
+['Airbag_1', 'Airco', 'const']
+['Airbag_1', 'Automatic', 'const']
+['Airbag_1', 'Automatic_airco', 'const']
+['Airbag_1', 'BOVAG_Guarantee', 'const']
+['Airbag_1', 'Backseat_Divider', 'const']
+['Airbag_1', 'Boardcomputer', 'const']
+['Airbag_1', 'CD_Player', 'const']
+['Airbag_1', 'CNG', 'const']
+['Airbag_1', 'Central_Lock', 'const']
+['Airbag_1', 'Cylinders', 'const']
+['Airbag_1', 'Diesel', 'const']
+['Airbag_1', 'Doors', 'const']
+['Airbag_1', 'Gears', 'const']
+['Airbag_1', 'Guarantee_Period', 'const']
+['Airbag_1', 'HP', 'const']
+['Airbag_1', 'KM', 'const']
+['Airbag_1', 'Met_Color', 'const']
+['Airbag_1', 'Metallic_Rim', 'const']
+['Airbag_1', 'Mfg_Month', 'const']
+['Airbag_1', 'Mfg_Year', 'const']
+['Airbag_1', 'Mfr_Guarantee', 'const']
+['Airbag_1', 'Mistlamps', 'const']
+['Airbag_1', 'Petro', 'const']
+['Airbag_1', 'Power_Steering', 'const']
+['Airbag_1', 'Powered_Windows', 'const']
+['Airbag_1', 'Quarterly_Tax', 'const']
+['Airbag_1', 'Radio', 'const']
+['Airbag_1', 'Radio_cassette', 'const']
+['Airbag_1', 'Sport_Model', 'const']
+['Airbag_1', 'Tow_Bar', 'const']
+['Airbag_1', 'Weight', 'const']
+['Airbag_1', 'cc', 'const']
+['Airbag_2', 'Airco', 'const']
+['Airbag_2', 'Automatic', 'const']
+['Airbag_2', 'Automatic_airco', 'const']
+['Airbag_2', 'BOVAG_Guarantee', 'const']
+['Airbag_2', 'Backseat_Divider', 'const']
+['Airbag_2', 'Boardcomputer', 'const']
+['Airbag_2', 'CD_Player', 'const']
+['Airbag_2', 'CNG', 'const']
+['Airbag_2', 'Central_Lock', 'const']
+['Airbag_2', 'Cylinders', 'const']
+['Airbag_2', 'Diesel', 'const']
+['Airbag_2', 'Doors', 'const']
+['Airbag_2', 'Gears', 'const']
+['Airbag_2', 'Guarantee_Period', 'const']
+['Airbag_2', 'HP', 'const']
+['Airbag_2', 'KM', 'const']
+['Airbag_2', 'Met_Color', 'const']
+['Airbag_2', 'Metallic_Rim', 'const']
+['Airbag_2', 'Mfg_Month', 'const']
+['Airbag_2', 'Mfg_Year', 'const']
+['Airbag_2', 'Mfr_Guarantee', 'const']
+['Airbag_2', 'Mistlamps', 'const']
+['Airbag_2', 'Petro', 'const']
+['Airbag_2', 'Power_Steering', 'const']
+['Airbag_2', 'Powered_Windows', 'const']
+['Airbag_2', 'Quarterly_Tax', 'const']
+['Airbag_2', 'Radio', 'const']
+['Airbag_2', 'Radio_cassette', 'const']
+['Airbag_2', 'Sport_Model', 'const']
+['Airbag_2', 'Tow_Bar', 'const']
+['Airbag_2', 'Weight', 'const']
+['Airbag_2', 'cc', 'const']
+['Airco', 'Automatic', 'const']
+['Airco', 'Automatic_airco', 'const']
+['Airco', 'BOVAG_Guarantee', 'const']
+['Airco', 'Backseat_Divider', 'const']
+['Airco', 'Boardcomputer', 'const']
+['Airco', 'CD_Player', 'const']
+['Airco', 'CNG', 'const']
+['Airco', 'Central_Lock', 'const']
+['Airco', 'Cylinders', 'const']
+['Airco', 'Diesel', 'const']
+['Airco', 'Doors', 'const']
+['Airco', 'Gears', 'const']
+['Airco', 'Guarantee_Period', 'const']
+['Airco', 'HP', 'const']
+['Airco', 'KM', 'const']
+['Airco', 'Met_Color', 'const']
+['Airco', 'Metallic_Rim', 'const']
+['Airco', 'Mfg_Month', 'const']
+['Airco', 'Mfg_Year', 'const']
+['Airco', 'Mfr_Guarantee', 'const']
+['Airco', 'Mistlamps', 'const']
+['Airco', 'Petro', 'const']
+['Airco', 'Power_Steering', 'const']
+['Airco', 'Powered_Windows', 'const']
+['Airco', 'Quarterly_Tax', 'const']
+['Airco', 'Radio', 'const']
+['Airco', 'Radio_cassette', 'const']
+['Airco', 'Sport_Model', 'const']
+['Airco', 'Tow_Bar', 'const']
+['Airco', 'Weight', 'const']
+['Airco', 'cc', 'const']
+['Automatic', 'Automatic_airco', 'const']
+['Automatic', 'BOVAG_Guarantee', 'const']
+['Automatic', 'Backseat_Divider', 'const']
+['Automatic', 'Boardcomputer', 'const']
+['Automatic', 'CD_Player', 'const']
+['Automatic', 'CNG', 'const']
+['Automatic', 'Central_Lock', 'const']
+['Automatic', 'Cylinders', 'const']
+['Automatic', 'Diesel', 'const']
+['Automatic', 'Doors', 'const']
+['Automatic', 'Gears', 'const']
+['Automatic', 'Guarantee_Period', 'const']
+['Automatic', 'HP', 'const']
+['Automatic', 'KM', 'const']
+['Automatic', 'Met_Color', 'const']
+['Automatic', 'Metallic_Rim', 'const']
+['Automatic', 'Mfg_Month', 'const']
+['Automatic', 'Mfg_Year', 'const']
+['Automatic', 'Mfr_Guarantee', 'const']
+['Automatic', 'Mistlamps', 'const']
+['Automatic', 'Petro', 'const']
+['Automatic', 'Power_Steering', 'const']
+['Automatic', 'Powered_Windows', 'const']
+['Automatic', 'Quarterly_Tax', 'const']
+['Automatic', 'Radio', 'const']
+['Automatic', 'Radio_cassette', 'const']
+['Automatic', 'Sport_Model', 'const']
+['Automatic', 'Tow_Bar', 'const']
+['Automatic', 'Weight', 'const']
+['Automatic', 'cc', 'const']
+['Automatic_airco', 'BOVAG_Guarantee', 'const']
+['Automatic_airco', 'Backseat_Divider', 'const']
+['Automatic_airco', 'Boardcomputer', 'const']
+['Automatic_airco', 'CD_Player', 'const']
+['Automatic_airco', 'CNG', 'const']
+['Automatic_airco', 'Central_Lock', 'const']
+['Automatic_airco', 'Cylinders', 'const']
+['Automatic_airco', 'Diesel', 'const']
+['Automatic_airco', 'Doors', 'const']
+['Automatic_airco', 'Gears', 'const']
+['Automatic_airco', 'Guarantee_Period', 'const']
+['Automatic_airco', 'HP', 'const']
+['Automatic_airco', 'KM', 'const']
+['Automatic_airco', 'Met_Color', 'const']
+['Automatic_airco', 'Metallic_Rim', 'const']
+['Automatic_airco', 'Mfg_Month', 'const']
+['Automatic_airco', 'Mfg_Year', 'const']
+['Automatic_airco', 'Mfr_Guarantee', 'const']
+['Automatic_airco', 'Mistlamps', 'const']
+['Automatic_airco', 'Petro', 'const']
+['Automatic_airco', 'Power_Steering', 'const']
+['Automatic_airco', 'Powered_Windows', 'const']
+['Automatic_airco', 'Quarterly_Tax', 'const']
+['Automatic_airco', 'Radio', 'const']
+['Automatic_airco', 'Radio_cassette', 'const']
+['Automatic_airco', 'Sport_Model', 'const']
+['Automatic_airco', 'Tow_Bar', 'const']
+['Automatic_airco', 'Weight', 'const']
+['Automatic_airco', 'cc', 'const']
+['BOVAG_Guarantee', 'Backseat_Divider', 'const']
+['BOVAG_Guarantee', 'Boardcomputer', 'const']
+['BOVAG_Guarantee', 'CD_Player', 'const']
+['BOVAG_Guarantee', 'CNG', 'const']
+['BOVAG_Guarantee', 'Central_Lock', 'const']
+['BOVAG_Guarantee', 'Cylinders', 'const']
+['BOVAG_Guarantee', 'Diesel', 'const']
+['BOVAG_Guarantee', 'Doors', 'const']
+['BOVAG_Guarantee', 'Gears', 'const']
+['BOVAG_Guarantee', 'Guarantee_Period', 'const']
+['BOVAG_Guarantee', 'HP', 'const']
+['BOVAG_Guarantee', 'KM', 'const']
+['BOVAG_Guarantee', 'Met_Color', 'const']
+['BOVAG_Guarantee', 'Metallic_Rim', 'const']
+['BOVAG_Guarantee', 'Mfg_Month', 'const']
+['BOVAG_Guarantee', 'Mfg_Year', 'const']
+['BOVAG_Guarantee', 'Mfr_Guarantee', 'const']
+['BOVAG_Guarantee', 'Mistlamps', 'const']
+['BOVAG_Guarantee', 'Petro', 'const']
+['BOVAG_Guarantee', 'Power_Steering', 'const']
+['BOVAG_Guarantee', 'Powered_Windows', 'const']
+['BOVAG_Guarantee', 'Quarterly_Tax', 'const']
+['BOVAG_Guarantee', 'Radio', 'const']
+['BOVAG_Guarantee', 'Radio_cassette', 'const']
+['BOVAG_Guarantee', 'Sport_Model', 'const']
+['BOVAG_Guarantee', 'Tow_Bar', 'const']
+['BOVAG_Guarantee', 'Weight', 'const']
+['BOVAG_Guarantee', 'cc', 'const']
+['Backseat_Divider', 'Boardcomputer', 'const']
+['Backseat_Divider', 'CD_Player', 'const']
+['Backseat_Divider', 'CNG', 'const']
+['Backseat_Divider', 'Central_Lock', 'const']
+['Backseat_Divider', 'Cylinders', 'const']
+['Backseat_Divider', 'Diesel', 'const']
+['Backseat_Divider', 'Doors', 'const']
+['Backseat_Divider', 'Gears', 'const']
+['Backseat_Divider', 'Guarantee_Period', 'const']
+['Backseat_Divider', 'HP', 'const']
+['Backseat_Divider', 'KM', 'const']
+['Backseat_Divider', 'Met_Color', 'const']
+['Backseat_Divider', 'Metallic_Rim', 'const']
+['Backseat_Divider', 'Mfg_Month', 'const']
+['Backseat_Divider', 'Mfg_Year', 'const']
+['Backseat_Divider', 'Mfr_Guarantee', 'const']
+['Backseat_Divider', 'Mistlamps', 'const']
+['Backseat_Divider', 'Petro', 'const']
+['Backseat_Divider', 'Power_Steering', 'const']
+['Backseat_Divider', 'Powered_Windows', 'const']
+['Backseat_Divider', 'Quarterly_Tax', 'const']
+['Backseat_Divider', 'Radio', 'const']
+['Backseat_Divider', 'Radio_cassette', 'const']
+['Backseat_Divider', 'Sport_Model', 'const']
+['Backseat_Divider', 'Tow_Bar', 'const']
+['Backseat_Divider', 'Weight', 'const']
+['Backseat_Divider', 'cc', 'const']
+['Boardcomputer', 'CD_Player', 'const']
+['Boardcomputer', 'CNG', 'const']
+['Boardcomputer', 'Central_Lock', 'const']
+['Boardcomputer', 'Cylinders', 'const']
+['Boardcomputer', 'Diesel', 'const']
+['Boardcomputer', 'Doors', 'const']
+['Boardcomputer', 'Gears', 'const']
+['Boardcomputer', 'Guarantee_Period', 'const']
+['Boardcomputer', 'HP', 'const']
+['Boardcomputer', 'KM', 'const']
+['Boardcomputer', 'Met_Color', 'const']
+['Boardcomputer', 'Metallic_Rim', 'const']
+['Boardcomputer', 'Mfg_Month', 'const']
+['Boardcomputer', 'Mfg_Year', 'const']
+['Boardcomputer', 'Mfr_Guarantee', 'const']
+['Boardcomputer', 'Mistlamps', 'const']
+['Boardcomputer', 'Petro', 'const']
+['Boardcomputer', 'Power_Steering', 'const']
+['Boardcomputer', 'Powered_Windows', 'const']
+['Boardcomputer', 'Quarterly_Tax', 'const']
+['Boardcomputer', 'Radio', 'const']
+['Boardcomputer', 'Radio_cassette', 'const']
+['Boardcomputer', 'Sport_Model', 'const']
+['Boardcomputer', 'Tow_Bar', 'const']
+['Boardcomputer', 'Weight', 'const']
+['Boardcomputer', 'cc', 'const']
+['CD_Player', 'CNG', 'const']
+['CD_Player', 'Central_Lock', 'const']
+['CD_Player', 'Cylinders', 'const']
+['CD_Player', 'Diesel', 'const']
+['CD_Player', 'Doors', 'const']
+['CD_Player', 'Gears', 'const']
+['CD_Player', 'Guarantee_Period', 'const']
+['CD_Player', 'HP', 'const']
+['CD_Player', 'KM', 'const']
+['CD_Player', 'Met_Color', 'const']
+['CD_Player', 'Metallic_Rim', 'const']
+['CD_Player', 'Mfg_Month', 'const']
+['CD_Player', 'Mfg_Year', 'const']
+['CD_Player', 'Mfr_Guarantee', 'const']
+['CD_Player', 'Mistlamps', 'const']
+['CD_Player', 'Petro', 'const']
+['CD_Player', 'Power_Steering', 'const']
+['CD_Player', 'Powered_Windows', 'const']
+['CD_Player', 'Quarterly_Tax', 'const']
+['CD_Player', 'Radio', 'const']
+['CD_Player', 'Radio_cassette', 'const']
+['CD_Player', 'Sport_Model', 'const']
+['CD_Player', 'Tow_Bar', 'const']
+['CD_Player', 'Weight', 'const']
+['CD_Player', 'cc', 'const']
+['CNG', 'Central_Lock', 'const']
+['CNG', 'Cylinders', 'const']
+['CNG', 'Diesel', 'const']
+['CNG', 'Doors', 'const']
+['CNG', 'Gears', 'const']
+['CNG', 'Guarantee_Period', 'const']
+['CNG', 'HP', 'const']
+['CNG', 'KM', 'const']
+['CNG', 'Met_Color', 'const']
+['CNG', 'Metallic_Rim', 'const']
+['CNG', 'Mfg_Month', 'const']
+['CNG', 'Mfg_Year', 'const']
+['CNG', 'Mfr_Guarantee', 'const']
+['CNG', 'Mistlamps', 'const']
+['CNG', 'Petro', 'const']
+['CNG', 'Power_Steering', 'const']
+['CNG', 'Powered_Windows', 'const']
+['CNG', 'Quarterly_Tax', 'const']
+['CNG', 'Radio', 'const']
+['CNG', 'Radio_cassette', 'const']
+['CNG', 'Sport_Model', 'const']
+['CNG', 'Tow_Bar', 'const']
+['CNG', 'Weight', 'const']
+['CNG', 'cc', 'const']
+['Central_Lock', 'Cylinders', 'const']
+['Central_Lock', 'Diesel', 'const']
+['Central_Lock', 'Doors', 'const']
+['Central_Lock', 'Gears', 'const']
+['Central_Lock', 'Guarantee_Period', 'const']
+['Central_Lock', 'HP', 'const']
+['Central_Lock', 'KM', 'const']
+['Central_Lock', 'Met_Color', 'const']
+['Central_Lock', 'Metallic_Rim', 'const']
+['Central_Lock', 'Mfg_Month', 'const']
+['Central_Lock', 'Mfg_Year', 'const']
+['Central_Lock', 'Mfr_Guarantee', 'const']
+['Central_Lock', 'Mistlamps', 'const']
+['Central_Lock', 'Petro', 'const']
+['Central_Lock', 'Power_Steering', 'const']
+['Central_Lock', 'Powered_Windows', 'const']
+['Central_Lock', 'Quarterly_Tax', 'const']
+['Central_Lock', 'Radio', 'const']
+['Central_Lock', 'Radio_cassette', 'const']
+['Central_Lock', 'Sport_Model', 'const']
+['Central_Lock', 'Tow_Bar', 'const']
+['Central_Lock', 'Weight', 'const']
+['Central_Lock', 'cc', 'const']
+['Cylinders', 'Diesel', 'const']
+['Cylinders', 'Doors', 'const']
+['Cylinders', 'Gears', 'const']
+['Cylinders', 'Guarantee_Period', 'const']
+['Cylinders', 'HP', 'const']
+['Cylinders', 'KM', 'const']
+['Cylinders', 'Met_Color', 'const']
+['Cylinders', 'Metallic_Rim', 'const']
+['Cylinders', 'Mfg_Month', 'const']
+['Cylinders', 'Mfg_Year', 'const']
+['Cylinders', 'Mfr_Guarantee', 'const']
+['Cylinders', 'Mistlamps', 'const']
+['Cylinders', 'Petro', 'const']
+['Cylinders', 'Power_Steering', 'const']
+['Cylinders', 'Powered_Windows', 'const']
+['Cylinders', 'Quarterly_Tax', 'const']
+['Cylinders', 'Radio', 'const']
+['Cylinders', 'Radio_cassette', 'const']
+['Cylinders', 'Sport_Model', 'const']
+['Cylinders', 'Tow_Bar', 'const']
+['Cylinders', 'Weight', 'const']
+['Cylinders', 'cc', 'const']
+['Diesel', 'Doors', 'const']
+['Diesel', 'Gears', 'const']
+['Diesel', 'Guarantee_Period', 'const']
+['Diesel', 'HP', 'const']
+['Diesel', 'KM', 'const']
+['Diesel', 'Met_Color', 'const']
+['Diesel', 'Metallic_Rim', 'const']
+['Diesel', 'Mfg_Month', 'const']
+['Diesel', 'Mfg_Year', 'const']
+['Diesel', 'Mfr_Guarantee', 'const']
+['Diesel', 'Mistlamps', 'const']
+['Diesel', 'Petro', 'const']
+['Diesel', 'Power_Steering', 'const']
+['Diesel', 'Powered_Windows', 'const']
+['Diesel', 'Quarterly_Tax', 'const']
+['Diesel', 'Radio', 'const']
+['Diesel', 'Radio_cassette', 'const']
+['Diesel', 'Sport_Model', 'const']
+['Diesel', 'Tow_Bar', 'const']
+['Diesel', 'Weight', 'const']
+['Diesel', 'cc', 'const']
+['Doors', 'Gears', 'const']
+['Doors', 'Guarantee_Period', 'const']
+['Doors', 'HP', 'const']
+['Doors', 'KM', 'const']
+['Doors', 'Met_Color', 'const']
+['Doors', 'Metallic_Rim', 'const']
+['Doors', 'Mfg_Month', 'const']
+['Doors', 'Mfg_Year', 'const']
+['Doors', 'Mfr_Guarantee', 'const']
+['Doors', 'Mistlamps', 'const']
+['Doors', 'Petro', 'const']
+['Doors', 'Power_Steering', 'const']
+['Doors', 'Powered_Windows', 'const']
+['Doors', 'Quarterly_Tax', 'const']
+['Doors', 'Radio', 'const']
+['Doors', 'Radio_cassette', 'const']
+['Doors', 'Sport_Model', 'const']
+['Doors', 'Tow_Bar', 'const']
+['Doors', 'Weight', 'const']
+['Doors', 'cc', 'const']
+['Gears', 'Guarantee_Period', 'const']
+['Gears', 'HP', 'const']
+['Gears', 'KM', 'const']
+['Gears', 'Met_Color', 'const']
+['Gears', 'Metallic_Rim', 'const']
+['Gears', 'Mfg_Month', 'const']
+['Gears', 'Mfg_Year', 'const']
+['Gears', 'Mfr_Guarantee', 'const']
+['Gears', 'Mistlamps', 'const']
+['Gears', 'Petro', 'const']
+['Gears', 'Power_Steering', 'const']
+['Gears', 'Powered_Windows', 'const']
+['Gears', 'Quarterly_Tax', 'const']
+['Gears', 'Radio', 'const']
+['Gears', 'Radio_cassette', 'const']
+['Gears', 'Sport_Model', 'const']
+['Gears', 'Tow_Bar', 'const']
+['Gears', 'Weight', 'const']
+['Gears', 'cc', 'const']
+['Guarantee_Period', 'HP', 'const']
+['Guarantee_Period', 'KM', 'const']
+['Guarantee_Period', 'Met_Color', 'const']
+['Guarantee_Period', 'Metallic_Rim', 'const']
+['Guarantee_Period', 'Mfg_Month', 'const']
+['Guarantee_Period', 'Mfg_Year', 'const']
+['Guarantee_Period', 'Mfr_Guarantee', 'const']
+['Guarantee_Period', 'Mistlamps', 'const']
+['Guarantee_Period', 'Petro', 'const']
+['Guarantee_Period', 'Power_Steering', 'const']
+['Guarantee_Period', 'Powered_Windows', 'const']
+['Guarantee_Period', 'Quarterly_Tax', 'const']
+['Guarantee_Period', 'Radio', 'const']
+['Guarantee_Period', 'Radio_cassette', 'const']
+['Guarantee_Period', 'Sport_Model', 'const']
+['Guarantee_Period', 'Tow_Bar', 'const']
+['Guarantee_Period', 'Weight', 'const']
+['Guarantee_Period', 'cc', 'const']
+['HP', 'KM', 'const']
+['HP', 'Met_Color', 'const']
+['HP', 'Metallic_Rim', 'const']
+['HP', 'Mfg_Month', 'const']
+['HP', 'Mfg_Year', 'const']
+['HP', 'Mfr_Guarantee', 'const']
+['HP', 'Mistlamps', 'const']
+['HP', 'Petro', 'const']
+['HP', 'Power_Steering', 'const']
+['HP', 'Powered_Windows', 'const']
+['HP', 'Quarterly_Tax', 'const']
+['HP', 'Radio', 'const']
+['HP', 'Radio_cassette', 'const']
+['HP', 'Sport_Model', 'const']
+['HP', 'Tow_Bar', 'const']
+['HP', 'Weight', 'const']
+['HP', 'cc', 'const']
+['KM', 'Met_Color', 'const']
+['KM', 'Metallic_Rim', 'const']
+['KM', 'Mfg_Month', 'const']
+['KM', 'Mfg_Year', 'const']
+['KM', 'Mfr_Guarantee', 'const']
+['KM', 'Mistlamps', 'const']
+['KM', 'Petro', 'const']
+['KM', 'Power_Steering', 'const']
+['KM', 'Powered_Windows', 'const']
+['KM', 'Quarterly_Tax', 'const']
+['KM', 'Radio', 'const']
+['KM', 'Radio_cassette', 'const']
+['KM', 'Sport_Model', 'const']
+['KM', 'Tow_Bar', 'const']
+['KM', 'Weight', 'const']
+['KM', 'cc', 'const']
+['Met_Color', 'Metallic_Rim', 'const']
+['Met_Color', 'Mfg_Month', 'const']
+['Met_Color', 'Mfg_Year', 'const']
+['Met_Color', 'Mfr_Guarantee', 'const']
+['Met_Color', 'Mistlamps', 'const']
+['Met_Color', 'Petro', 'const']
+['Met_Color', 'Power_Steering', 'const']
+['Met_Color', 'Powered_Windows', 'const']
+['Met_Color', 'Quarterly_Tax', 'const']
+['Met_Color', 'Radio', 'const']
+['Met_Color', 'Radio_cassette', 'const']
+['Met_Color', 'Sport_Model', 'const']
+['Met_Color', 'Tow_Bar', 'const']
+['Met_Color', 'Weight', 'const']
+['Met_Color', 'cc', 'const']
+['Metallic_Rim', 'Mfg_Month', 'const']
+['Metallic_Rim', 'Mfg_Year', 'const']
+['Metallic_Rim', 'Mfr_Guarantee', 'const']
+['Metallic_Rim', 'Mistlamps', 'const']
+['Metallic_Rim', 'Petro', 'const']
+['Metallic_Rim', 'Power_Steering', 'const']
+['Metallic_Rim', 'Powered_Windows', 'const']
+['Metallic_Rim', 'Quarterly_Tax', 'const']
+['Metallic_Rim', 'Radio', 'const']
+['Metallic_Rim', 'Radio_cassette', 'const']
+['Metallic_Rim', 'Sport_Model', 'const']
+['Metallic_Rim', 'Tow_Bar', 'const']
+['Metallic_Rim', 'Weight', 'const']
+['Metallic_Rim', 'cc', 'const']
+['Mfg_Month', 'Mfg_Year', 'const']
+['Mfg_Month', 'Mfr_Guarantee', 'const']
+['Mfg_Month', 'Mistlamps', 'const']
+['Mfg_Month', 'Petro', 'const']
+['Mfg_Month', 'Power_Steering', 'const']
+['Mfg_Month', 'Powered_Windows', 'const']
+['Mfg_Month', 'Quarterly_Tax', 'const']
+['Mfg_Month', 'Radio', 'const']
+['Mfg_Month', 'Radio_cassette', 'const']
+['Mfg_Month', 'Sport_Model', 'const']
+['Mfg_Month', 'Tow_Bar', 'const']
+['Mfg_Month', 'Weight', 'const']
+['Mfg_Month', 'cc', 'const']
+['Mfg_Year', 'Mfr_Guarantee', 'const']
+['Mfg_Year', 'Mistlamps', 'const']
+['Mfg_Year', 'Petro', 'const']
+['Mfg_Year', 'Power_Steering', 'const']
+['Mfg_Year', 'Powered_Windows', 'const']
+['Mfg_Year', 'Quarterly_Tax', 'const']
+['Mfg_Year', 'Radio', 'const']
+['Mfg_Year', 'Radio_cassette', 'const']
+['Mfg_Year', 'Sport_Model', 'const']
+['Mfg_Year', 'Tow_Bar', 'const']
+['Mfg_Year', 'Weight', 'const']
+['Mfg_Year', 'cc', 'const']
+['Mfr_Guarantee', 'Mistlamps', 'const']
+['Mfr_Guarantee', 'Petro', 'const']
+['Mfr_Guarantee', 'Power_Steering', 'const']
+['Mfr_Guarantee', 'Powered_Windows', 'const']
+['Mfr_Guarantee', 'Quarterly_Tax', 'const']
+['Mfr_Guarantee', 'Radio', 'const']
+['Mfr_Guarantee', 'Radio_cassette', 'const']
+['Mfr_Guarantee', 'Sport_Model', 'const']
+['Mfr_Guarantee', 'Tow_Bar', 'const']
+['Mfr_Guarantee', 'Weight', 'const']
+['Mfr_Guarantee', 'cc', 'const']
+['Mistlamps', 'Petro', 'const']
+['Mistlamps', 'Power_Steering', 'const']
+['Mistlamps', 'Powered_Windows', 'const']
+['Mistlamps', 'Quarterly_Tax', 'const']
+['Mistlamps', 'Radio', 'const']
+['Mistlamps', 'Radio_cassette', 'const']
+['Mistlamps', 'Sport_Model', 'const']
+['Mistlamps', 'Tow_Bar', 'const']
+['Mistlamps', 'Weight', 'const']
+['Mistlamps', 'cc', 'const']
+['Petro', 'Power_Steering', 'const']
+['Petro', 'Powered_Windows', 'const']
+['Petro', 'Quarterly_Tax', 'const']
+['Petro', 'Radio', 'const']
+['Petro', 'Radio_cassette', 'const']
+['Petro', 'Sport_Model', 'const']
+['Petro', 'Tow_Bar', 'const']
+['Petro', 'Weight', 'const']
+['Petro', 'cc', 'const']
+['Power_Steering', 'Powered_Windows', 'const']
+['Power_Steering', 'Quarterly_Tax', 'const']
+['Power_Steering', 'Radio', 'const']
+['Power_Steering', 'Radio_cassette', 'const']
+['Power_Steering', 'Sport_Model', 'const']
+['Power_Steering', 'Tow_Bar', 'const']
+['Power_Steering', 'Weight', 'const']
+['Power_Steering', 'cc', 'const']
+['Powered_Windows', 'Quarterly_Tax', 'const']
+['Powered_Windows', 'Radio', 'const']
+['Powered_Windows', 'Radio_cassette', 'const']
+['Powered_Windows', 'Sport_Model', 'const']
+['Powered_Windows', 'Tow_Bar', 'const']
+['Powered_Windows', 'Weight', 'const']
+['Powered_Windows', 'cc', 'const']
+['Quarterly_Tax', 'Radio', 'const']
+['Quarterly_Tax', 'Radio_cassette', 'const']
+['Quarterly_Tax', 'Sport_Model', 'const']
+['Quarterly_Tax', 'Tow_Bar', 'const']
+['Quarterly_Tax', 'Weight', 'const']
+['Quarterly_Tax', 'cc', 'const']
+['Radio', 'Radio_cassette', 'const']
+['Radio', 'Sport_Model', 'const']
+['Radio', 'Tow_Bar', 'const']
+['Radio', 'Weight', 'const']
+['Radio', 'cc', 'const']
+['Radio_cassette', 'Sport_Model', 'const']
+['Radio_cassette', 'Tow_Bar', 'const']
+['Radio_cassette', 'Weight', 'const']
+['Radio_cassette', 'cc', 'const']
+['Sport_Model', 'Tow_Bar', 'const']
+['Sport_Model', 'Weight', 'const']
+['Sport_Model', 'cc', 'const']
+['Tow_Bar', 'Weight', 'const']
+['Tow_Bar', 'cc', 'const']
+['Weight', 'cc', 'const']
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">models</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"AIC"</span><span class="p">,</span> <span class="s">"model"</span><span class="p">])</span>
+<span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">models</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">getBest</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+<span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Total elapsed time: "</span><span class="p">,</span> <span class="p">(</span><span class="n">toc</span><span class="o">-</span><span class="n">tic</span><span class="p">),</span><span class="s">"seconds"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Processed 36 Models on 1 Predictors in 0.05295109748840332 Seconds
+Processed 630 Models on 2 Predictors in 0.6937060356140137 Seconds
+Processed 7140 Models on 3 Predictors in 8.845685958862305 Seconds
+Total elapsed time:  9.793633222579956 seconds
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">models</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AIC</th>
+      <th>model</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>19148.242112</td>
+      <td>&lt;statsmodels.regression.linear_model.Regressio...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>18856.528454</td>
+      <td>&lt;statsmodels.regression.linear_model.Regressio...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>18613.178629</td>
+      <td>&lt;statsmodels.regression.linear_model.Regressio...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">models</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="s">"model"</span><span class="p">].</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>          <td>Price</td>      <th>  R-squared:         </th> <td>   0.864</td> 
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.864</td> 
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   2281.</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Wed, 06 Jan 2021</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
+</tr>
+<tr>
+  <th>Time:</th>                 <td>08:35:57</td>     <th>  Log-Likelihood:    </th> <td> -9302.6</td> 
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>  1077</td>      <th>  AIC:               </th> <td>1.861e+04</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>  1073</td>      <th>  BIC:               </th> <td>1.863e+04</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     3</td>      <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>        <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P&gt;|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>KM</th>       <td>   -0.0241</td> <td>    0.001</td> <td>  -17.882</td> <td> 0.000</td> <td>   -0.027</td> <td>   -0.021</td>
+</tr>
+<tr>
+  <th>Mfg_Year</th> <td> 1436.0571</td> <td>   37.310</td> <td>   38.490</td> <td> 0.000</td> <td> 1362.849</td> <td> 1509.266</td>
+</tr>
+<tr>
+  <th>Weight</th>   <td>   22.0074</td> <td>    0.952</td> <td>   23.111</td> <td> 0.000</td> <td>   20.139</td> <td>   23.876</td>
+</tr>
+<tr>
+  <th>const</th>    <td>-2.883e+06</td> <td> 7.41e+04</td> <td>  -38.901</td> <td> 0.000</td> <td>-3.03e+06</td> <td>-2.74e+06</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td>213.250</td> <th>  Durbin-Watson:     </th> <td>   1.994</td>
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td>2564.134</td>
+</tr>
+<tr>
+  <th>Skew:</th>          <td>-0.533</td>  <th>  Prob(JB):          </th> <td>    0.00</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td>10.484</td>  <th>  Cond. No.          </th> <td>1.39e+08</td>
+</tr>
+</table>
+<p><br /><br />Warnings:<br />[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br />[2] The condition number is large, 1.39e+08. This might indicate that there are<br />strong multicollinearity or other numerical problems.</p>
+
+<h2 id="using-feedforward-and-aic">Using Feedforward and AIC</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#function that shows feedforward
+</span><span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictors</span><span class="p">):</span>
+    <span class="c1"># Check whether data variables are in pre-defined predictors.
+</span>    <span class="n">remaining_predictors</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">X</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">'const'</span><span class="p">])</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">predictors</span><span class="p">]</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">remaining_predictors</span><span class="p">:</span>
+        <span class="n">results</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">processSubset</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">feature_set</span><span class="o">=</span><span class="n">predictors</span><span class="o">+</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="s">'const'</span><span class="p">]))</span>
+    <span class="c1"># Transfer to Data Frame
+</span>    <span class="n">models</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+    <span class="c1"># Select the minimum AIC model
+</span>    <span class="n">best_model</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">models</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">].</span><span class="n">argmin</span><span class="p">()]</span> <span class="c1"># index
+</span>    <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Processed "</span><span class="p">,</span> <span class="n">models</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">"models on"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s">"predictors in"</span><span class="p">,</span> <span class="p">(</span><span class="n">toc</span><span class="o">-</span><span class="n">tic</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Selected predictors:'</span><span class="p">,</span><span class="n">best_model</span><span class="p">[</span><span class="s">'model'</span><span class="p">].</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span><span class="p">,</span><span class="s">' AIC:'</span><span class="p">,</span><span class="n">best_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">best_model</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># feedforward model
+</span>
+<span class="k">def</span> <span class="nf">forward_model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+    <span class="n">Fmodels</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"AIC"</span><span class="p">,</span> <span class="s">"model"</span><span class="p">])</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="c1"># pre-defined variables
+</span>    <span class="n">predictors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># variables 1~10 : 0~9 -&gt; 1~10
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">'const'</span><span class="p">]))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">Forward_result</span> <span class="o">=</span> <span class="n">forward</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">predictors</span><span class="o">=</span><span class="n">predictors</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">Forward_result</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">Fmodel_before</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="n">Fmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Forward_result</span>
+        <span class="n">predictors</span> <span class="o">=</span> <span class="n">Fmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"model"</span><span class="p">].</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span>
+        <span class="n">Fmodel_before</span> <span class="o">=</span> <span class="n">Fmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"AIC"</span><span class="p">]</span>
+        <span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">predictors</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s">'const'</span><span class="p">]</span>
+    <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Total elapsed time:"</span><span class="p">,</span> <span class="p">(</span><span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span><span class="p">),</span> <span class="s">"seconds."</span><span class="p">)</span>
+
+    <span class="k">return</span><span class="p">(</span><span class="n">Fmodels</span><span class="p">[</span><span class="s">'model'</span><span class="p">][</span><span class="nb">len</span><span class="p">(</span><span class="n">Fmodels</span><span class="p">[</span><span class="s">'model'</span><span class="p">])])</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Forward_best_model</span> <span class="o">=</span> <span class="n">forward_model</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Processed  36 models on 1 predictors in 0.051309823989868164
+Selected predictors: ['Mfg_Year', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f1f2b0&gt;
+Processed  35 models on 2 predictors in 0.04193592071533203
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc0f70&gt;
+Processed  34 models on 3 predictors in 0.03990316390991211
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd77f0&gt;
+Processed  33 models on 4 predictors in 0.041136980056762695
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f16820&gt;
+Processed  32 models on 5 predictors in 0.04191279411315918
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd5bb0&gt;
+Processed  31 models on 6 predictors in 0.04304909706115723
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f285e0&gt;
+Processed  30 models on 7 predictors in 0.04502987861633301
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc09d0&gt;
+Processed  29 models on 8 predictors in 0.042726993560791016
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f16be0&gt;
+Processed  28 models on 9 predictors in 0.04291677474975586
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f1f8e0&gt;
+Processed  27 models on 10 predictors in 0.04385733604431152
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc2970&gt;
+Processed  26 models on 11 predictors in 0.043953895568847656
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc0520&gt;
+Processed  25 models on 12 predictors in 0.03996729850769043
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff36c36c940&gt;
+Processed  24 models on 13 predictors in 0.03893709182739258
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f166d0&gt;
+Processed  23 models on 14 predictors in 0.03901314735412598
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc26d0&gt;
+Processed  22 models on 15 predictors in 0.037045955657958984
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc2280&gt;
+Processed  21 models on 16 predictors in 0.04207611083984375
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff385168b20&gt;
+Processed  20 models on 17 predictors in 0.03994297981262207
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f446d0&gt;
+Processed  19 models on 18 predictors in 0.035218238830566406
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd7ca0&gt;
+Processed  18 models on 19 predictors in 0.033807992935180664
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc21c0&gt;
+Processed  17 models on 20 predictors in 0.03210592269897461
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f28520&gt;
+Processed  16 models on 21 predictors in 0.030421733856201172
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc2610&gt;
+Processed  15 models on 22 predictors in 0.03138422966003418
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f28790&gt;
+Total elapsed time: 0.9624440670013428 seconds.
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Forward_best_model</span><span class="p">.</span><span class="n">aic</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>18184.21667252312
+</code></pre></div></div>
+
+<h2 id="backward-elimination-and-aic">Backward Elimination and AIC</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># backward elimination
+</span><span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">predictors</span><span class="p">):</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">itertools</span><span class="p">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">predictors</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">results</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">processSubset</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="n">y</span><span class="p">,</span><span class="n">feature_set</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">combo</span><span class="p">)</span><span class="o">+</span><span class="p">[</span><span class="s">'const'</span><span class="p">]))</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    <span class="c1"># select the best model(lowest AIC)
+</span>    <span class="n">best_model</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">models</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">].</span><span class="n">argmin</span><span class="p">()]</span>
+    <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Processed "</span><span class="p">,</span> <span class="n">models</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">"models on"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"predictors in"</span><span class="p">,</span>
+          <span class="p">(</span><span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Selected predictors:'</span><span class="p">,</span><span class="n">best_model</span><span class="p">[</span><span class="s">'model'</span><span class="p">].</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span><span class="p">,</span><span class="s">' AIC:'</span><span class="p">,</span><span class="n">best_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">best_model</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># backward elimination model
+</span><span class="k">def</span> <span class="nf">backward_model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">Bmodels</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"AIC"</span><span class="p">,</span> <span class="s">"model"</span><span class="p">],</span> <span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">.</span><span class="n">columns</span><span class="p">)))</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">predictors</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">'const'</span><span class="p">])</span>
+    <span class="n">Bmodel_before</span> <span class="o">=</span> <span class="n">processSubset</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">predictors</span><span class="p">)[</span><span class="s">'AIC'</span><span class="p">]</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">Backward_result</span> <span class="o">=</span> <span class="n">backward</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">predictors</span> <span class="o">=</span> <span class="n">predictors</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Backward_result</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">Bmodel_before</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">Bmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Backward_result</span>
+        <span class="n">predictors</span> <span class="o">=</span> <span class="n">Bmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s">"model"</span><span class="p">].</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span>
+        <span class="n">Bmodel_before</span> <span class="o">=</span> <span class="n">Backward_result</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">]</span>
+        <span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">predictors</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s">'const'</span><span class="p">]</span>
+
+    <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Total elapsed time:"</span><span class="p">,</span> <span class="p">(</span><span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span><span class="p">),</span> <span class="s">"seconds."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Bmodels</span><span class="p">[</span><span class="s">'model'</span><span class="p">].</span><span class="n">dropna</span><span class="p">().</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Backward_best_model</span> <span class="o">=</span> <span class="n">backward_model</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Processed  36 models on 35 predictors in 0.09178304672241211
+Selected predictors: ['ABS', 'Age_08_04', 'Airbag_2', 'Airco', 'Automatic', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Central_Lock', 'Cylinders', 'Diesel', 'Doors', 'Gears', 'Guarantee_Period', 'HP', 'KM', 'Met_Color', 'Metallic_Rim', 'Mfg_Month', 'Mfg_Year', 'Mfr_Guarantee', 'Mistlamps', 'Petro', 'Power_Steering', 'Powered_Windows', 'Quarterly_Tax', 'Radio', 'Radio_cassette', 'Sport_Model', 'Tow_Bar', 'Weight', 'cc', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd79a0&gt;
+Processed  35 models on 34 predictors in 0.07942771911621094
+Selected predictors: ['ABS', 'Age_08_04', 'Airbag_2', 'Airco', 'Automatic', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Central_Lock', 'Cylinders', 'Diesel', 'Doors', 'Gears', 'Guarantee_Period', 'HP', 'KM', 'Met_Color', 'Metallic_Rim', 'Mfg_Month', 'Mfg_Year', 'Mfr_Guarantee', 'Mistlamps', 'Petro', 'Powered_Windows', 'Quarterly_Tax', 'Radio', 'Radio_cassette', 'Sport_Model', 'Tow_Bar', 'Weight', 'cc', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f16850&gt;
+Processed  34 models on 33 predictors in 0.08089590072631836
+Selected predictors: ['ABS', 'Age_08_04', 'Airbag_2', 'Airco', 'Automatic', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Cylinders', 'Diesel', 'Doors', 'Gears', 'Guarantee_Period', 'HP', 'KM', 'Met_Color', 'Metallic_Rim', 'Mfg_Month', 'Mfg_Year', 'Mfr_Guarantee', 'Mistlamps', 'Petro', 'Powered_Windows', 'Quarterly_Tax', 'Radio', 'Radio_cassette', 'Sport_Model', 'Tow_Bar', 'Weight', 'cc', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd5ac0&gt;
+Processed  33 models on 32 predictors in 0.07989501953125
+Selected predictors: ['ABS', 'Age_08_04', 'Airbag_2', 'Airco', 'Automatic', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Cylinders', 'Diesel', 'Doors', 'Gears', 'Guarantee_Period', 'HP', 'KM', 'Met_Color', 'Metallic_Rim', 'Mfg_Month', 'Mfg_Year', 'Mfr_Guarantee', 'Petro', 'Powered_Windows', 'Quarterly_Tax', 'Radio', 'Radio_cassette', 'Sport_Model', 'Tow_Bar', 'Weight', 'cc', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f165e0&gt;
+Processed  32 models on 31 predictors in 0.07679104804992676
+Selected predictors: ['ABS', 'Age_08_04', 'Airbag_2', 'Airco', 'Automatic', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Cylinders', 'Diesel', 'Doors', 'Guarantee_Period', 'HP', 'KM', 'Met_Color', 'Metallic_Rim', 'Mfg_Month', 'Mfg_Year', 'Mfr_Guarantee', 'Petro', 'Powered_Windows', 'Quarterly_Tax', 'Radio', 'Radio_cassette', 'Sport_Model', 'Tow_Bar', 'Weight', 'cc', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc0610&gt;
+Processed  31 models on 30 predictors in 0.06960821151733398
+Selected predictors: ['ABS', 'Age_08_04', 'Airbag_2', 'Airco', 'Automatic', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Cylinders', 'Diesel', 'Guarantee_Period', 'HP', 'KM', 'Met_Color', 'Metallic_Rim', 'Mfg_Month', 'Mfg_Year', 'Mfr_Guarantee', 'Petro', 'Powered_Windows', 'Quarterly_Tax', 'Radio', 'Radio_cassette', 'Sport_Model', 'Tow_Bar', 'Weight', 'cc', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff3963e3b50&gt;
+Processed  30 models on 29 predictors in 0.06864714622497559
+Selected predictors: ['ABS', 'Age_08_04', 'Airbag_2', 'Airco', 'Automatic', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Cylinders', 'Diesel', 'Guarantee_Period', 'HP', 'KM', 'Metallic_Rim', 'Mfg_Month', 'Mfg_Year', 'Mfr_Guarantee', 'Petro', 'Powered_Windows', 'Quarterly_Tax', 'Radio', 'Radio_cassette', 'Sport_Model', 'Tow_Bar', 'Weight', 'cc', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc0f40&gt;
+Processed  29 models on 28 predictors in 0.06637692451477051
+Selected predictors: ['ABS', 'Age_08_04', 'Airbag_2', 'Airco', 'Automatic', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Cylinders', 'Diesel', 'Guarantee_Period', 'HP', 'KM', 'Metallic_Rim', 'Mfg_Month', 'Mfg_Year', 'Mfr_Guarantee', 'Petro', 'Powered_Windows', 'Quarterly_Tax', 'Radio_cassette', 'Sport_Model', 'Tow_Bar', 'Weight', 'cc', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f44be0&gt;
+Processed  28 models on 27 predictors in 0.06002688407897949
+Selected predictors: ['ABS', 'Age_08_04', 'Airbag_2', 'Airco', 'Automatic', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Cylinders', 'Diesel', 'Guarantee_Period', 'HP', 'KM', 'Metallic_Rim', 'Mfg_Month', 'Mfg_Year', 'Mfr_Guarantee', 'Petro', 'Powered_Windows', 'Quarterly_Tax', 'Sport_Model', 'Tow_Bar', 'Weight', 'cc', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc2640&gt;
+Processed  27 models on 26 predictors in 0.057373046875
+Selected predictors: ['ABS', 'Age_08_04', 'Airbag_2', 'Airco', 'Automatic', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Cylinders', 'Diesel', 'Guarantee_Period', 'HP', 'KM', 'Metallic_Rim', 'Mfg_Month', 'Mfg_Year', 'Mfr_Guarantee', 'Petro', 'Powered_Windows', 'Quarterly_Tax', 'Sport_Model', 'Tow_Bar', 'Weight', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd7910&gt;
+Processed  26 models on 25 predictors in 0.05675196647644043
+Selected predictors: ['ABS', 'Age_08_04', 'Airbag_2', 'Airco', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Cylinders', 'Diesel', 'Guarantee_Period', 'HP', 'KM', 'Metallic_Rim', 'Mfg_Month', 'Mfg_Year', 'Mfr_Guarantee', 'Petro', 'Powered_Windows', 'Quarterly_Tax', 'Sport_Model', 'Tow_Bar', 'Weight', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f28fd0&gt;
+Processed  25 models on 24 predictors in 0.05087733268737793
+Selected predictors: ['ABS', 'Age_08_04', 'Airco', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Cylinders', 'Diesel', 'Guarantee_Period', 'HP', 'KM', 'Metallic_Rim', 'Mfg_Month', 'Mfg_Year', 'Mfr_Guarantee', 'Petro', 'Powered_Windows', 'Quarterly_Tax', 'Sport_Model', 'Tow_Bar', 'Weight', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff36c377550&gt;
+Processed  24 models on 23 predictors in 0.04692792892456055
+Selected predictors: ['ABS', 'Age_08_04', 'Airco', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Cylinders', 'Diesel', 'Guarantee_Period', 'HP', 'KM', 'Metallic_Rim', 'Mfg_Month', 'Mfg_Year', 'Mfr_Guarantee', 'Powered_Windows', 'Quarterly_Tax', 'Sport_Model', 'Tow_Bar', 'Weight', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc2430&gt;
+Processed  23 models on 22 predictors in 0.0440068244934082
+Selected predictors: ['ABS', 'Age_08_04', 'Airco', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Cylinders', 'Diesel', 'Guarantee_Period', 'HP', 'KM', 'Metallic_Rim', 'Mfg_Month', 'Mfr_Guarantee', 'Powered_Windows', 'Quarterly_Tax', 'Sport_Model', 'Tow_Bar', 'Weight', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd5ca0&gt;
+Processed  22 models on 21 predictors in 0.04205799102783203
+Selected predictors: ['ABS', 'Age_08_04', 'Airco', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'Boardcomputer', 'CD_Player', 'CNG', 'Diesel', 'Guarantee_Period', 'HP', 'KM', 'Metallic_Rim', 'Mfg_Month', 'Mfr_Guarantee', 'Powered_Windows', 'Quarterly_Tax', 'Sport_Model', 'Tow_Bar', 'Weight', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc09a0&gt;
+Processed  21 models on 20 predictors in 0.053166866302490234
+Selected predictors: ['ABS', 'Age_08_04', 'Airco', 'Automatic_airco', 'BOVAG_Guarantee', 'Backseat_Divider', 'CD_Player', 'CNG', 'Diesel', 'Guarantee_Period', 'HP', 'KM', 'Metallic_Rim', 'Mfg_Month', 'Mfr_Guarantee', 'Powered_Windows', 'Quarterly_Tax', 'Sport_Model', 'Tow_Bar', 'Weight', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc2ca0&gt;
+Total elapsed time: 1.0788190364837646 seconds.
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Backward_best_model</span><span class="p">.</span><span class="n">aic</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>18184.216672523162
+</code></pre></div></div>
+
+<h2 id="stepwise-and-aic">Stepwise and AIC</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">Stepwise_model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+    <span class="n">Stepmodels</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"AIC"</span><span class="p">,</span> <span class="s">"model"</span><span class="p">])</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">predictors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">Smodel_before</span> <span class="o">=</span> <span class="n">processSubset</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">predictors</span><span class="o">+</span><span class="p">[</span><span class="s">'const'</span><span class="p">])[</span><span class="s">'AIC'</span><span class="p">]</span>
+    <span class="c1"># variables 1~10 : 0~9 -&gt; 1~10
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">'const'</span><span class="p">]))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">Forward_result</span> <span class="o">=</span> <span class="n">forward</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">predictors</span><span class="o">=</span><span class="n">predictors</span><span class="p">)</span> <span class="c1"># constant added
+</span>        <span class="k">print</span><span class="p">(</span><span class="s">'forward'</span><span class="p">)</span>
+        <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Forward_result</span>
+        <span class="n">predictors</span> <span class="o">=</span> <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"model"</span><span class="p">].</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span>
+        <span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">predictors</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s">'const'</span><span class="p">]</span>
+        <span class="n">Backward_result</span> <span class="o">=</span> <span class="n">backward</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">predictors</span><span class="o">=</span><span class="n">predictors</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Backward_result</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">]</span><span class="o">&lt;</span> <span class="n">Forward_result</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">]:</span>
+            <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Backward_result</span>
+            <span class="n">predictors</span> <span class="o">=</span> <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"model"</span><span class="p">].</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span>
+            <span class="n">Smodel_before</span> <span class="o">=</span> <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"AIC"</span><span class="p">]</span>
+            <span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">predictors</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s">'const'</span><span class="p">]</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'backward'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">'AIC'</span><span class="p">]</span><span class="o">&gt;</span> <span class="n">Smodel_before</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Smodel_before</span> <span class="o">=</span> <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"AIC"</span><span class="p">]</span>
+    <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Total elapsed time:"</span><span class="p">,</span> <span class="p">(</span><span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span><span class="p">),</span> <span class="s">"seconds."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Stepmodels</span><span class="p">[</span><span class="s">'model'</span><span class="p">][</span><span class="nb">len</span><span class="p">(</span><span class="n">Stepmodels</span><span class="p">[</span><span class="s">'model'</span><span class="p">])])</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Stepwise_best_model</span><span class="o">=</span><span class="n">Stepwise_model</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Processed  36 models on 1 predictors in 0.046244144439697266
+Selected predictors: ['Mfg_Year', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f16dc0&gt;
+forward
+Processed  1 models on 0 predictors in 0.0020759105682373047
+Selected predictors: ['const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376db9a30&gt;
+Processed  35 models on 2 predictors in 0.04328203201293945
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd7640&gt;
+forward
+Processed  2 models on 1 predictors in 0.0041429996490478516
+Selected predictors: ['Mfg_Year', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff3963f0d90&gt;
+Processed  34 models on 3 predictors in 0.04217982292175293
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376db96a0&gt;
+forward
+Processed  3 models on 2 predictors in 0.006243228912353516
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff3963e3130&gt;
+Processed  33 models on 4 predictors in 0.04342913627624512
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f0b700&gt;
+forward
+Processed  4 models on 3 predictors in 0.008071184158325195
+Selected predictors: ['Mfg_Year', 'Weight', 'KM', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc2fd0&gt;
+Processed  32 models on 5 predictors in 0.04354095458984375
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd5700&gt;
+forward
+Processed  5 models on 4 predictors in 0.009791851043701172
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376db9c70&gt;
+Processed  31 models on 6 predictors in 0.04703831672668457
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376db9df0&gt;
+forward
+Processed  6 models on 5 predictors in 0.010483741760253906
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f44850&gt;
+Processed  30 models on 7 predictors in 0.043623924255371094
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f283a0&gt;
+forward
+Processed  7 models on 6 predictors in 0.013200044631958008
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376db99a0&gt;
+Processed  29 models on 8 predictors in 0.047222137451171875
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f1e6a0&gt;
+forward
+Processed  8 models on 7 predictors in 0.016467809677124023
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f44be0&gt;
+Processed  28 models on 9 predictors in 0.05187177658081055
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f16a90&gt;
+forward
+Processed  9 models on 8 predictors in 0.016223907470703125
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd7ac0&gt;
+Processed  27 models on 10 predictors in 0.044255971908569336
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc2970&gt;
+forward
+Processed  10 models on 9 predictors in 0.017006874084472656
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff385168af0&gt;
+Processed  26 models on 11 predictors in 0.04333901405334473
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376db9070&gt;
+forward
+Processed  11 models on 10 predictors in 0.019193172454833984
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f16430&gt;
+Processed  25 models on 12 predictors in 0.04718613624572754
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376db9d00&gt;
+forward
+Processed  12 models on 11 predictors in 0.02122807502746582
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc0ac0&gt;
+Processed  24 models on 13 predictors in 0.03974509239196777
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc0bb0&gt;
+forward
+Processed  13 models on 12 predictors in 0.022813081741333008
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Quarterly_Tax', 'CNG', 'Diesel', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f28550&gt;
+Processed  23 models on 14 predictors in 0.03941822052001953
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc2700&gt;
+forward
+Processed  14 models on 13 predictors in 0.025166034698486328
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc2ee0&gt;
+Processed  22 models on 15 predictors in 0.038865089416503906
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff36c377d60&gt;
+forward
+Processed  15 models on 14 predictors in 0.026324033737182617
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f35af0&gt;
+Processed  21 models on 16 predictors in 0.03781008720397949
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376db9fa0&gt;
+forward
+Processed  16 models on 15 predictors in 0.030161142349243164
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff36c36c430&gt;
+Processed  20 models on 17 predictors in 0.040255069732666016
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc23a0&gt;
+forward
+Processed  17 models on 16 predictors in 0.03247714042663574
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd58e0&gt;
+Processed  19 models on 18 predictors in 0.03638482093811035
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd7ca0&gt;
+forward
+Processed  18 models on 17 predictors in 0.03403925895690918
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff36c36c400&gt;
+Processed  18 models on 19 predictors in 0.03527688980102539
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc2a30&gt;
+forward
+Processed  19 models on 18 predictors in 0.03639864921569824
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff3963f0d90&gt;
+Processed  17 models on 20 predictors in 0.03433704376220703
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f35af0&gt;
+forward
+Processed  20 models on 19 predictors in 0.03732609748840332
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff36c36c940&gt;
+Processed  16 models on 21 predictors in 0.03263998031616211
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f1ed00&gt;
+forward
+Processed  21 models on 20 predictors in 0.04057598114013672
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff3963f0220&gt;
+Processed  15 models on 22 predictors in 0.03088998794555664
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc0160&gt;
+forward
+Processed  22 models on 21 predictors in 0.042059898376464844
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff3963f0d90&gt;
+backward
+Processed  15 models on 22 predictors in 0.03145289421081543
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376daeac0&gt;
+forward
+Processed  22 models on 21 predictors in 0.04304695129394531
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376db9460&gt;
+backward
+Processed  15 models on 22 predictors in 0.029968738555908203
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f28460&gt;
+forward
+Processed  22 models on 21 predictors in 0.041710853576660156
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc0b50&gt;
+backward
+Processed  15 models on 22 predictors in 0.029713153839111328
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd5b20&gt;
+forward
+Processed  22 models on 21 predictors in 0.04184722900390625
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd70d0&gt;
+backward
+Processed  15 models on 22 predictors in 0.029603004455566406
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376db9a00&gt;
+forward
+Processed  22 models on 21 predictors in 0.043662071228027344
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff385168a90&gt;
+backward
+Processed  15 models on 22 predictors in 0.02975010871887207
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376daed60&gt;
+forward
+Processed  22 models on 21 predictors in 0.04123806953430176
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f44880&gt;
+backward
+Processed  15 models on 22 predictors in 0.02954697608947754
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376daeaf0&gt;
+forward
+Processed  22 models on 21 predictors in 0.0420527458190918
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff36c36cee0&gt;
+backward
+Processed  15 models on 22 predictors in 0.029139041900634766
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376daec40&gt;
+forward
+Processed  22 models on 21 predictors in 0.04445791244506836
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376db9490&gt;
+backward
+Processed  15 models on 22 predictors in 0.03146696090698242
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dae9a0&gt;
+forward
+Processed  22 models on 21 predictors in 0.044550180435180664
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff370f16730&gt;
+backward
+Processed  15 models on 22 predictors in 0.03165316581726074
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dae490&gt;
+forward
+Processed  22 models on 21 predictors in 0.04656481742858887
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dd59d0&gt;
+backward
+Processed  15 models on 22 predictors in 0.03325796127319336
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff39d65b3a0&gt;
+forward
+Processed  22 models on 21 predictors in 0.04699993133544922
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff3963e3b50&gt;
+backward
+Processed  15 models on 22 predictors in 0.03199005126953125
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff39d65b970&gt;
+forward
+Processed  22 models on 21 predictors in 0.04788804054260254
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff39d6c7190&gt;
+backward
+Processed  15 models on 22 predictors in 0.03226590156555176
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff376dc0eb0&gt;
+forward
+Processed  22 models on 21 predictors in 0.04380297660827637
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff385168d30&gt;
+backward
+Processed  15 models on 22 predictors in 0.03445887565612793
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff39e7f50d0&gt;
+forward
+Processed  22 models on 21 predictors in 0.04657101631164551
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff39ea16bb0&gt;
+backward
+Processed  15 models on 22 predictors in 0.03381919860839844
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'Cylinders', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff39d65beb0&gt;
+forward
+Processed  22 models on 21 predictors in 0.047460317611694336
+Selected predictors: ['Mfg_Year', 'Automatic_airco', 'Weight', 'KM', 'HP', 'BOVAG_Guarantee', 'Powered_Windows', 'Guarantee_Period', 'Mfr_Guarantee', 'Sport_Model', 'Quarterly_Tax', 'CNG', 'Diesel', 'Tow_Bar', 'ABS', 'Metallic_Rim', 'Backseat_Divider', 'Age_08_04', 'Airco', 'CD_Player', 'Boardcomputer', 'const']  AIC: &lt;statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x7ff39d60fdf0&gt;
+backward
+Total elapsed time: 2.7432610988616943 seconds.
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Stepwise_best_model</span><span class="p">.</span><span class="n">aic</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>18184.21667252312
+</code></pre></div></div>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

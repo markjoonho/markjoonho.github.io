@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "25. Multi Linear Regression Feature Selection Practice(3) for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML, Fast Campus ML practice",
+      "url"      : "/blog/ml-25",
+      "date"     : "2021-01-06 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "24. Polynomial Regression for Machine Learning",
       "category" : "",
       "tags"     : "Fast Campus ML",
@@ -33,9 +41,9 @@
     } ,
   
     {
-      "title"    : "20. Multi Linear Regression Practice(2) for Machine Learning",
+      "title"    : "20. Multi Linear Regression Multicollinearlity Practice(2) for Machine Learning",
       "category" : "",
-      "tags"     : "Fast Campus ML",
+      "tags"     : "Fast Campus ML, Fast Campus ML practice",
       "url"      : "/blog/ml-20",
       "date"     : "2021-01-03 00:00:00 +0900"
     } ,
@@ -67,7 +75,7 @@
     {
       "title"    : "16. Multi Linear Regression Practice(1) for Machine Learning",
       "category" : "",
-      "tags"     : "Fast Campus ML",
+      "tags"     : "Fast Campus ML, Fast Campus ML practice",
       "url"      : "/blog/ml-16",
       "date"     : "2020-12-31 00:00:00 +0900"
     } ,
@@ -534,6 +542,14 @@
       "tags"     : "Introduction to ML with Python",
       "url"      : "/blog/intro-to-ml-01",
       "date"     : "2020-12-02 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "01. Tensorflow with Python",
+      "category" : "",
+      "tags"     : "Coding Everybody Tensorflow Python",
+      "url"      : "/blog/tf-python-01",
+      "date"     : "2020-01-05 00:00:00 +0900"
     } 
   
 ]
