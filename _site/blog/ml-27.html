@@ -1,0 +1,2145 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta
+    property="og:title"
+    content="27. Logistic Regression Practice for Machine Learning"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    27. Logistic Regression Practice for Machine Learning
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>27. Logistic Regression Practice for Machine Learning</b></h1>
+
+<p class="post-metadata text-muted">
+  08 January 2021 -  
+  <b>43 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-ml">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus ML</span>
+    </a>
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-ml-practice">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus ML practice</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">roc_auc_score</span><span class="p">,</span> <span class="n">roc_curve</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="n">sm</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">time</span>
+</code></pre></div></div>
+
+<h1 id="logistic-regression">Logistic Regression</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ploan</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">"./data/Personal Loan.csv"</span><span class="p">)</span>
+<span class="n">ploan</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ID</th>
+      <th>Age</th>
+      <th>Experience</th>
+      <th>Income</th>
+      <th>ZIP Code</th>
+      <th>Family</th>
+      <th>CCAvg</th>
+      <th>Education</th>
+      <th>Mortgage</th>
+      <th>Personal Loan</th>
+      <th>Securities Account</th>
+      <th>CD Account</th>
+      <th>Online</th>
+      <th>CreditCard</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>25</td>
+      <td>1</td>
+      <td>49</td>
+      <td>91107</td>
+      <td>4</td>
+      <td>1.6</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>45</td>
+      <td>19</td>
+      <td>34</td>
+      <td>90089</td>
+      <td>3</td>
+      <td>1.5</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>39</td>
+      <td>15</td>
+      <td>11</td>
+      <td>94720</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>35</td>
+      <td>9</td>
+      <td>100</td>
+      <td>94112</td>
+      <td>1</td>
+      <td>2.7</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>35</td>
+      <td>8</td>
+      <td>45</td>
+      <td>91330</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Remove ID, ZIP Code
+</span><span class="n">ploan_processed</span> <span class="o">=</span> <span class="n">ploan</span><span class="p">.</span><span class="n">dropna</span><span class="p">().</span><span class="n">drop</span><span class="p">([</span><span class="s">'ID'</span><span class="p">,</span><span class="s">"ZIP Code"</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ploan_processed</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Age</th>
+      <th>Experience</th>
+      <th>Income</th>
+      <th>Family</th>
+      <th>CCAvg</th>
+      <th>Education</th>
+      <th>Mortgage</th>
+      <th>Personal Loan</th>
+      <th>Securities Account</th>
+      <th>CD Account</th>
+      <th>Online</th>
+      <th>CreditCard</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>25</td>
+      <td>1</td>
+      <td>49</td>
+      <td>4</td>
+      <td>1.6</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>45</td>
+      <td>19</td>
+      <td>34</td>
+      <td>3</td>
+      <td>1.5</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>39</td>
+      <td>15</td>
+      <td>11</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>35</td>
+      <td>9</td>
+      <td>100</td>
+      <td>1</td>
+      <td>2.7</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>35</td>
+      <td>8</td>
+      <td>45</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># add constant
+</span><span class="n">ploan_processed</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">ploan_processed</span><span class="p">,</span> <span class="n">has_constant</span><span class="o">=</span><span class="s">"add"</span><span class="p">)</span>
+<span class="n">ploan_processed</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>const</th>
+      <th>Age</th>
+      <th>Experience</th>
+      <th>Income</th>
+      <th>Family</th>
+      <th>CCAvg</th>
+      <th>Education</th>
+      <th>Mortgage</th>
+      <th>Personal Loan</th>
+      <th>Securities Account</th>
+      <th>CD Account</th>
+      <th>Online</th>
+      <th>CreditCard</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.0</td>
+      <td>25</td>
+      <td>1</td>
+      <td>49</td>
+      <td>4</td>
+      <td>1.6</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.0</td>
+      <td>45</td>
+      <td>19</td>
+      <td>34</td>
+      <td>3</td>
+      <td>1.5</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1.0</td>
+      <td>39</td>
+      <td>15</td>
+      <td>11</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.0</td>
+      <td>35</td>
+      <td>9</td>
+      <td>100</td>
+      <td>1</td>
+      <td>2.7</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.0</td>
+      <td>35</td>
+      <td>8</td>
+      <td>45</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h1 id="set-datatraining-data-test-data-x-y">Set Data(training data, test data, X, y)</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1"># Loaned or not: 1 or 0
+</span><span class="n">feature</span> <span class="o">=</span> <span class="n">ploan_processed</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">'Personal Loan'</span><span class="p">])</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">ploan_processed</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ploan_processed</span><span class="p">[</span><span class="s">'Personal Loan'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">train_x</span><span class="p">,</span> <span class="n">test_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">test_y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">train_size</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">train_x</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test_x</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">train_y</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test_y</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(1750, 12) (750, 12) (1750,) (750,)
+</code></pre></div></div>
+
+<h1 id="modeling-logistic-regression-y--fx">Modeling Logistic Regression y = f(x)</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># fit logistic model
+</span><span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">Logit</span><span class="p">(</span><span class="n">train_y</span><span class="p">,</span> <span class="n">train_x</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">'newton'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Optimization terminated successfully.
+         Current function value: 0.131055
+         Iterations 9
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">results</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>     <td>Personal Loan</td>  <th>  No. Observations:  </th>   <td>  1750</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>      <th>  Df Residuals:      </th>   <td>  1738</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>    11</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Fri, 08 Jan 2021</td> <th>  Pseudo R-squ.:     </th>   <td>0.6030</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>06:37:19</td>     <th>  Log-Likelihood:    </th>  <td> -229.35</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -577.63</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>2.927e-142</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+           <td></td>             <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P&gt;|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Age</th>                <td>    0.0245</td> <td>    0.102</td> <td>    0.240</td> <td> 0.810</td> <td>   -0.175</td> <td>    0.224</td>
+</tr>
+<tr>
+  <th>CCAvg</th>              <td>    0.0985</td> <td>    0.063</td> <td>    1.562</td> <td> 0.118</td> <td>   -0.025</td> <td>    0.222</td>
+</tr>
+<tr>
+  <th>CD Account</th>         <td>    4.3726</td> <td>    0.568</td> <td>    7.703</td> <td> 0.000</td> <td>    3.260</td> <td>    5.485</td>
+</tr>
+<tr>
+  <th>CreditCard</th>         <td>   -1.2374</td> <td>    0.337</td> <td>   -3.667</td> <td> 0.000</td> <td>   -1.899</td> <td>   -0.576</td>
+</tr>
+<tr>
+  <th>Education</th>          <td>    1.5203</td> <td>    0.190</td> <td>    7.999</td> <td> 0.000</td> <td>    1.148</td> <td>    1.893</td>
+</tr>
+<tr>
+  <th>Experience</th>         <td>   -0.0070</td> <td>    0.102</td> <td>   -0.069</td> <td> 0.945</td> <td>   -0.206</td> <td>    0.192</td>
+</tr>
+<tr>
+  <th>Family</th>             <td>    0.7579</td> <td>    0.128</td> <td>    5.914</td> <td> 0.000</td> <td>    0.507</td> <td>    1.009</td>
+</tr>
+<tr>
+  <th>Income</th>             <td>    0.0547</td> <td>    0.004</td> <td>   12.659</td> <td> 0.000</td> <td>    0.046</td> <td>    0.063</td>
+</tr>
+<tr>
+  <th>Mortgage</th>           <td>   -0.0001</td> <td>    0.001</td> <td>   -0.144</td> <td> 0.885</td> <td>   -0.002</td> <td>    0.002</td>
+</tr>
+<tr>
+  <th>Online</th>             <td>   -0.4407</td> <td>    0.263</td> <td>   -1.674</td> <td> 0.094</td> <td>   -0.957</td> <td>    0.075</td>
+</tr>
+<tr>
+  <th>Securities Account</th> <td>   -1.8520</td> <td>    0.561</td> <td>   -3.299</td> <td> 0.001</td> <td>   -2.952</td> <td>   -0.752</td>
+</tr>
+<tr>
+  <th>const</th>              <td>  -13.9203</td> <td>    2.773</td> <td>   -5.021</td> <td> 0.000</td> <td>  -19.354</td> <td>   -8.486</td>
+</tr>
+</table>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Logit
+</span><span class="n">results</span><span class="p">.</span><span class="n">params</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Age                    0.024471
+CCAvg                  0.098468
+CD Account             4.372577
+CreditCard            -1.237447
+Education              1.520329
+Experience            -0.007032
+Family                 0.757911
+Income                 0.054695
+Mortgage              -0.000133
+Online                -0.440746
+Securities Account    -1.852006
+const                -13.920298
+dtype: float64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Each time the age increases by one, the probability of loaning multipies by 1.25.
+# Each time the income increases by one, the probability of loaning multipies by 1.05.
+# Each time the number of family increases by one, the probability of loaning multipies by 2.13.
+# Each time the work experience increases by one, the probability of loaning multipies by 0.99.
+</span><span class="n">np</span><span class="p">.</span><span class="n">exp</span><span class="p">(</span><span class="n">results</span><span class="p">.</span><span class="n">params</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Age                   1.024773e+00
+CCAvg                 1.103479e+00
+CD Account            7.924761e+01
+CreditCard            2.901239e-01
+Education             4.573729e+00
+Experience            9.929928e-01
+Family                2.133814e+00
+Income                1.056218e+00
+Mortgage              9.998665e-01
+Online                6.435563e-01
+Securities Account    1.569221e-01
+const                 9.005163e-07
+dtype: float64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># predict y_hat
+</span><span class="n">pred_y</span> <span class="o">=</span> <span class="n">results</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span>
+<span class="n">pred_y</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>277     0.019982
+914     0.959460
+542     0.005239
+32      0.011344
+2360    0.084464
+dtype: float64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">cut_off</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">threshold</span><span class="p">):</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">y</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># use copy, it does not effect previous y val
+</span>    <span class="n">Y</span><span class="p">[</span><span class="n">Y</span><span class="o">&gt;</span><span class="n">threshold</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">Y</span><span class="p">[</span><span class="n">Y</span><span class="o">&lt;=</span><span class="n">threshold</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">Y</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+<span class="n">pred_Y</span> <span class="o">=</span> <span class="n">cut_off</span><span class="p">(</span><span class="n">pred_y</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">pred_Y</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>277     0
+914     1
+542     0
+32      0
+2360    0
+dtype: int64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># confusion matrix
+</span><span class="n">cfmat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_Y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">cfmat</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[[661  12]
+ [ 28  49]]
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## confusion matrix accuracy
+</span><span class="p">(</span><span class="n">cfmat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">cfmat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_Y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.9466666666666667
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">acc</span><span class="p">(</span><span class="n">cfmat</span><span class="p">):</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="p">(</span><span class="n">cfmat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">cfmat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">cfmat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cfmat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cfmat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cfmat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">acc</span>
+<span class="k">print</span><span class="p">(</span><span class="n">acc</span><span class="p">(</span><span class="n">cfmat</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.9466666666666667
+</code></pre></div></div>
+
+<h2 id="accuracy-by-cut-off">Accuracy by Cut-off</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'ACC'</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">threshold</span><span class="p">:</span>
+    <span class="n">pred_Y</span> <span class="o">=</span> <span class="n">cut_off</span><span class="p">(</span><span class="n">pred_y</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">cfmat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_Y</span><span class="p">)</span>
+    <span class="n">table</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">acc</span><span class="p">(</span><span class="n">cfmat</span><span class="p">)</span>
+<span class="n">table</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="n">name</span><span class="o">=</span><span class="s">'threshold'</span>
+<span class="n">table</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">name</span><span class="o">=</span><span class="s">'performance'</span>
+<span class="n">table</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>performance</th>
+      <th>ACC</th>
+    </tr>
+    <tr>
+      <th>threshold</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.0</th>
+      <td>0.102667</td>
+    </tr>
+    <tr>
+      <th>0.1</th>
+      <td>0.908000</td>
+    </tr>
+    <tr>
+      <th>0.2</th>
+      <td>0.922667</td>
+    </tr>
+    <tr>
+      <th>0.3</th>
+      <td>0.933333</td>
+    </tr>
+    <tr>
+      <th>0.4</th>
+      <td>0.934667</td>
+    </tr>
+    <tr>
+      <th>0.5</th>
+      <td>0.946667</td>
+    </tr>
+    <tr>
+      <th>0.6</th>
+      <td>0.949333</td>
+    </tr>
+    <tr>
+      <th>0.7</th>
+      <td>0.946667</td>
+    </tr>
+    <tr>
+      <th>0.8</th>
+      <td>0.941333</td>
+    </tr>
+    <tr>
+      <th>0.9</th>
+      <td>0.937333</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># sklearn ROC (good performance when the curve is close to left top)
+</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">.</span><span class="n">roc_curve</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_y</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Print ROC curve
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span><span class="n">tpr</span><span class="p">)</span>
+
+<span class="c1"># Print AUC (area belows the curve)
+</span><span class="n">auc</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span><span class="n">fpr</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'AUC:'</span><span class="p">,</span> <span class="n">auc</span><span class="p">)</span>
+
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AUC: 0.9463923891858513
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml27/output_20_1.png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Remove variables: Experience, Mortage
+</span><span class="n">feature_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ploan_processed</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">"Personal Loan"</span><span class="p">,</span><span class="s">"Experience"</span><span class="p">,</span>  <span class="s">"Mortgage"</span><span class="p">]))</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">ploan_processed</span><span class="p">[</span><span class="n">feature_columns</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ploan_processed</span><span class="p">[</span><span class="s">'Personal Loan'</span><span class="p">]</span> <span class="c1"># 대출여부: 1 or 0
+</span></code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">train_x2</span><span class="p">,</span> <span class="n">test_x2</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">test_y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">train_size</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">train_x</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test_x</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">train_y</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test_y</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(1750, 12) (750, 12) (1750,) (750,)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Logistic Model fit
+</span><span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">Logit</span><span class="p">(</span><span class="n">train_y</span><span class="p">,</span> <span class="n">train_x2</span><span class="p">)</span>
+<span class="n">result2</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">"newton"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Optimization terminated successfully.
+         Current function value: 0.131062
+         Iterations 9
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Compare with previous model
+</span><span class="n">results</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>     <td>Personal Loan</td>  <th>  No. Observations:  </th>   <td>  1750</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>      <th>  Df Residuals:      </th>   <td>  1738</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>    11</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Fri, 08 Jan 2021</td> <th>  Pseudo R-squ.:     </th>   <td>0.6030</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>07:00:22</td>     <th>  Log-Likelihood:    </th>  <td> -229.35</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -577.63</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>2.927e-142</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+           <td></td>             <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P&gt;|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Age</th>                <td>    0.0245</td> <td>    0.102</td> <td>    0.240</td> <td> 0.810</td> <td>   -0.175</td> <td>    0.224</td>
+</tr>
+<tr>
+  <th>CCAvg</th>              <td>    0.0985</td> <td>    0.063</td> <td>    1.562</td> <td> 0.118</td> <td>   -0.025</td> <td>    0.222</td>
+</tr>
+<tr>
+  <th>CD Account</th>         <td>    4.3726</td> <td>    0.568</td> <td>    7.703</td> <td> 0.000</td> <td>    3.260</td> <td>    5.485</td>
+</tr>
+<tr>
+  <th>CreditCard</th>         <td>   -1.2374</td> <td>    0.337</td> <td>   -3.667</td> <td> 0.000</td> <td>   -1.899</td> <td>   -0.576</td>
+</tr>
+<tr>
+  <th>Education</th>          <td>    1.5203</td> <td>    0.190</td> <td>    7.999</td> <td> 0.000</td> <td>    1.148</td> <td>    1.893</td>
+</tr>
+<tr>
+  <th>Experience</th>         <td>   -0.0070</td> <td>    0.102</td> <td>   -0.069</td> <td> 0.945</td> <td>   -0.206</td> <td>    0.192</td>
+</tr>
+<tr>
+  <th>Family</th>             <td>    0.7579</td> <td>    0.128</td> <td>    5.914</td> <td> 0.000</td> <td>    0.507</td> <td>    1.009</td>
+</tr>
+<tr>
+  <th>Income</th>             <td>    0.0547</td> <td>    0.004</td> <td>   12.659</td> <td> 0.000</td> <td>    0.046</td> <td>    0.063</td>
+</tr>
+<tr>
+  <th>Mortgage</th>           <td>   -0.0001</td> <td>    0.001</td> <td>   -0.144</td> <td> 0.885</td> <td>   -0.002</td> <td>    0.002</td>
+</tr>
+<tr>
+  <th>Online</th>             <td>   -0.4407</td> <td>    0.263</td> <td>   -1.674</td> <td> 0.094</td> <td>   -0.957</td> <td>    0.075</td>
+</tr>
+<tr>
+  <th>Securities Account</th> <td>   -1.8520</td> <td>    0.561</td> <td>   -3.299</td> <td> 0.001</td> <td>   -2.952</td> <td>   -0.752</td>
+</tr>
+<tr>
+  <th>const</th>              <td>  -13.9203</td> <td>    2.773</td> <td>   -5.021</td> <td> 0.000</td> <td>  -19.354</td> <td>   -8.486</td>
+</tr>
+</table>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">result2</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>     <td>Personal Loan</td>  <th>  No. Observations:  </th>   <td>  1750</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>      <th>  Df Residuals:      </th>   <td>  1740</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>     9</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Fri, 08 Jan 2021</td> <th>  Pseudo R-squ.:     </th>   <td>0.6029</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>07:00:33</td>     <th>  Log-Likelihood:    </th>  <td> -229.36</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -577.63</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>3.817e-144</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+           <td></td>             <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P&gt;|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Age</th>                <td>    0.0174</td> <td>    0.011</td> <td>    1.569</td> <td> 0.117</td> <td>   -0.004</td> <td>    0.039</td>
+</tr>
+<tr>
+  <th>CCAvg</th>              <td>    0.0997</td> <td>    0.062</td> <td>    1.596</td> <td> 0.111</td> <td>   -0.023</td> <td>    0.222</td>
+</tr>
+<tr>
+  <th>CD Account</th>         <td>    4.3699</td> <td>    0.567</td> <td>    7.705</td> <td> 0.000</td> <td>    3.258</td> <td>    5.481</td>
+</tr>
+<tr>
+  <th>CreditCard</th>         <td>   -1.2350</td> <td>    0.337</td> <td>   -3.668</td> <td> 0.000</td> <td>   -1.895</td> <td>   -0.575</td>
+</tr>
+<tr>
+  <th>Education</th>          <td>    1.5249</td> <td>    0.187</td> <td>    8.156</td> <td> 0.000</td> <td>    1.158</td> <td>    1.891</td>
+</tr>
+<tr>
+  <th>Family</th>             <td>    0.7572</td> <td>    0.127</td> <td>    5.948</td> <td> 0.000</td> <td>    0.508</td> <td>    1.007</td>
+</tr>
+<tr>
+  <th>Income</th>             <td>    0.0546</td> <td>    0.004</td> <td>   12.833</td> <td> 0.000</td> <td>    0.046</td> <td>    0.063</td>
+</tr>
+<tr>
+  <th>Online</th>             <td>   -0.4418</td> <td>    0.263</td> <td>   -1.678</td> <td> 0.093</td> <td>   -0.958</td> <td>    0.074</td>
+</tr>
+<tr>
+  <th>Securities Account</th> <td>   -1.8526</td> <td>    0.561</td> <td>   -3.302</td> <td> 0.001</td> <td>   -2.952</td> <td>   -0.753</td>
+</tr>
+<tr>
+  <th>const</th>              <td>  -13.7465</td> <td>    1.164</td> <td>  -11.814</td> <td> 0.000</td> <td>  -16.027</td> <td>  -11.466</td>
+</tr>
+</table>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Predict
+</span><span class="n">pred_y</span> <span class="o">=</span> <span class="n">result2</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># threshold 0.5
+</span><span class="n">pred_y</span> <span class="o">=</span> <span class="n">cut_off</span><span class="p">(</span><span class="n">pred_y</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">##  accuracy
+</span><span class="n">cfmat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span><span class="n">pred_y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">acc</span><span class="p">(</span><span class="n">cfmat</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.944
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">pred_y</span> <span class="o">=</span> <span class="n">result2</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x2</span><span class="p">)</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'ACC'</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">threshold</span><span class="p">:</span>
+    <span class="n">pred_y2</span> <span class="o">=</span> <span class="n">cut_off</span><span class="p">(</span><span class="n">pred_y</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">cfmat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_y2</span><span class="p">)</span>
+    <span class="n">table</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">acc</span><span class="p">(</span><span class="n">cfmat</span><span class="p">)</span>
+<span class="n">table</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="n">name</span><span class="o">=</span><span class="s">'threshold'</span>
+<span class="n">table</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">name</span><span class="o">=</span><span class="s">'performance'</span>
+<span class="n">table</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>performance</th>
+      <th>ACC</th>
+    </tr>
+    <tr>
+      <th>threshold</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.0</th>
+      <td>0.102667</td>
+    </tr>
+    <tr>
+      <th>0.1</th>
+      <td>0.908000</td>
+    </tr>
+    <tr>
+      <th>0.2</th>
+      <td>0.922667</td>
+    </tr>
+    <tr>
+      <th>0.3</th>
+      <td>0.932000</td>
+    </tr>
+    <tr>
+      <th>0.4</th>
+      <td>0.936000</td>
+    </tr>
+    <tr>
+      <th>0.5</th>
+      <td>0.944000</td>
+    </tr>
+    <tr>
+      <th>0.6</th>
+      <td>0.949333</td>
+    </tr>
+    <tr>
+      <th>0.7</th>
+      <td>0.946667</td>
+    </tr>
+    <tr>
+      <th>0.8</th>
+      <td>0.941333</td>
+    </tr>
+    <tr>
+      <th>0.9</th>
+      <td>0.937333</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># sklearn ROC
+</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">.</span><span class="n">roc_curve</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_y</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Print ROC curve
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span><span class="n">tpr</span><span class="p">)</span>
+
+<span class="c1"># Print AUC
+</span><span class="n">auc</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span><span class="n">fpr</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'AUC:'</span><span class="p">,</span> <span class="n">auc</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AUC: 0.9465467667547905
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml27/output_31_1.png" /></p>
+
+<h1 id="feature-selection">Feature Selection</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">feature_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ploan_processed</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">"Personal Loan"</span><span class="p">]))</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">ploan_processed</span><span class="p">[</span><span class="n">feature_columns</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ploan_processed</span><span class="p">[</span><span class="s">'Personal Loan'</span><span class="p">]</span> <span class="c1"># Loaned or Not: 1 or 0
+</span></code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">train_x</span><span class="p">,</span> <span class="n">test_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">test_y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">train_size</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">train_x</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test_x</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">train_y</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test_y</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(1750, 12) (750, 12) (1750,) (750,)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">processSubset</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">feature_set</span><span class="p">):</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">Logit</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">X</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">feature_set</span><span class="p">)])</span>
+            <span class="n">regr</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">()</span>
+            <span class="n">AIC</span> <span class="o">=</span> <span class="n">regr</span><span class="p">.</span><span class="n">aic</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s">"model"</span><span class="p">:</span><span class="n">regr</span><span class="p">,</span> <span class="s">"AIC"</span><span class="p">:</span><span class="n">AIC</span><span class="p">}</span>
+
+<span class="s">'''
+Forward
+'''</span>
+<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictors</span><span class="p">):</span>
+    <span class="n">remaining_predictors</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">X</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">'const'</span><span class="p">])</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">predictors</span><span class="p">]</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">remaining_predictors</span><span class="p">:</span>
+        <span class="n">results</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">processSubset</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">feature_set</span><span class="o">=</span><span class="n">predictors</span><span class="o">+</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="s">'const'</span><span class="p">]))</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+    <span class="c1"># choose lowest AIC
+</span>    <span class="n">best_model</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">models</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">].</span><span class="n">argmin</span><span class="p">()]</span> <span class="c1"># index
+</span>    <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Processed "</span><span class="p">,</span> <span class="n">models</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">"models on"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s">"predictors in"</span><span class="p">,</span> <span class="p">(</span><span class="n">toc</span><span class="o">-</span><span class="n">tic</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Selected predictors:'</span><span class="p">,</span><span class="n">best_model</span><span class="p">[</span><span class="s">'model'</span><span class="p">].</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span><span class="p">,</span><span class="s">' AIC:'</span><span class="p">,</span><span class="n">best_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">best_model</span>
+
+<span class="k">def</span> <span class="nf">forward_model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+    <span class="n">Fmodels</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"AIC"</span><span class="p">,</span> <span class="s">"model"</span><span class="p">])</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">predictors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">'const'</span><span class="p">]))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">Forward_result</span> <span class="o">=</span> <span class="n">forward</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">predictors</span><span class="o">=</span><span class="n">predictors</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">Forward_result</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">Fmodel_before</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="n">Fmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Forward_result</span>
+        <span class="n">predictors</span> <span class="o">=</span> <span class="n">Fmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"model"</span><span class="p">].</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span>
+        <span class="n">Fmodel_before</span> <span class="o">=</span> <span class="n">Fmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"AIC"</span><span class="p">]</span>
+        <span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">predictors</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s">'const'</span><span class="p">]</span>
+    <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Total elapsed time:"</span><span class="p">,</span> <span class="p">(</span><span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span><span class="p">),</span> <span class="s">"seconds."</span><span class="p">)</span>
+
+    <span class="k">return</span><span class="p">(</span><span class="n">Fmodels</span><span class="p">[</span><span class="s">'model'</span><span class="p">][</span><span class="nb">len</span><span class="p">(</span><span class="n">Fmodels</span><span class="p">[</span><span class="s">'model'</span><span class="p">])])</span>
+
+
+<span class="s">'''
+Backward
+'''</span>
+<span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">predictors</span><span class="p">):</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">itertools</span><span class="p">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">predictors</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">results</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">processSubset</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="n">y</span><span class="p">,</span><span class="n">feature_set</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">combo</span><span class="p">)</span><span class="o">+</span><span class="p">[</span><span class="s">'const'</span><span class="p">]))</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+    <span class="c1"># Choose Lowest AIC
+</span>    <span class="n">best_model</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">models</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">].</span><span class="n">argmin</span><span class="p">()]</span>
+    <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Processed "</span><span class="p">,</span> <span class="n">models</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">"models on"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"predictors in"</span><span class="p">,</span>
+          <span class="p">(</span><span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Selected predictors:'</span><span class="p">,</span><span class="n">best_model</span><span class="p">[</span><span class="s">'model'</span><span class="p">].</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span><span class="p">,</span><span class="s">' AIC:'</span><span class="p">,</span><span class="n">best_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">best_model</span>
+
+
+<span class="k">def</span> <span class="nf">backward_model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">Bmodels</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"AIC"</span><span class="p">,</span> <span class="s">"model"</span><span class="p">],</span> <span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">.</span><span class="n">columns</span><span class="p">)))</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">predictors</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">'const'</span><span class="p">])</span>
+    <span class="n">Bmodel_before</span> <span class="o">=</span> <span class="n">processSubset</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">predictors</span><span class="p">)[</span><span class="s">'AIC'</span><span class="p">]</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">Backward_result</span> <span class="o">=</span> <span class="n">backward</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">train_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">predictors</span> <span class="o">=</span> <span class="n">predictors</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Backward_result</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">Bmodel_before</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">Bmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Backward_result</span>
+        <span class="n">predictors</span> <span class="o">=</span> <span class="n">Bmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s">"model"</span><span class="p">].</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span>
+        <span class="n">Bmodel_before</span> <span class="o">=</span> <span class="n">Backward_result</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">]</span>
+        <span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">predictors</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s">'const'</span><span class="p">]</span>
+
+    <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Total elapsed time:"</span><span class="p">,</span> <span class="p">(</span><span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span><span class="p">),</span> <span class="s">"seconds."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Bmodels</span><span class="p">[</span><span class="s">'model'</span><span class="p">].</span><span class="n">dropna</span><span class="p">().</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+
+<span class="s">'''
+Stepwise
+'''</span>
+<span class="k">def</span> <span class="nf">Stepwise_model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+    <span class="n">Stepmodels</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"AIC"</span><span class="p">,</span> <span class="s">"model"</span><span class="p">])</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">predictors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">Smodel_before</span> <span class="o">=</span> <span class="n">processSubset</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">predictors</span><span class="o">+</span><span class="p">[</span><span class="s">'const'</span><span class="p">])[</span><span class="s">'AIC'</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">'const'</span><span class="p">]))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">Forward_result</span> <span class="o">=</span> <span class="n">forward</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">predictors</span><span class="o">=</span><span class="n">predictors</span><span class="p">)</span> <span class="c1"># constant added
+</span>        <span class="k">print</span><span class="p">(</span><span class="s">'forward'</span><span class="p">)</span>
+        <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Forward_result</span>
+        <span class="n">predictors</span> <span class="o">=</span> <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"model"</span><span class="p">].</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span>
+        <span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">predictors</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s">'const'</span><span class="p">]</span>
+        <span class="n">Backward_result</span> <span class="o">=</span> <span class="n">backward</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">predictors</span><span class="o">=</span><span class="n">predictors</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Backward_result</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">]</span><span class="o">&lt;</span> <span class="n">Forward_result</span><span class="p">[</span><span class="s">'AIC'</span><span class="p">]:</span>
+            <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Backward_result</span>
+            <span class="n">predictors</span> <span class="o">=</span> <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"model"</span><span class="p">].</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span>
+            <span class="n">Smodel_before</span> <span class="o">=</span> <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"AIC"</span><span class="p">]</span>
+            <span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">predictors</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s">'const'</span><span class="p">]</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'backward'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">'AIC'</span><span class="p">]</span><span class="o">&gt;</span> <span class="n">Smodel_before</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Smodel_before</span> <span class="o">=</span> <span class="n">Stepmodels</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"AIC"</span><span class="p">]</span>
+    <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Total elapsed time:"</span><span class="p">,</span> <span class="p">(</span><span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span><span class="p">),</span> <span class="s">"seconds."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Stepmodels</span><span class="p">[</span><span class="s">'model'</span><span class="p">][</span><span class="nb">len</span><span class="p">(</span><span class="n">Stepmodels</span><span class="p">[</span><span class="s">'model'</span><span class="p">])])</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Forward_best_model</span> <span class="o">=</span> <span class="n">forward_model</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">train_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="n">train_y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Optimization terminated successfully.
+         Current function value: 0.329986
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.284217
+         Iterations 7
+Optimization terminated successfully.
+         Current function value: 0.296731
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.330062
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.322763
+         Iterations 7
+Optimization terminated successfully.
+         Current function value: 0.329995
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.327824
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.205738
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.324953
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.329912
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.330059
+         Iterations 6
+Processed  11 models on 1 predictors in 0.05225801467895508
+Selected predictors: ['Income', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc5d040&gt;
+Optimization terminated successfully.
+         Current function value: 0.205431
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.205682
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.185721
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.205517
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.169107
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.205563
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.182286
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.205735
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.205561
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.205167
+         Iterations 8
+Processed  10 models on 2 predictors in 0.04529714584350586
+Selected predictors: ['Income', 'Education', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc5dee0&gt;
+Optimization terminated successfully.
+         Current function value: 0.168881
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.168679
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.152041
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.168833
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.168897
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.154924
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.169073
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.169052
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.168642
+         Iterations 9
+Processed  9 models on 3 predictors in 0.04034614562988281
+Selected predictors: ['Income', 'Education', 'CD Account', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ecb49d0&gt;
+Optimization terminated successfully.
+         Current function value: 0.152028
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.151411
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.148163
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.152036
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.139352
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.152015
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.151151
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.150075
+         Iterations 9
+Processed  8 models on 4 predictors in 0.03633999824523926
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ecb45e0&gt;
+Optimization terminated successfully.
+         Current function value: 0.138887
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.138758
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.136599
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.138901
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.139349
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.138959
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.137180
+         Iterations 9
+Processed  7 models on 5 predictors in 0.03413200378417969
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ecb4820&gt;
+Optimization terminated successfully.
+         Current function value: 0.136127
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.135996
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.136142
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.136574
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.135928
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.133263
+         Iterations 9
+Processed  6 models on 6 predictors in 0.03259992599487305
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ecb48b0&gt;
+Optimization terminated successfully.
+         Current function value: 0.132630
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.132650
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.132646
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.133238
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.132361
+         Iterations 9
+Processed  5 models on 7 predictors in 0.026926279067993164
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'Online', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc7a3a0&gt;
+Optimization terminated successfully.
+         Current function value: 0.131791
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131772
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131803
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.132343
+         Iterations 9
+Processed  4 models on 8 predictors in 0.02244400978088379
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'Online', 'CCAvg', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc5ddf0&gt;
+Optimization terminated successfully.
+         Current function value: 0.131062
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131077
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131771
+         Iterations 9
+Processed  3 models on 9 predictors in 0.017028093338012695
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'Online', 'CCAvg', 'Age', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ecb4df0&gt;
+Optimization terminated successfully.
+         Current function value: 0.131061
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131057
+         Iterations 9
+Processed  2 models on 10 predictors in 0.013223886489868164
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'Online', 'CCAvg', 'Age', 'Mortgage', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc5dfa0&gt;
+Total elapsed time: 0.3527662754058838 seconds.
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Backward_best_model</span> <span class="o">=</span> <span class="n">backward_model</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">train_x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">train_y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Optimization terminated successfully.
+         Current function value: 0.137663
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.134821
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131859
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131061
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.214795
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.142500
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131057
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.154241
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.135440
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.152443
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131753
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131072
+         Iterations 9
+Processed  11 models on 10 predictors in 0.06787991523742676
+Selected predictors: ['Age', 'CCAvg', 'CD Account', 'CreditCard', 'Education', 'Family', 'Income', 'Mortgage', 'Online', 'Securities Account', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ecb42b0&gt;
+Optimization terminated successfully.
+         Current function value: 0.134824
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131862
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131062
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.215827
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.142665
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.155447
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.135443
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.152478
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131755
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131771
+         Iterations 9
+Processed  10 models on 9 predictors in 0.05658125877380371
+Selected predictors: ['Age', 'CCAvg', 'CD Account', 'CreditCard', 'Education', 'Family', 'Income', 'Online', 'Securities Account', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ecb4b20&gt;
+Optimization terminated successfully.
+         Current function value: 0.134831
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131871
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.218281
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.142684
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.155797
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.135444
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.152482
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131791
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131772
+         Iterations 9
+Processed  9 models on 8 predictors in 0.049247026443481445
+Selected predictors: ['CCAvg', 'CD Account', 'CreditCard', 'Education', 'Family', 'Income', 'Online', 'Securities Account', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ecb4760&gt;
+Total elapsed time: 0.1851491928100586 seconds.
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Stepwise_best_model</span> <span class="o">=</span> <span class="n">Stepwise_model</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">train_x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">train_y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Optimization terminated successfully.
+         Current function value: 0.330076
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.329986
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.284217
+         Iterations 7
+Optimization terminated successfully.
+         Current function value: 0.296731
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.330062
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.322763
+         Iterations 7
+Optimization terminated successfully.
+         Current function value: 0.329995
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.327824
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.205738
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.324953
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.329912
+         Iterations 6
+Optimization terminated successfully.
+         Current function value: 0.330059
+         Iterations 6
+Processed  11 models on 1 predictors in 0.05102419853210449
+Selected predictors: ['Income', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc5d5e0&gt;
+forward
+Optimization terminated successfully.
+         Current function value: 0.330076
+         Iterations 6
+Processed  1 models on 0 predictors in 0.007719993591308594
+Selected predictors: ['const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc7a3a0&gt;
+Optimization terminated successfully.
+         Current function value: 0.205431
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.205682
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.185721
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.205517
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.169107
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.205563
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.182286
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.205735
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.205561
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.205167
+         Iterations 8
+Processed  10 models on 2 predictors in 0.04338407516479492
+Selected predictors: ['Income', 'Education', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc5deb0&gt;
+forward
+Optimization terminated successfully.
+         Current function value: 0.205738
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.322763
+         Iterations 7
+Processed  2 models on 1 predictors in 0.011770248413085938
+Selected predictors: ['Income', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ecb47c0&gt;
+Optimization terminated successfully.
+         Current function value: 0.168881
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.168679
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.152041
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.168833
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.168897
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.154924
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.169073
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.169052
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.168642
+         Iterations 9
+Processed  9 models on 3 predictors in 0.04062628746032715
+Selected predictors: ['Income', 'Education', 'CD Account', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc5dd30&gt;
+forward
+Optimization terminated successfully.
+         Current function value: 0.169107
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.185721
+         Iterations 8
+Optimization terminated successfully.
+         Current function value: 0.288940
+         Iterations 7
+Processed  3 models on 2 predictors in 0.01477813720703125
+Selected predictors: ['Income', 'Education', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ecb4070&gt;
+Optimization terminated successfully.
+         Current function value: 0.152028
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.151411
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.148163
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.152036
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.139352
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.152015
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.151151
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.150075
+         Iterations 9
+Processed  8 models on 4 predictors in 0.04022479057312012
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ecb47c0&gt;
+forward
+Optimization terminated successfully.
+         Current function value: 0.152041
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.154924
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.164270
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.287431
+         Iterations 7
+Processed  4 models on 3 predictors in 0.022669076919555664
+Selected predictors: ['Income', 'Education', 'CD Account', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ece9cd0&gt;
+Optimization terminated successfully.
+         Current function value: 0.138887
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.138758
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.136599
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.138901
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.139349
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.138959
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.137180
+         Iterations 9
+Processed  7 models on 5 predictors in 0.03583788871765137
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ece9a30&gt;
+forward
+Optimization terminated successfully.
+         Current function value: 0.139352
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.148163
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.154854
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.160828
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.282426
+         Iterations 7
+Processed  5 models on 4 predictors in 0.026121139526367188
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc7a430&gt;
+Optimization terminated successfully.
+         Current function value: 0.136127
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.135996
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.136142
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.136574
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.135928
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.133263
+         Iterations 9
+Processed  6 models on 6 predictors in 0.030944108963012695
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ece9f10&gt;
+forward
+Optimization terminated successfully.
+         Current function value: 0.136599
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.137180
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.144927
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.154299
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.157364
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.273321
+         Iterations 7
+Processed  6 models on 5 predictors in 0.03034496307373047
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc7a280&gt;
+Optimization terminated successfully.
+         Current function value: 0.132630
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.132650
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.132646
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.133238
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.132361
+         Iterations 9
+Processed  5 models on 7 predictors in 0.02812981605529785
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'Online', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ece9340&gt;
+forward
+Optimization terminated successfully.
+         Current function value: 0.133263
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.135928
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.136688
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.143335
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.154141
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.156593
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.271509
+         Iterations 7
+Processed  7 models on 6 predictors in 0.040854692459106445
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc5d190&gt;
+Optimization terminated successfully.
+         Current function value: 0.131791
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131772
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131803
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.132343
+         Iterations 9
+Processed  4 models on 8 predictors in 0.02469611167907715
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'Online', 'CCAvg', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ece9670&gt;
+forward
+Optimization terminated successfully.
+         Current function value: 0.132361
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.132650
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.135373
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.136112
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.142716
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.153670
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.156410
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.218291
+         Iterations 8
+Processed  8 models on 7 predictors in 0.041397809982299805
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'Online', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc5de80&gt;
+Optimization terminated successfully.
+         Current function value: 0.131062
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131077
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131771
+         Iterations 9
+Processed  3 models on 9 predictors in 0.018525123596191406
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'Online', 'CCAvg', 'Age', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ece95e0&gt;
+forward
+Optimization terminated successfully.
+         Current function value: 0.131772
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131791
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131871
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.134831
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.135444
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.142684
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.152482
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.155797
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.218281
+         Iterations 8
+Processed  9 models on 8 predictors in 0.04807877540588379
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'Online', 'CCAvg', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ecb4bb0&gt;
+Optimization terminated successfully.
+         Current function value: 0.131061
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131057
+         Iterations 9
+Processed  2 models on 10 predictors in 0.01361989974975586
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'Online', 'CCAvg', 'Age', 'Mortgage', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ece9850&gt;
+forward
+Optimization terminated successfully.
+         Current function value: 0.131062
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131771
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131755
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131862
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.134824
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.135443
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.142665
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.152478
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.155447
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.215827
+         Iterations 8
+Processed  10 models on 9 predictors in 0.05479693412780762
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'Online', 'CCAvg', 'Age', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc5d040&gt;
+backward
+Optimization terminated successfully.
+         Current function value: 0.131061
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131057
+         Iterations 9
+Processed  2 models on 10 predictors in 0.01616501808166504
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'Online', 'CCAvg', 'Age', 'Mortgage', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f876cc7ae50&gt;
+forward
+Optimization terminated successfully.
+         Current function value: 0.131062
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131771
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131755
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.131862
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.134824
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.135443
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.142665
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.152478
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.155447
+         Iterations 9
+Optimization terminated successfully.
+         Current function value: 0.215827
+         Iterations 8
+Processed  10 models on 9 predictors in 0.05709075927734375
+Selected predictors: ['Income', 'Education', 'CD Account', 'Family', 'CreditCard', 'Securities Account', 'Online', 'CCAvg', 'Age', 'const']  AIC: &lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x7f874ece9eb0&gt;
+backward
+Total elapsed time: 0.7562820911407471 seconds.
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_y_full</span> <span class="o">=</span> <span class="n">results</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span> <span class="c1"># full model
+</span><span class="n">pred_y_forward</span> <span class="o">=</span> <span class="n">Forward_best_model</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">[</span><span class="n">Forward_best_model</span><span class="p">.</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span><span class="p">])</span>
+<span class="n">pred_y_backward</span> <span class="o">=</span> <span class="n">Backward_best_model</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">[</span><span class="n">Backward_best_model</span><span class="p">.</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span><span class="p">])</span>
+<span class="n">pred_y_stepwise</span> <span class="o">=</span> <span class="n">Stepwise_best_model</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">[</span><span class="n">Stepwise_best_model</span><span class="p">.</span><span class="n">model</span><span class="p">.</span><span class="n">exog_names</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_Y_full</span><span class="o">=</span> <span class="n">cut_off</span><span class="p">(</span><span class="n">pred_y_full</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">pred_Y_forward</span> <span class="o">=</span> <span class="n">cut_off</span><span class="p">(</span><span class="n">pred_y_forward</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">pred_Y_backward</span> <span class="o">=</span> <span class="n">cut_off</span><span class="p">(</span><span class="n">pred_y_backward</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">pred_Y_stepwise</span> <span class="o">=</span> <span class="n">cut_off</span><span class="p">(</span><span class="n">pred_y_stepwise</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cfmat_full</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_Y_full</span><span class="p">)</span>
+<span class="n">cfmat_forward</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_Y_forward</span><span class="p">)</span>
+<span class="n">cfmat_backward</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_Y_backward</span><span class="p">)</span>
+<span class="n">cfmat_stepwise</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_Y_stepwise</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">acc</span><span class="p">(</span><span class="n">cfmat_full</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">acc</span><span class="p">(</span><span class="n">cfmat_forward</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">acc</span><span class="p">(</span><span class="n">cfmat_backward</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">acc</span><span class="p">(</span><span class="n">cfmat_stepwise</span><span class="p">))</span>
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.9466666666666667
+0.944
+0.944
+0.944
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">.</span><span class="n">roc_curve</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_y_full</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Print ROC curve
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span><span class="n">tpr</span><span class="p">)</span>
+<span class="c1"># Print AUC
+</span><span class="n">auc</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span><span class="n">fpr</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'AUC:'</span><span class="p">,</span> <span class="n">auc</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AUC: 0.9463923891858513
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml27/output_43_1.png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">.</span><span class="n">roc_curve</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_y_forward</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Print ROC curve
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span><span class="n">tpr</span><span class="p">)</span>
+<span class="c1"># Print AUC
+</span><span class="n">auc</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span><span class="n">fpr</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'AUC:'</span><span class="p">,</span> <span class="n">auc</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AUC: 0.9465467667547905
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml27/output_44_1.png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">.</span><span class="n">roc_curve</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_y_backward</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Print ROC curve
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span><span class="n">tpr</span><span class="p">)</span>
+<span class="c1"># Print AUC
+</span><span class="n">auc</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span><span class="n">fpr</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'AUC:'</span><span class="p">,</span> <span class="n">auc</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AUC: 0.9465467667547905
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml27/output_45_1.png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">.</span><span class="n">roc_curve</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_y_stepwise</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Print ROC curve
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span><span class="n">tpr</span><span class="p">)</span>
+<span class="c1"># Print AUC
+</span><span class="n">auc</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span><span class="n">fpr</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'AUC:'</span><span class="p">,</span> <span class="n">auc</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AUC: 0.9465467667547905
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml27/output_46_1.png" /></p>
+
+<p><strong>These four models does not have big difference about the performance</strong></p>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "27. Logistic Regression Practice for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML, Fast Campus ML practice",
+      "url"      : "/blog/ml-27",
+      "date"     : "2021-01-08 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "26. Logistic Regression for Machine Learning",
       "category" : "",
       "tags"     : "Fast Campus ML",
