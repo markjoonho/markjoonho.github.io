@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "26. Logistic Regression for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-26",
+      "date"     : "2021-01-07 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "25. Multi Linear Regression Feature Selection Practice(3) for Machine Learning",
       "category" : "",
       "tags"     : "Fast Campus ML, Fast Campus ML practice",

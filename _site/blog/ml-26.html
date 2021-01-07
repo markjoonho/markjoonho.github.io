@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta
+    property="og:title"
+    content="26. Logistic Regression for Machine Learning"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    26. Logistic Regression for Machine Learning
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>26. Logistic Regression for Machine Learning</b></h1>
+
+<p class="post-metadata text-muted">
+  07 January 2021 -  
+  <b>less than 1 min read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-ml">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus ML</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a>, <a href="http://strijov.com/sources/demoDataGen.php">strijov.com</a></p>
+
+<h2 id="logistic-regression">Logistic Regression</h2>
+
+<p>From the logistic regression, we do not predict the output directly. Logistic regression is the method that predic the binary category(‘yes’ or ‘no’) of the output.</p>
+
+\[p = P(success|k inputs)\]
+
+\[1-p = P(fail|k inputs)\]
+
+<h2 id="logistic-functionsigmoid">Logistic Function(Sigmoid)</h2>
+
+<p>Modeling the \(p(X)\) which is the successful rate when there exist k imputs.</p>
+
+\[p(X) = P(success|X_1, ..., X_k) = \beta_0 + \beta_1 + ... + \beta_kX_k + randome\space error(\epsilon)\]
+
+<p>Left-hand-side is from 0 to 1. Right-hand-side is from -\(\infty\) to \(\infty\). Thus, we will use logistic function.</p>
+
+\[ln(p(X)) = \beta_0 + \beta_1 + ... + \beta_kX_k + \epsilon\]
+
+<p>However, since the maximum value of \(p(X)\) is 1, \(ln(p(X))\) cannot get +\(\infty\). Thus, we will use following equation.</p>
+
+\[logit = ln(\frac{p(X)}{1-p(X)}) = \beta_0 + \beta_1 + ... + \beta_kX_k + \epsilon\]
+
+<p>From this, when \(X\) is input and \(Y\) is the probability that it becomes 1,</p>
+
+\[Y = p(X) = \frac{e^{\beta_0 + \beta_1 + ... + \beta_kX_k}}{1+e^{\beta_0 + \beta_1 + ... + \beta_kX_k}}\]
+
+\[Y = p(X) = \frac{e^x}{1+e^x}\]
+
+<ol>
+  <li>
+    <p>There exists one input variable.
+<img src="https://hvidberrrg.github.io/deep_learning/activation_functions/assets/sigmoid_function.png" /></p>
+  </li>
+  <li>
+    <p>There exists two input variables.</p>
+  </li>
+</ol>
+
+<p><img src="http://strijov.com/sources/img/demoDataGen_saved.png" /></p>
+
+<h2 id="logistic-regression-coefficient">Logistic Regression Coefficient</h2>
+
+<ul>
+  <li>Use Maximum Likelihood.</li>
+  <li>Use Bernouii Probability Distribution</li>
+</ul>
+
+\[Maximize_{\beta_0\beta_1}\space\space l(\beta_0, \beta_1) = \prod_{i=1}^N \theta_i(x_i)^{y_i}(1-(\theta_i))^{1-y_i}\]
+
+<p><img src="/assets/img/ml26/result.png" width="1000px" /></p>
+
+<h2 id="logistic-regression-analytics">Logistic Regression Analytics</h2>
+
+<ul>
+  <li>There exists two ways to analyze
+    <ul>
+      <li>Odds: \(odds = \frac{p(X)}{1-p(X)} = e^{\beta_0+\beta_1X}\)</li>
+      <li>Logit: \(logit = log(frac{p(X)}{1-p(X)} = \beta_0 + \beta_1X)\)</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>EXAMPLE</strong></p>
+
+<p>Following table shows the probability of the fault depends on each features</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>Coefficient</th>
+      <th>Std. error</th>
+      <th>Z-statistic</th>
+      <th>P-value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Intercept</td>
+      <td>-10.8690</td>
+      <td>0.4923</td>
+      <td>-22.08</td>
+      <td>&lt;0.0001</td>
+    </tr>
+    <tr>
+      <td>Pressure</td>
+      <td>0.0057</td>
+      <td>0.0002</td>
+      <td>24.74</td>
+      <td>&lt;0.0001</td>
+    </tr>
+    <tr>
+      <td>CL2 Flow</td>
+      <td>0.0030</td>
+      <td>0.0082</td>
+      <td>0.37</td>
+      <td>0.7115</td>
+    </tr>
+    <tr>
+      <td>RF_impedance</td>
+      <td>-0.0468</td>
+      <td>0.0172</td>
+      <td>-2.74</td>
+      <td>0.0062</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Logit: When RF_impedance increase by 1 unit, probability of the fault logit is increasing by -0.0468.
+Odds: When RF_impedance increase by 1 unit, probability of the fault logit is increasing by 0.954(exp(-0.0468)).
+</code></pre></div></div>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>
