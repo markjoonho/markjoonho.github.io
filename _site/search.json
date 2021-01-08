@@ -1,6 +1,62 @@
 [
   
     {
+      "title"    : "07. Better Model for Tensorflow",
+      "category" : "",
+      "tags"     : "Tensorflow 101",
+      "url"      : "/blog/tensorflow101-07",
+      "date"     : "2021-01-08 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "06. Data Cleaning for Tensorflow",
+      "category" : "",
+      "tags"     : "Tensorflow 101",
+      "url"      : "/blog/tensorflow101-06",
+      "date"     : "2021-01-08 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "05. Hidden Layer for Tensorflow",
+      "category" : "",
+      "tags"     : "Tensorflow 101",
+      "url"      : "/blog/tensorflow101-05",
+      "date"     : "2021-01-08 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "04. Iris Dataset for Tensorflow",
+      "category" : "",
+      "tags"     : "Tensorflow 101",
+      "url"      : "/blog/tensorflow101-04",
+      "date"     : "2021-01-08 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "03. Boston Housing Dataset for Tensorflow",
+      "category" : "",
+      "tags"     : "Tensorflow 101",
+      "url"      : "/blog/tensorflow101-03",
+      "date"     : "2021-01-08 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "02. Lemonade Dataset for Tensorflow",
+      "category" : "",
+      "tags"     : "Tensorflow 101",
+      "url"      : "/blog/tensorflow101-02",
+      "date"     : "2021-01-08 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "01. Pandas for Tensorflow",
+      "category" : "",
+      "tags"     : "Tensorflow 101",
+      "url"      : "/blog/tensorflow101-01",
+      "date"     : "2021-01-08 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "27. Logistic Regression Practice for Machine Learning",
       "category" : "",
       "tags"     : "Fast Campus ML, Fast Campus ML practice",
@@ -558,14 +614,6 @@
       "tags"     : "Introduction to ML with Python",
       "url"      : "/blog/intro-to-ml-01",
       "date"     : "2020-12-02 00:00:00 +0900"
-    } ,
-  
-    {
-      "title"    : "01. Tensorflow with Python",
-      "category" : "",
-      "tags"     : "Coding Everybody Tensorflow Python",
-      "url"      : "/blog/tf-python-01",
-      "date"     : "2020-01-05 00:00:00 +0900"
     } 
   
 ]
