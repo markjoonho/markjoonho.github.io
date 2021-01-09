@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta
+    property="og:title"
+    content="31. Ridge, Lasso Regression Practice for Machine Learning"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    31. Ridge, Lasso Regression Practice for Machine Learning
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>31. Ridge, Lasso Regression Practice for Machine Learning</b></h1>
+
+<p class="post-metadata text-muted">
+  10 January 2021 -  
+  <b>12 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-ml">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus ML</span>
+    </a>
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-ml-practice">
+      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus ML practice</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span><span class="p">,</span> <span class="n">Ridge</span><span class="p">,</span> <span class="n">Lasso</span><span class="p">,</span> <span class="n">ElasticNet</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">roc_auc_score</span><span class="p">,</span> <span class="n">roc_curve</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="n">sm</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">time</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Read Data
+</span><span class="n">ploan</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">"./data/Personal Loan.csv"</span><span class="p">)</span>
+<span class="n">ploan</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ID</th>
+      <th>Age</th>
+      <th>Experience</th>
+      <th>Income</th>
+      <th>ZIP Code</th>
+      <th>Family</th>
+      <th>CCAvg</th>
+      <th>Education</th>
+      <th>Mortgage</th>
+      <th>Personal Loan</th>
+      <th>Securities Account</th>
+      <th>CD Account</th>
+      <th>Online</th>
+      <th>CreditCard</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>25</td>
+      <td>1</td>
+      <td>49</td>
+      <td>91107</td>
+      <td>4</td>
+      <td>1.6</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>45</td>
+      <td>19</td>
+      <td>34</td>
+      <td>90089</td>
+      <td>3</td>
+      <td>1.5</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>39</td>
+      <td>15</td>
+      <td>11</td>
+      <td>94720</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>35</td>
+      <td>9</td>
+      <td>100</td>
+      <td>94112</td>
+      <td>1</td>
+      <td>2.7</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>35</td>
+      <td>8</td>
+      <td>45</td>
+      <td>91330</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ploan_processed</span> <span class="o">=</span> <span class="n">ploan</span><span class="p">.</span><span class="n">dropna</span><span class="p">().</span><span class="n">drop</span><span class="p">([</span><span class="s">'ID'</span><span class="p">,</span><span class="s">'ZIP Code'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">ploan_processed</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Age</th>
+      <th>Experience</th>
+      <th>Income</th>
+      <th>Family</th>
+      <th>CCAvg</th>
+      <th>Education</th>
+      <th>Mortgage</th>
+      <th>Personal Loan</th>
+      <th>Securities Account</th>
+      <th>CD Account</th>
+      <th>Online</th>
+      <th>CreditCard</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>25</td>
+      <td>1</td>
+      <td>49</td>
+      <td>4</td>
+      <td>1.6</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>45</td>
+      <td>19</td>
+      <td>34</td>
+      <td>3</td>
+      <td>1.5</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>39</td>
+      <td>15</td>
+      <td>11</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>35</td>
+      <td>9</td>
+      <td>100</td>
+      <td>1</td>
+      <td>2.7</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>35</td>
+      <td>8</td>
+      <td>45</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">feature_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ploan_processed</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">difference</span><span class="p">([</span><span class="s">"Personal Loan"</span><span class="p">]))</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">ploan_processed</span><span class="p">[</span><span class="n">feature_columns</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ploan_processed</span><span class="p">[</span><span class="s">'Personal Loan'</span><span class="p">]</span> <span class="c1"># Personal loaned: 1 or 0
+</span>
+<span class="n">train_x</span><span class="p">,</span> <span class="n">test_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">test_y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">train_size</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+                                                    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Using the threshold divide the y value
+</span><span class="k">def</span> <span class="nf">cut_off</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">threshold</span><span class="p">):</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">y</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># use copy, it does not effect previous y val
+</span>    <span class="n">Y</span><span class="p">[</span><span class="n">Y</span><span class="o">&gt;</span><span class="n">threshold</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">Y</span><span class="p">[</span><span class="n">Y</span><span class="o">&lt;=</span><span class="n">threshold</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">Y</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+<span class="c1"># Calculate the Accuracy
+</span><span class="k">def</span> <span class="nf">acc</span><span class="p">(</span><span class="n">cfmat</span><span class="p">):</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="p">(</span><span class="n">cfmat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">cfmat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">cfmat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cfmat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cfmat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cfmat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">acc</span>
+</code></pre></div></div>
+
+<h1 id="logistic-regression">Logistic Regression</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/Users/joonholee/opt/anaconda3/lib/python3.8/site-packages/sklearn/linear_model/_logistic.py:762: ConvergenceWarning: lbfgs failed to converge (status=1):
+STOP: TOTAL NO. of ITERATIONS REACHED LIMIT.
+
+Increase the number of iterations (max_iter) or scale the data as shown in:
+    https://scikit-learn.org/stable/modules/preprocessing.html
+Please also refer to the documentation for alternative solver options:
+    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
+  n_iter_i = _check_optimize_result(
+
+
+
+
+
+LogisticRegression(random_state=0)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model</span><span class="p">.</span><span class="n">coef_</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([[-4.82585675e-01,  2.84566066e-02,  2.19223529e+00,
+        -4.77610384e-01,  1.45059642e+00,  4.95915045e-01,
+         6.91584688e-01,  4.99669715e-02, -1.28734130e-04,
+        -1.02444609e-01,  3.55138778e-02]])
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_y</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span>
+<span class="n">cfmat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">acc</span><span class="p">(</span><span class="n">cfmat</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.9453333333333334
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_y_prob</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">test_x</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">.</span><span class="n">roc_curve</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_y_prob</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Print ROC curve
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span><span class="n">tpr</span><span class="p">)</span>
+<span class="c1"># Print AUC
+</span><span class="n">auc</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span><span class="n">fpr</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'AUC:'</span><span class="p">,</span> <span class="n">auc</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AUC: 0.9386349163466547
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml31/output_9_1.png" /></p>
+
+<h1 id="lasso-regression">Lasso Regression</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># lasso fitting
+</span><span class="n">model_l</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span> <span class="c1"># alpha is a lambda from the equation
+</span><span class="n">model_l</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Lasso(alpha=0.01)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model_l</span><span class="p">.</span><span class="n">coef_</span> <span class="c1"># Lasso can be 0
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([ 0.00000000e+00,  2.04783983e-03,  1.14390390e-01, -0.00000000e+00,
+        6.58342418e-02,  4.76625359e-04,  3.13396711e-02,  3.55393865e-03,
+        1.31719530e-05,  0.00000000e+00, -0.00000000e+00])
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># predict, confusionmatrix, accuracy
+</span><span class="n">pred_y_lasso</span> <span class="o">=</span> <span class="n">model_l</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span>
+<span class="n">pred_Y_lasso</span> <span class="o">=</span> <span class="n">cut_off</span><span class="p">(</span><span class="n">pred_y_lasso</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">cfmat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_Y_lasso</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">acc</span><span class="p">(</span><span class="n">cfmat</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.936
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">.</span><span class="n">roc_curve</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_y_lasso</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Print ROC curve
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span><span class="n">tpr</span><span class="p">)</span>
+<span class="c1"># Print AUC
+</span><span class="n">auc</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span><span class="n">fpr</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'AUC:'</span><span class="p">,</span> <span class="n">auc</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AUC: 0.9439995368672931
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml31/output_14_1.png" /></p>
+
+<h1 id="ridge">Ridge</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ridge fitting
+</span><span class="n">model_r</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span> <span class="c1"># lambda
+</span><span class="n">model_r</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Ridge(alpha=0.01)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model_r</span><span class="p">.</span><span class="n">coef_</span> <span class="c1"># Cannot be 0
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array([-3.71283678e-03,  7.37570775e-03,  3.54973975e-01, -5.28579506e-02,
+        7.83404224e-02,  4.12823466e-03,  3.62504712e-02,  3.27385112e-03,
+        1.73105480e-06, -1.91297381e-02, -8.77388670e-02])
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># predict, confusion matrix, acc
+</span><span class="n">predict_y_ridge</span> <span class="o">=</span> <span class="n">model_r</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span>
+<span class="n">predict_Y_ridge</span> <span class="o">=</span> <span class="n">cut_off</span><span class="p">(</span><span class="n">predict_y_ridge</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">cfmat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">predict_Y_ridge</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">acc</span><span class="p">(</span><span class="n">cfmat</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.932
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">.</span><span class="n">roc_curve</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">predict_y_ridge</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Print ROC curve
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span><span class="n">tpr</span><span class="p">)</span>
+<span class="c1"># Print AUC
+</span><span class="n">auc</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span><span class="n">fpr</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'AUC:'</span><span class="p">,</span> <span class="n">auc</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AUC: 0.9494992377607533
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml31/output_19_1.png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># base on lambda, check how coefficient change / calculate accuracy
+</span><span class="n">alpha</span> <span class="o">=</span>  <span class="n">np</span><span class="p">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># 0.001, 0.01, 0.1, 1, 10
+</span></code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">acc_table</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">alpha</span><span class="p">):</span>
+    <span class="n">lasso</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">a</span><span class="p">).</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">lasso</span><span class="p">.</span><span class="n">intercept_</span><span class="p">,</span> <span class="n">lasso</span><span class="p">.</span><span class="n">coef_</span><span class="p">])))</span>
+    <span class="n">pred_y</span> <span class="o">=</span> <span class="n">lasso</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span> <span class="c1"># full model
+</span>    <span class="n">pred_y</span><span class="o">=</span> <span class="n">cut_off</span><span class="p">(</span><span class="n">pred_y</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">cfmat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_y</span><span class="p">)</span>
+    <span class="n">acc_table</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="n">acc</span><span class="p">(</span><span class="n">cfmat</span><span class="p">)))</span>
+
+
+<span class="n">df_lasso</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">alpha</span><span class="p">).</span><span class="n">T</span>
+<span class="n">acc_table_lasso</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">acc_table</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">alpha</span><span class="p">).</span><span class="n">T</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_lasso</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0.001</th>
+      <th>0.010</th>
+      <th>0.100</th>
+      <th>1.000</th>
+      <th>10.000</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-0.335006</td>
+      <td>-0.381869</td>
+      <td>-0.143698</td>
+      <td>-0.113103</td>
+      <td>0.102286</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.002109</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-0.000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.006829</td>
+      <td>0.002048</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.322174</td>
+      <td>0.114390</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-0.043385</td>
+      <td>-0.000000</td>
+      <td>-0.000000</td>
+      <td>-0.000000</td>
+      <td>-0.000000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.076771</td>
+      <td>0.065834</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.002534</td>
+      <td>0.000477</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-0.000000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.035728</td>
+      <td>0.031340</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.003313</td>
+      <td>0.003554</td>
+      <td>0.003291</td>
+      <td>0.002893</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.000004</td>
+      <td>0.000013</td>
+      <td>0.000016</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>-0.012241</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>-0.067973</td>
+      <td>-0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">acc_table_lasso</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0.001</th>
+      <th>0.010</th>
+      <th>0.100</th>
+      <th>1.000</th>
+      <th>10.000</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.932</td>
+      <td>0.936</td>
+      <td>0.894667</td>
+      <td>0.897333</td>
+      <td>0.897333</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">acc_table</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">alpha</span><span class="p">):</span>
+    <span class="n">ridge</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">a</span><span class="p">).</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">ridge</span><span class="p">.</span><span class="n">intercept_</span><span class="p">,</span> <span class="n">ridge</span><span class="p">.</span><span class="n">coef_</span><span class="p">])))</span>
+    <span class="n">pred_y</span> <span class="o">=</span> <span class="n">ridge</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span> <span class="c1"># full model
+</span>    <span class="n">pred_y</span><span class="o">=</span> <span class="n">cut_off</span><span class="p">(</span><span class="n">pred_y</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">cfmat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span> <span class="n">pred_y</span><span class="p">)</span>
+    <span class="n">acc_table</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="n">acc</span><span class="p">(</span><span class="n">cfmat</span><span class="p">)))</span>
+
+
+<span class="n">df_ridge</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">alpha</span><span class="p">).</span><span class="n">T</span>
+<span class="n">acc_table_ridge</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">acc_table</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">alpha</span><span class="p">).</span><span class="n">T</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_ridge</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0.001</th>
+      <th>0.010</th>
+      <th>0.100</th>
+      <th>1.000</th>
+      <th>10.000</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-0.289557</td>
+      <td>-0.289565</td>
+      <td>-0.289645</td>
+      <td>-0.290438</td>
+      <td>-0.297581</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.003713</td>
+      <td>-0.003713</td>
+      <td>-0.003713</td>
+      <td>-0.003716</td>
+      <td>-0.003723</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.007376</td>
+      <td>0.007376</td>
+      <td>0.007376</td>
+      <td>0.007378</td>
+      <td>0.007388</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.355019</td>
+      <td>0.354974</td>
+      <td>0.354529</td>
+      <td>0.350141</td>
+      <td>0.311781</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-0.052866</td>
+      <td>-0.052858</td>
+      <td>-0.052782</td>
+      <td>-0.052037</td>
+      <td>-0.045541</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.078340</td>
+      <td>0.078340</td>
+      <td>0.078341</td>
+      <td>0.078347</td>
+      <td>0.078316</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.004128</td>
+      <td>0.004128</td>
+      <td>0.004129</td>
+      <td>0.004136</td>
+      <td>0.004175</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.036250</td>
+      <td>0.036250</td>
+      <td>0.036254</td>
+      <td>0.036289</td>
+      <td>0.036578</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.003274</td>
+      <td>0.003274</td>
+      <td>0.003274</td>
+      <td>0.003278</td>
+      <td>0.003313</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.000002</td>
+      <td>0.000002</td>
+      <td>0.000002</td>
+      <td>0.000002</td>
+      <td>0.000004</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>-0.019134</td>
+      <td>-0.019130</td>
+      <td>-0.019086</td>
+      <td>-0.018655</td>
+      <td>-0.014925</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>-0.087756</td>
+      <td>-0.087739</td>
+      <td>-0.087569</td>
+      <td>-0.085897</td>
+      <td>-0.071545</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">acc_table_ridge</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0.001</th>
+      <th>0.010</th>
+      <th>0.100</th>
+      <th>1.000</th>
+      <th>10.000</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.932</td>
+      <td>0.932</td>
+      <td>0.932</td>
+      <td>0.932</td>
+      <td>0.932</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h1 id="visualizing-the-lambdax-vs-coefficienty">Visualizing the Lambda(x) vs Coefficient(y)</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">df_ridge</span><span class="p">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Ridge"</span><span class="p">)</span>
+
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">df_lasso</span><span class="p">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Lasso"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/ml31/output_28_0.png" /></p>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on opentutorial "Coding Everybody" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta
+    property="og:title"
+    content="06. Using My Image for Tensorflow CNN"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on opentutorial "Coding Everybody" Since the post is summarized by Joonho Mark Lee, the contents may different."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    06. Using My Image for Tensorflow CNN
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>06. Using My Image for Tensorflow CNN</b></h1>
+
+<p class="post-metadata text-muted">
+  09 January 2021 -  
+  <b>4 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#tensorflow-102">
+      <span class="tag badge badge-pill text-primary border border-primary">Tensorflow 102</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: <a href="https://opentutorials.org/module/5268/29784">Coding Everyday</a></p>
+
+<h1 id="using-my-image">Using My Image</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">!</span><span class="n">wget</span> <span class="o">-</span><span class="n">q</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="p">.</span><span class="n">githubusercontent</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">blackdew</span><span class="o">/</span><span class="n">tensorflow1</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">csv</span><span class="o">/</span><span class="n">notMNIST_small</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
+<span class="err">!</span><span class="n">tar</span> <span class="o">-</span><span class="n">xzf</span> <span class="n">notMNIST_small</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Read Image Data
+</span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">paths</span> <span class="o">=</span> <span class="n">glob</span><span class="p">.</span><span class="n">glob</span><span class="p">(</span><span class="s">'./notMNIST_small/*/*.png'</span><span class="p">)</span>
+<span class="n">paths</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
+<span class="n">X_data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="n">plt</span><span class="p">.</span><span class="n">imread</span><span class="p">(</span><span class="n">paths</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">))])</span>
+<span class="n">y_data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="n">paths</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">split</span><span class="p">(</span><span class="s">'/'</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">))])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">X_data</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_data</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">X_data</span> <span class="o">=</span> <span class="n">X_data</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">18724</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y_data</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">y_data</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">X_data</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_data</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(18724, 28, 28) (18724,)
+(18724, 28, 28, 1) (18724, 10)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Making Model
+</span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="n">tf</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'swish'</span><span class="p">)(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">MaxPool2D</span><span class="p">()(</span><span class="n">H</span><span class="p">)</span>
+
+<span class="n">H</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'swish'</span><span class="p">)(</span><span class="n">H</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">MaxPool2D</span><span class="p">()(</span><span class="n">H</span><span class="p">)</span>
+
+<span class="n">H</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Flatten</span><span class="p">()(</span><span class="n">H</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'swish'</span><span class="p">)(</span><span class="n">H</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">84</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'swish'</span><span class="p">)(</span><span class="n">H</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'softmax'</span><span class="p">)(</span><span class="n">H</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">model</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s">'categorical_crossentropy'</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="s">'accuracy'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Model: "model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+input_1 (InputLayer)         [(None, 28, 28, 1)]       0
+_________________________________________________________________
+conv2d (Conv2D)              (None, 24, 24, 6)         156
+_________________________________________________________________
+max_pooling2d (MaxPooling2D) (None, 12, 12, 6)         0
+_________________________________________________________________
+conv2d_1 (Conv2D)            (None, 8, 8, 16)          2416
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 4, 4, 16)          0
+_________________________________________________________________
+flatten (Flatten)            (None, 256)               0
+_________________________________________________________________
+dense (Dense)                (None, 120)               30840
+_________________________________________________________________
+dense_1 (Dense)              (None, 84)                10164
+_________________________________________________________________
+dense_2 (Dense)              (None, 10)                850
+=================================================================
+Total params: 44,426
+Trainable params: 44,426
+Non-trainable params: 0
+_________________________________________________________________
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Fitting Model
+</span><span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Epoch 1/10
+586/586 [==============================] - 9s 13ms/step - loss: 0.9070 - accuracy: 0.7181
+Epoch 2/10
+586/586 [==============================] - 8s 13ms/step - loss: 0.3485 - accuracy: 0.8963
+Epoch 3/10
+586/586 [==============================] - 8s 13ms/step - loss: 0.2885 - accuracy: 0.9095
+Epoch 4/10
+586/586 [==============================] - 8s 13ms/step - loss: 0.2317 - accuracy: 0.9311
+Epoch 5/10
+586/586 [==============================] - 7s 13ms/step - loss: 0.1999 - accuracy: 0.9395
+Epoch 6/10
+586/586 [==============================] - 8s 13ms/step - loss: 0.1710 - accuracy: 0.9444
+Epoch 7/10
+586/586 [==============================] - 8s 13ms/step - loss: 0.1472 - accuracy: 0.9533
+Epoch 8/10
+586/586 [==============================] - 8s 13ms/step - loss: 0.1396 - accuracy: 0.9551
+Epoch 9/10
+586/586 [==============================] - 7s 13ms/step - loss: 0.1174 - accuracy: 0.9629
+Epoch 10/10
+586/586 [==============================] - 8s 13ms/step - loss: 0.1015 - accuracy: 0.9671
+
+
+
+
+
+&lt;tensorflow.python.keras.callbacks.History at 0x7f0dea7120f0&gt;
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Using Model
+</span><span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_data</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pred</span><span class="p">).</span><span class="nb">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y_data</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</code></pre></div></div>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>
