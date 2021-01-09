@@ -1,6 +1,30 @@
 [
   
     {
+      "title"    : "30. Lasso Regression, Elastic Net for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-30",
+      "date"     : "2021-01-09 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "29. Ridge Regression for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-29",
+      "date"     : "2021-01-09 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "28. Feature Selection(1) for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-28",
+      "date"     : "2021-01-09 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "07. Better Model for Tensorflow",
       "category" : "",
       "tags"     : "Tensorflow 101",
