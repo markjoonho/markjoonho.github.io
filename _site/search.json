@@ -1,7 +1,15 @@
 [
   
     {
-      "title"    : "33. PCA(2) Definition for Machine Learning",
+      "title"    : "35. PCA(3) Mathematics for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-35",
+      "date"     : "2021-01-11 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "34. PCA(2) Definition for Machine Learning",
       "category" : "",
       "tags"     : "Fast Campus ML",
       "url"      : "/blog/ml-34",

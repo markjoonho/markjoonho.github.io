@@ -18,7 +18,7 @@
   />
   <meta
     property="og:title"
-    content="33. PCA(1) Covariance Matrix for Machine Learning"
+    content="35. PCA(3) Mathematics for Machine Learning"
   />
   <meta
     property="og:description"
@@ -26,7 +26,7 @@
   />
   <meta property="og:type" content="website" />
   <title>
-    33. PCA(1) Covariance Matrix for Machine Learning
+    35. PCA(3) Mathematics for Machine Learning
   </title>
 
   <link
@@ -100,10 +100,10 @@
 
 </nav>
   <div class="col-lg-10 mx-auto mt-5 post">
-  <h1><b>33. PCA(1) Covariance Matrix for Machine Learning</b></h1>
+  <h1><b>35. PCA(3) Mathematics for Machine Learning</b></h1>
 
 <p class="post-metadata text-muted">
-  10 January 2021 -  
+  11 January 2021 -  
   <b>less than 1 min read time</b>
 
   <br>Tags: 
@@ -115,87 +115,107 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
 
-<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a>, <a href="https://darkpgmr.tistory.com/104">Dark Programmer</a></p>
 
-<h2 id="what-is-covariance-matrix">What is Covariance Matrix</h2>
+<h2 id="matrix">Matrix</h2>
 
-<ul>
-  <li>Matrix that shows the relationship between multi variables.</li>
-</ul>
-
-\[Cov(X = \begin{bmatrix} X_1 \\ X_2 \end{bmatrix}) =
-   \begin{bmatrix}
-   Var(X_1) &amp; Cov(X_1, X_2)\\
-   Cov(X_2, X_1) &amp; Var(X_2)
-   \end{bmatrix} =
-   \begin{bmatrix}
-   3 &amp; -2\\
-   -2 &amp; 3
-   \end{bmatrix}\]
-
-<p><img src="/assets/img/ml33/cov_matrix.png" /></p>
-
-<h2 id="how-covariance-matrix-work">How Covariance Matrix Work</h2>
+<h5 id="determinant-a-deta">Determinant \(|A|, det(A)\)</h5>
 
 <ul>
-  <li>When we are doing following calculation, it transfers the position of data.</li>
+  <li>2 by 2 matrix,</li>
 </ul>
 
-\[AX =
+\[A =
 \begin{bmatrix}
-3 &amp; -2\\
--2 &amp; 3
+a_{11} &amp; a_{12}\\
+a_{21} &amp; a_{22}
 \end{bmatrix}
-\begin{bmatrix}
-1 &amp; 0 &amp; 1 &amp; -1\\
-0 &amp; 1 &amp; -1 &amp; 1
-\end{bmatrix} =
-\begin{bmatrix}
-3 &amp; -2 &amp; 5 &amp; -5\\
--2 &amp; 3 &amp; -5 &amp; 5
-\end{bmatrix}\]
 
-<p><img src="/assets/img/ml33/cov_matrix1.png" /></p>
+\Rightarrow
+
+|A| = a_{11}a_{22} - a_{12}a_{21}\]
 
 <ul>
-  <li>When the Covariance Matrix is <em><strong>not positive definite</strong></em>, it transfers but wrong direction.</li>
+  <li>In general,</li>
 </ul>
 
-\[AX =
+\[A =
 \begin{bmatrix}
-1 &amp; -2\\
--2 &amp; 1
+a_{11} &amp; a_{12} &amp; a_{13}\\
+a_{21} &amp; a_{22} &amp; a_{23}\\
+a_{31} &amp; a_{32} &amp; a_{33}
 \end{bmatrix}
-\begin{bmatrix}
-1 &amp; 0 &amp; 1 &amp; -1\\
-0 &amp; 1 &amp; -1 &amp; 1
-\end{bmatrix} =
-\begin{bmatrix}
-1 &amp; -2 &amp; 3 &amp; -3\\
--2 &amp; 1 &amp; -3 &amp; 3
-\end{bmatrix}\]
+\Rightarrow
+\\
+\begin{split}
 
-<p><img src="/assets/img/ml33/cov_matrix2.png" /></p>
+
+|A| \\
+&amp;=
+(-1)^{1+1}a_{11}
+\begin{vmatrix}
+a_{22} &amp; a_{23}\\
+a_{32} &amp; a_{33}
+\end{vmatrix} +
+
+(-1)^{1+2}a_{12}
+\begin{vmatrix}
+a_{21} &amp; a_{23}\\
+a_{31} &amp; a_{33}
+\end{vmatrix} +
+
+(-1)^{1+3}a_{13}
+\begin{vmatrix}
+a_{21} &amp; a_{22}\\
+a_{31} &amp; a_{32}
+\end{vmatrix}
+
+\\
+&amp;= a_{11}
+\begin{vmatrix}
+a_{22} &amp; a_{23}\\
+a_{32} &amp; a_{33}
+\end{vmatrix} -
+
+a_{12}
+\begin{vmatrix}
+a_{21} &amp; a_{23}\\
+a_{31} &amp; a_{33}
+\end{vmatrix} +
+
+a_{13}
+\begin{vmatrix}
+a_{21} &amp; a_{22}\\
+a_{31} &amp; a_{32}
+\end{vmatrix}
+\\
+&amp;= a_{11}(a_{22}a_{33} - a_{23}a_{32}) - a_{12}(a_{21}a{33} - a_{23}a_{31}) + a_{13}(a_{21}a_{32} - a_{22}a_{31})
+\end{split}\]
+
+<h5 id="geometric-meaning-of-determinant">Geometric Meaning of Determinant</h5>
 
 <ul>
-  <li>When the Covariance Matrix is 0, it transfers but arrange as line.</li>
+  <li>\(\mid A\mid\) is the scale of linear transformation.</li>
+  <li>When \(D' = AD\),</li>
 </ul>
 
-\[AX =
-\begin{bmatrix}
-1 &amp; -1\\
--1 &amp; 1
-\end{bmatrix}
-\begin{bmatrix}
-1 &amp; 0 &amp; 1 &amp; -1\\
-0 &amp; 1 &amp; -1 &amp; 1
-\end{bmatrix} =
-\begin{bmatrix}
-1 &amp; -2 &amp; 3 &amp; -3\\
--2 &amp; 1 &amp; -3 &amp; 3
-\end{bmatrix}\]
+\[area(D')=\mid A \mid area(D)\]
 
-<p><img src="/assets/img/ml33/cov_matrix3.png" /></p>
+<ul>
+  <li>Example: when \(A =
+\begin{bmatrix}
+1 &amp; 2\\
+-1 &amp; 3
+\end{bmatrix}
+, |A| = 5.\)</li>
+</ul>
+
+<p><img src="/assets/img/ml35/geometric.png" /></p>
+
+<ul>
+  <li>Area of \(P\) is 1 and area of \(P'\) becomes 5.</li>
+  <li>When \(\mid A\mid = 0\) , \(P'\) become a line.</li>
+</ul>
 
 
 
