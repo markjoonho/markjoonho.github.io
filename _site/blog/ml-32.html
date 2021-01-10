@@ -18,7 +18,7 @@
   />
   <meta
     property="og:title"
-    content="28. Feature Selection(2) for Machine Learning"
+    content="32. Dimension Reduction for Machine Learning"
   />
   <meta
     property="og:description"
@@ -26,7 +26,7 @@
   />
   <meta property="og:type" content="website" />
   <title>
-    28. Feature Selection(2) for Machine Learning
+    32. Dimension Reduction for Machine Learning
   </title>
 
   <link
@@ -100,10 +100,10 @@
 
 </nav>
   <div class="col-lg-10 mx-auto mt-5 post">
-  <h1><b>28. Feature Selection(2) for Machine Learning</b></h1>
+  <h1><b>32. Dimension Reduction for Machine Learning</b></h1>
 
 <p class="post-metadata text-muted">
-  09 January 2021 -  
+  10 January 2021 -  
   <b>less than 1 min read time</b>
 
   <br>Tags: 
@@ -115,49 +115,38 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
 
-<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a>, <a href="https://welcome-to-dewy-world.tistory.com/12">Dewy-World</a></p>
 
-<h2 id="condition-of-good-data">Condition of Good Data</h2>
-
-<ul>
-  <li>Correlationship between \(X\)s(independent variables) should be small.</li>
-  <li>Correlationship between \(X\) and \(Y\) should be big.</li>
-  <li>Number of \(X\)s should be small.</li>
-  <li>Plenty of Clean Data(long and thin).</li>
-</ul>
-
-<p>However, most of our data are not in good condition. Most of our data is short and Fat.</p>
-
-<h2 id="variable-selection">Variable Selection</h2>
-
-<p>Select variables with the condition(no multicollinearity):</p>
+<h2 id="the-curse-of-dimensionality">The Curse of Dimensionality</h2>
 
 <ul>
-  <li>Minimal Redundancy between \(X\)s(independence variables)</li>
-  <li>Maximal Relevance between \(X\) and \(Y\).</li>
+  <li>As the dimension increase, distance between data sets are increasing.</li>
+  <li>It increases the model complexity and bad performance.</li>
 </ul>
 
-<h2 id="feature-selection">Feature Selection</h2>
+<p><img src="/assets/img/ml32/curse_dim.png" /></p>
+
+<h2 id="dimension-reduction-methods">Dimension Reduction Methods</h2>
 
 <ul>
-  <li>Make the coefficient is close to 0 for low relevance \(X\) with \(Y\).</li>
+  <li>
+    <p>From high correlation coefficient variables, except some of it.</p>
+
+    <ul>
+      <li>Loss of Information Occured:</li>
+      <li>Let 0.8 is correlation coefficient, then 0.2 of the information is missing.</li>
+    </ul>
+  </li>
+  <li><strong>PCA(Principa Component Analysis)</strong>
+    <ul>
+      <li>Reduce the loss of information.</li>
+    </ul>
+  </li>
+  <li>Feature Selection</li>
+  <li>Penalty base Regression (lasso, ridge, etc)</li>
+  <li>CNN(filtering)</li>
+  <li>Drop out &amp; Bagging</li>
 </ul>
-
-<h4 id="three-advantagges-of-feature-selection"><strong>Three Advantagges of Feature Selection</strong></h4>
-
-<ol>
-  <li>No noise -&gt; Improve accuracy of Model.</li>
-  <li>Increase calculating speed.</li>
-  <li>Able to decrease multicollinearity -&gt; Improve Model.</li>
-</ol>
-
-<h4 id="three-feature-selection-method"><strong>Three Feature Selection method</strong></h4>
-
-<ol>
-  <li><a href="https://www.joonho.dev/blog/ml-29">Ridge Regression</a></li>
-  <li><a href="https://www.joonho.dev/blog/ml-30">Lasso Regression</a></li>
-  <li><a href="https://www.joonho.dev/blog/ml-30">Elastic-Net Regression</a></li>
-</ol>
 
 
 

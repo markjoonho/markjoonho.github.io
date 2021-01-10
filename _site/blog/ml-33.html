@@ -18,7 +18,7 @@
   />
   <meta
     property="og:title"
-    content="28. Feature Selection(2) for Machine Learning"
+    content="33. PCA(1) Covariance Matrix for Machine Learning"
   />
   <meta
     property="og:description"
@@ -26,7 +26,7 @@
   />
   <meta property="og:type" content="website" />
   <title>
-    28. Feature Selection(2) for Machine Learning
+    33. PCA(1) Covariance Matrix for Machine Learning
   </title>
 
   <link
@@ -100,10 +100,10 @@
 
 </nav>
   <div class="col-lg-10 mx-auto mt-5 post">
-  <h1><b>28. Feature Selection(2) for Machine Learning</b></h1>
+  <h1><b>33. PCA(1) Covariance Matrix for Machine Learning</b></h1>
 
 <p class="post-metadata text-muted">
-  09 January 2021 -  
+  10 January 2021 -  
   <b>less than 1 min read time</b>
 
   <br>Tags: 
@@ -115,49 +115,87 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
 
-<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a>, <a href="https://welcome-to-dewy-world.tistory.com/12">Dewy-World</a></p>
 
-<h2 id="condition-of-good-data">Condition of Good Data</h2>
-
-<ul>
-  <li>Correlationship between \(X\)s(independent variables) should be small.</li>
-  <li>Correlationship between \(X\) and \(Y\) should be big.</li>
-  <li>Number of \(X\)s should be small.</li>
-  <li>Plenty of Clean Data(long and thin).</li>
-</ul>
-
-<p>However, most of our data are not in good condition. Most of our data is short and Fat.</p>
-
-<h2 id="variable-selection">Variable Selection</h2>
-
-<p>Select variables with the condition(no multicollinearity):</p>
+<h2 id="what-is-covariance-matrix">What is Covariance Matrix</h2>
 
 <ul>
-  <li>Minimal Redundancy between \(X\)s(independence variables)</li>
-  <li>Maximal Relevance between \(X\) and \(Y\).</li>
+  <li>Matrix that shows the relationship between multi variables.</li>
 </ul>
 
-<h2 id="feature-selection">Feature Selection</h2>
+\[Cov(X = \begin{bmatrix} X_1 \\ X_2 \end{bmatrix}) =
+   \begin{bmatrix}
+   Var(X_1) &amp; Cov(X_1, X_2)\\
+   Cov(X_2, X_1) &amp; Var(X_2)
+   \end{bmatrix} =
+   \begin{bmatrix}
+   3 &amp; -2\\
+   -2 &amp; 3
+   \end{bmatrix}\]
+
+<p><img src="/assets/img/ml33/cov_matrix.png" /></p>
+
+<h2 id="how-covariance-matrix-work">How Covariance Matrix Work</h2>
 
 <ul>
-  <li>Make the coefficient is close to 0 for low relevance \(X\) with \(Y\).</li>
+  <li>When we are doing following calculation, it transfers the position of data.</li>
 </ul>
 
-<h4 id="three-advantagges-of-feature-selection"><strong>Three Advantagges of Feature Selection</strong></h4>
+\[AX =
+\begin{bmatrix}
+3 &amp; -2\\
+-2 &amp; 3
+\end{bmatrix}
+\begin{bmatrix}
+1 &amp; 0 &amp; 1 &amp; -1\\
+0 &amp; 1 &amp; -1 &amp; 1
+\end{bmatrix} =
+\begin{bmatrix}
+3 &amp; -2 &amp; 5 &amp; -5\\
+-2 &amp; 3 &amp; -5 &amp; 5
+\end{bmatrix}\]
 
-<ol>
-  <li>No noise -&gt; Improve accuracy of Model.</li>
-  <li>Increase calculating speed.</li>
-  <li>Able to decrease multicollinearity -&gt; Improve Model.</li>
-</ol>
+<p><img src="/assets/img/ml33/cov_matrix1.png" /></p>
 
-<h4 id="three-feature-selection-method"><strong>Three Feature Selection method</strong></h4>
+<ul>
+  <li>When the Covariance Matrix is <em><strong>not positive definite</strong></em>, it transfers but wrong direction.</li>
+</ul>
 
-<ol>
-  <li><a href="https://www.joonho.dev/blog/ml-29">Ridge Regression</a></li>
-  <li><a href="https://www.joonho.dev/blog/ml-30">Lasso Regression</a></li>
-  <li><a href="https://www.joonho.dev/blog/ml-30">Elastic-Net Regression</a></li>
-</ol>
+\[AX =
+\begin{bmatrix}
+1 &amp; -2\\
+-2 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+1 &amp; 0 &amp; 1 &amp; -1\\
+0 &amp; 1 &amp; -1 &amp; 1
+\end{bmatrix} =
+\begin{bmatrix}
+1 &amp; -2 &amp; 3 &amp; -3\\
+-2 &amp; 1 &amp; -3 &amp; 3
+\end{bmatrix}\]
+
+<p><img src="/assets/img/ml33/cov_matrix2.png" /></p>
+
+<ul>
+  <li>When the Covariance Matrix is 0, it transfers but arrange as line.</li>
+</ul>
+
+\[AX =
+\begin{bmatrix}
+1 &amp; -1\\
+-1 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+1 &amp; 0 &amp; 1 &amp; -1\\
+0 &amp; 1 &amp; -1 &amp; 1
+\end{bmatrix} =
+\begin{bmatrix}
+1 &amp; -2 &amp; 3 &amp; -3\\
+-2 &amp; 1 &amp; -3 &amp; 3
+\end{bmatrix}\]
+
+<p><img src="/assets/img/ml33/cov_matrix3.png" /></p>
 
 
 
