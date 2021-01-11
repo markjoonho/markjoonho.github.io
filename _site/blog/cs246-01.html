@@ -14,19 +14,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
     name="description"
-    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
   />
   <meta
     property="og:title"
-    content="35. PCA(3) Determinant for Machine Learning"
+    content="Week 01. Linux for CS246"
   />
   <meta
     property="og:description"
-    content="This post is based on "Fast Campus Machine Learning Lecture" Since the post is summarized by Joonho Mark Lee, the contents may different."
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
   />
   <meta property="og:type" content="website" />
   <title>
-    35. PCA(3) Determinant for Machine Learning
+    Week 01. Linux for CS246
   </title>
 
   <link
@@ -100,7 +100,7 @@
 
 </nav>
   <div class="col-lg-10 mx-auto mt-5 post">
-  <h1><b>35. PCA(3) Determinant for Machine Learning</b></h1>
+  <h1><b>Week 01. Linux for CS246</b></h1>
 
 <p class="post-metadata text-muted">
   11 January 2021 -  
@@ -108,121 +108,16 @@
 
   <br>Tags: 
     
-    <a class="text-decoration-none no-underline" href="/blog/tags#fast-campus-ml">
-      <span class="tag badge badge-pill text-primary border border-primary">Fast Campus ML</span>
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-246">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 246</span>
     </a>
     </p>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
 
-<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a>, <a href="https://darkpgmr.tistory.com/104">Dark Programmer</a></p>
+<p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
 
-<h2 id="matrix">Matrix</h2>
-
-<h5 id="determinant-a-deta">Determinant \(|A|, det(A)\)</h5>
-
-<ul>
-  <li>2 by 2 matrix,</li>
-</ul>
-
-\[A =
-\begin{bmatrix}
-a_{11} &amp; a_{12}\\
-a_{21} &amp; a_{22}
-\end{bmatrix}
-
-\Rightarrow
-
-|A| = a_{11}a_{22} - a_{12}a_{21}\]
-
-<ul>
-  <li>In general,</li>
-</ul>
-
-\[A =
-\begin{bmatrix}
-a_{11} &amp; a_{12} &amp; a_{13}\\
-a_{21} &amp; a_{22} &amp; a_{23}\\
-a_{31} &amp; a_{32} &amp; a_{33}
-\end{bmatrix}
-\Rightarrow
-\\
-\begin{split}
-
-
-|A| \\
-&amp;=
-(-1)^{1+1}a_{11}
-\begin{vmatrix}
-a_{22} &amp; a_{23}\\
-a_{32} &amp; a_{33}
-\end{vmatrix} +
-
-(-1)^{1+2}a_{12}
-\begin{vmatrix}
-a_{21} &amp; a_{23}\\
-a_{31} &amp; a_{33}
-\end{vmatrix} +
-
-(-1)^{1+3}a_{13}
-\begin{vmatrix}
-a_{21} &amp; a_{22}\\
-a_{31} &amp; a_{32}
-\end{vmatrix}
-
-\\
-&amp;= a_{11}
-\begin{vmatrix}
-a_{22} &amp; a_{23}\\
-a_{32} &amp; a_{33}
-\end{vmatrix} -
-
-a_{12}
-\begin{vmatrix}
-a_{21} &amp; a_{23}\\
-a_{31} &amp; a_{33}
-\end{vmatrix} +
-
-a_{13}
-\begin{vmatrix}
-a_{21} &amp; a_{22}\\
-a_{31} &amp; a_{32}
-\end{vmatrix}
-\\
-&amp;= a_{11}(a_{22}a_{33} - a_{23}a_{32}) - a_{12}(a_{21}a{33} - a_{23}a_{31}) + a_{13}(a_{21}a_{32} - a_{22}a_{31})
-\end{split}\]
-
-<h5 id="geometric-meaning-of-determinant">Geometric Meaning of Determinant</h5>
-
-<ul>
-  <li>\(\mid A\mid\) is the scale of linear transformation.</li>
-  <li>When \(D' = AD\),</li>
-</ul>
-
-\[area(D')=\mid A \mid area(D)\]
-
-<ul>
-  <li>Example: when \(A =
-\begin{bmatrix}
-1 &amp; 2\\
--1 &amp; 3
-\end{bmatrix}
-, |A| = 5.\)</li>
-</ul>
-
-<p><img src="/assets/img/ml35/geometric.png" /></p>
-
-<ul>
-  <li>Area of \(P\) is 1 and area of \(P'\) becomes 5.</li>
-  <li>When \(\mid A\mid = 0\) , \(P'\) become a line.</li>
-</ul>
-
-<h5 id="how-to-use-determinant">How to use Determinant</h5>
-
-<ul>
-  <li>When \(\mid A \mid = 0\), there is no inverse matrix.</li>
-  <li>We can determine whether the matrix has inverse matrix or not.</li>
-</ul>
+<p>To be Continued</p>
 
 
 

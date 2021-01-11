@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 245 Lecture by Professor Shai Ben-David. Since the post is summarized by Joonho Mark Lee, the contents may di..."
+  />
+  <meta
+    property="og:title"
+    content="Week 01. Introduction, Formal Definition of the Language of Propoitional Logic for CS245"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 245 Lecture by Professor Shai Ben-David. Since the post is summarized by Joonho Mark Lee, the contents may di..."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    Week 01. Introduction, Formal Definition of the Language of Propoitional Logic for CS245
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>Week 01. Introduction, Formal Definition of the Language of Propoitional Logic for CS245</b></h1>
+
+<p class="post-metadata text-muted">
+  11 January 2021 -  
+  <b>2 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-245">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 245</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: University of Waterloo CS 245 by Professor <a href="https://www.youtube.com/channel/UCg9V0y9_RxG7hg5GjcyS2OA">Shai Ben-David</a></p>
+
+<h2 id="what-is-logic">What is Logic?</h2>
+
+<p>It focuses on how to reliably get from assumptions to conclusions.</p>
+
+<p>Example: \(F=ma\)</p>
+
+<ul>
+  <li>Physician: True or False</li>
+  <li>Mathematician: If \(F=ma\) then \(a=\frac{F}{m}\)</li>
+  <li>Logician: If whenever \(X=yz\) then \(y =\frac{X}{z}\). This statement works then if \(F=ma\) then \(a=\frac{F}{m}\)</li>
+</ul>
+
+<h2 id="example-of-logical-argument">Example of Logical Argument</h2>
+
+<ul>
+  <li>
+    <p>Socrates(first logician): If all men are mortal and I am a man, then I am mortal.</p>
+  </li>
+  <li>
+    <p>Russell’s Paradox: The baraber in the village shaves every man in the village that does not shave themselves.
+Does the barber shave himself?</p>
+  </li>
+  <li>
+    <p>Berry’s Paradox:</p>
+
+    <p>Number that can be precisely described by an English sentence:</p>
+
+    <ul>
+      <li>ten</li>
+      <li>ten to the power ten</li>
+      <li>the number of hairs on the heads of all students in the class</li>
+      <li>721638354812638</li>
+    </ul>
+
+    <p>B = all numbers that can be described by an English Sentence of at most 200 characters.
+Is B a finite set?</p>
+
+    <p>Yes, since there are at most 26 ^200 such combinations of characters.
+“The first number that cannot be described by an English Sentence of at most 200 characters”</p>
+  </li>
+  <li>
+    <p>More example:</p>
+  </li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. At least one of the statements in this box is false.
+2. Mark is not going to be millionaire by the age of 25
+</code></pre></div></div>
+
+<h2 id="goal">Goal</h2>
+
+<ul>
+  <li>Develop Reliable tools for going from assumptions to implied conclusions.</li>
+  <li>Do not rely on any Natural Language for that purpose.</li>
+  <li>Constructing(and analyzing) formal languages.
+    <ul>
+      <li>Propositional Logic: \(p\lor q \implies s\)</li>
+      <li>First Order Logic: \(\forall x \exists y(y &gt; x)\)</li>
+      <li>etc.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="syntax-vs-sementics">Syntax vs Sementics</h2>
+
+<p>Syntax: Form of the language
+Sementics: Meaning of the language</p>
+
+<h2 id="syntax-of-propositional-logic">Syntax of Propositional Logic</h2>
+
+<p>Defined the set of all valid <em><strong>Words</strong></em> in this language.</p>
+
+<p>What tools do we have for formally or precisely defining a set?</p>
+
+<ol>
+  <li>Make a list of all members of the set. (0,2,4,…)</li>
+  <li>By a common characteristic. (number that are divisible by 2)</li>
+</ol>
+
+<h2 id="inductive-definitions-of-sets">Inductive Definitions of Sets</h2>
+
+<p>It is consists of followings:</p>
+
+<ol>
+  <li>Universe set: \(X\)</li>
+  <li>Core set: \(A\subseteq X\)</li>
+  <li>Set of Operations(\(P\)): Functions from \(X\times X \times ...\times X \to X\). Requires that \(P\) is finite.</li>
+</ol>
+
+<p>\(B\subseteq X\) is closed under the operations in \(P\), if for every \(b_1..bn \in B\) and \(f \in P\), \(f(b_1, ...,b_k) \in X\)</p>
+
+<h3 id="iap">\(I(A,P)\)</h3>
+
+<p>The set defined inductively from \(X,A,P\) is denoted \(I(A,P)\) is the smallest subset of \(X\) that contains \(A\) and is closed under \(P\).</p>
+
+<p><em><strong>Exampel</strong></em></p>
+
+\[X = Real\space Number , A= {5}, P = \{f1: x-&gt;x+1, f2: x-&gt;x-1\}\]
+
+\[I(A,P) = All \space Integers\]
+
+<h2 id="does-such-smallest-set-always-exist-yes">Does such smallest set always exist? Yes.</h2>
+
+\[I(A,P)= \cap\{B \subseteq X: A \subseteq B, B closed under P\}\]
+
+<p>Recall: Given a Set \(W\), \(\cap W = {x: \forall B \in W, x \in B}\)</p>
+
+<p>Why does the intersection satisfies the requirements of \(I(A,P)\)?</p>
+
+<ol>
+  <li>\(A \subseteq \cap\{B \subseteq X: A \subseteq B, B closed under P\}\). Since \(x \in A\) implies \(x \in B\) for all \(B\) in \(W\)</li>
+</ol>
+
+<p>To be Continued</p>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

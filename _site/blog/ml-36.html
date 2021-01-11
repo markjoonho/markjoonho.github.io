@@ -18,7 +18,7 @@
   />
   <meta
     property="og:title"
-    content="35. PCA(3) Determinant for Machine Learning"
+    content="36. PCA(3) Eigen value, Eigen vector for Machine Learning"
   />
   <meta
     property="og:description"
@@ -26,7 +26,7 @@
   />
   <meta property="og:type" content="website" />
   <title>
-    35. PCA(3) Determinant for Machine Learning
+    36. PCA(3) Eigen value, Eigen vector for Machine Learning
   </title>
 
   <link
@@ -100,7 +100,7 @@
 
 </nav>
   <div class="col-lg-10 mx-auto mt-5 post">
-  <h1><b>35. PCA(3) Determinant for Machine Learning</b></h1>
+  <h1><b>36. PCA(3) Eigen value, Eigen vector for Machine Learning</b></h1>
 
 <p class="post-metadata text-muted">
   11 January 2021 -  
@@ -115,114 +115,118 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
 
-<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a>, <a href="https://darkpgmr.tistory.com/104">Dark Programmer</a></p>
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a>, <a href="https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors">Wikipedia</a></p>
 
-<h2 id="matrix">Matrix</h2>
-
-<h5 id="determinant-a-deta">Determinant \(|A|, det(A)\)</h5>
+<h2 id="eigen-value-eigen-vector">Eigen Value, Eigen Vector</h2>
 
 <ul>
-  <li>2 by 2 matrix,</li>
+  <li>
+    <p>For square matrix A, when following condition is satisfied, \(v\) is eigen vector and \(\lambda\) is eigen value.</p>
+
+    <ul>
+      <li>\(Av = \lambda v\)</li>
+      <li>\(A\) is linearly transform \(v\) as follow.</li>
+    </ul>
+  </li>
 </ul>
 
-\[A =
-\begin{bmatrix}
-a_{11} &amp; a_{12}\\
-a_{21} &amp; a_{22}
+<p><img src="/assets/img/ml36/eigen.png" width="380px" /></p>
+
+<ul>
+  <li>
+    <p>Geometically, for any dot, when we do A transformation eigen vector does not change the direction.</p>
+
+    <ul>
+      <li>For following gif blue and pink is eigen vector</li>
+      <li>For following gif eigen value is amount of scale that changes</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="/assets/img/ml36/example.gif" /></p>
+
+<h2 id="equation-of-eigen-vlaue-eigen-vector">Equation of Eigen Vlaue, Eigen Vector</h2>
+
+\[Av = \lambda v\]
+
+\[Av - \lambda v = 0\]
+
+\[(A - \lambda) v = 0\]
+
+\[(A - \lambda I) v = 0\]
+
+\[\begin{bmatrix}
+(a_{11} - \lambda) &amp; a_{12} \\
+a_{21} &amp; (a_{22} - \lambda)
 \end{bmatrix}
-
-\Rightarrow
-
-|A| = a_{11}a_{22} - a_{12}a_{21}\]
-
-<ul>
-  <li>In general,</li>
-</ul>
-
-\[A =
 \begin{bmatrix}
-a_{11} &amp; a_{12} &amp; a_{13}\\
-a_{21} &amp; a_{22} &amp; a_{23}\\
-a_{31} &amp; a_{32} &amp; a_{33}
+X_1 \\ X_2
 \end{bmatrix}
-\Rightarrow
-\\
-\begin{split}
-
-
-|A| \\
-&amp;=
-(-1)^{1+1}a_{11}
-\begin{vmatrix}
-a_{22} &amp; a_{23}\\
-a_{32} &amp; a_{33}
-\end{vmatrix} +
-
-(-1)^{1+2}a_{12}
-\begin{vmatrix}
-a_{21} &amp; a_{23}\\
-a_{31} &amp; a_{33}
-\end{vmatrix} +
-
-(-1)^{1+3}a_{13}
-\begin{vmatrix}
-a_{21} &amp; a_{22}\\
-a_{31} &amp; a_{32}
-\end{vmatrix}
-
-\\
-&amp;= a_{11}
-\begin{vmatrix}
-a_{22} &amp; a_{23}\\
-a_{32} &amp; a_{33}
-\end{vmatrix} -
-
-a_{12}
-\begin{vmatrix}
-a_{21} &amp; a_{23}\\
-a_{31} &amp; a_{33}
-\end{vmatrix} +
-
-a_{13}
-\begin{vmatrix}
-a_{21} &amp; a_{22}\\
-a_{31} &amp; a_{32}
-\end{vmatrix}
-\\
-&amp;= a_{11}(a_{22}a_{33} - a_{23}a_{32}) - a_{12}(a_{21}a{33} - a_{23}a_{31}) + a_{13}(a_{21}a_{32} - a_{22}a_{31})
-\end{split}\]
-
-<h5 id="geometric-meaning-of-determinant">Geometric Meaning of Determinant</h5>
+= 0\]
 
 <ul>
-  <li>\(\mid A\mid\) is the scale of linear transformation.</li>
-  <li>When \(D' = AD\),</li>
+  <li>From the above equation, when \(X\neq 0\), \(\begin{bmatrix}
+(a_{11} - \lambda) &amp; a_{12} \\
+a_{21} &amp; (a_{22} - \lambda)
+\end{bmatrix}\) should be 0 which means that there does not exist inverse matrix.</li>
 </ul>
 
-\[area(D')=\mid A \mid area(D)\]
+<p><em><strong>Example</strong></em></p>
 
-<ul>
-  <li>Example: when \(A =
-\begin{bmatrix}
-1 &amp; 2\\
--1 &amp; 3
-\end{bmatrix}
-, |A| = 5.\)</li>
-</ul>
+<p>Let \(A = \begin{bmatrix}
+4 &amp; 2 \\
+3 &amp; 5
+\end{bmatrix}\)
+. Find Eigen Value, and Eigen Vector.</p>
 
-<p><img src="/assets/img/ml35/geometric.png" /></p>
+\[C = (A-\lambda I) = \begin{bmatrix}
+4 - \lambda &amp; 2 \\
+3 &amp; 5 - \lambda
+\end{bmatrix}\]
 
-<ul>
-  <li>Area of \(P\) is 1 and area of \(P'\) becomes 5.</li>
-  <li>When \(\mid A\mid = 0\) , \(P'\) become a line.</li>
-</ul>
+\[\mid C\mid = (4-\lambda)(5-\lambda) -6 = \lambda ^2 -9\lambda +14 = (\lambda -7)(\lambda -2) = 0\]
 
-<h5 id="how-to-use-determinant">How to use Determinant</h5>
+\[\lambda_1 = 7,\space \lambda_2 = 2\]
 
-<ul>
-  <li>When \(\mid A \mid = 0\), there is no inverse matrix.</li>
-  <li>We can determine whether the matrix has inverse matrix or not.</li>
-</ul>
+\[\begin{bmatrix}
+4 - \lambda_1 &amp; 2 \\
+3 &amp; 5 - \lambda_1
+\end{bmatrix} v_1 = 0\]
+
+\[\begin{bmatrix}
+4 - 7 &amp; 2 \\
+3 &amp; 5 - 7
+\end{bmatrix} v_1 = 0\]
+
+\[\begin{bmatrix}
+-3 &amp; 2 \\
+3 &amp; -2
+\end{bmatrix} v_1 = 0\]
+
+\[v_1 = \begin{bmatrix}
+2 \\
+3
+\end{bmatrix}\]
+
+\[\begin{bmatrix}
+4 - \lambda_2 &amp; 2 \\
+3 &amp; 5 - \lambda_2
+\end{bmatrix} v_2 = 0\]
+
+\[\begin{bmatrix}
+4 - 2 &amp; 2 \\
+3 &amp; 5 - 2
+\end{bmatrix} v_2 = 0\]
+
+\[\begin{bmatrix}
+2 &amp; 2 \\
+3 &amp; 3
+\end{bmatrix} v_2 = 0\]
+
+\[v_2 = \begin{bmatrix}
+1 \\
+-1
+\end{bmatrix}\]
 
 
 
