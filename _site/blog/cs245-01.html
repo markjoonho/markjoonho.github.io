@@ -18,7 +18,7 @@
   />
   <meta
     property="og:title"
-    content="Week 01. Introduction, Formal Definition of the Language of Propoitional Logic for CS245"
+    content="01. Introduction for CS245"
   />
   <meta
     property="og:description"
@@ -26,7 +26,7 @@
   />
   <meta property="og:type" content="website" />
   <title>
-    Week 01. Introduction, Formal Definition of the Language of Propoitional Logic for CS245
+    01. Introduction for CS245
   </title>
 
   <link
@@ -100,16 +100,16 @@
 
 </nav>
   <div class="col-lg-10 mx-auto mt-5 post">
-  <h1><b>Week 01. Introduction, Formal Definition of the Language of Propoitional Logic for CS245</b></h1>
+  <h1><b>01. Introduction for CS245</b></h1>
 
 <p class="post-metadata text-muted">
   11 January 2021 -  
-  <b>2 mins read time</b>
+  <b>3 mins read time</b>
 
   <br>Tags: 
     
-    <a class="text-decoration-none no-underline" href="/blog/tags#cs-245">
-      <span class="tag badge badge-pill text-primary border border-primary">CS 245</span>
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-245-logic-and-computaion">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 245 Logic and Computaion</span>
     </a>
     </p>
 
@@ -182,8 +182,9 @@ Is B a finite set?</p>
 
 <h2 id="syntax-vs-sementics">Syntax vs Sementics</h2>
 
-<p>Syntax: Form of the language
-Sementics: Meaning of the language</p>
+<p>Syntax: Form of the language</p>
+
+<p>Sementics: Meaning of the language</p>
 
 <h2 id="syntax-of-propositional-logic">Syntax of Propositional Logic</h2>
 
@@ -196,41 +197,99 @@ Sementics: Meaning of the language</p>
   <li>By a common characteristic. (number that are divisible by 2)</li>
 </ol>
 
+<h1 id="tool-for-precise-definitions-of-inifinite-sets">Tool for Precise Definitions of inifinite sets</h1>
+
 <h2 id="inductive-definitions-of-sets">Inductive Definitions of Sets</h2>
 
 <p>It is consists of followings:</p>
 
 <ol>
-  <li>Universe set: \(X\)</li>
+  <li>Universe set(Domain Set): \(X\)</li>
   <li>Core set: \(A\subseteq X\)</li>
   <li>Set of Operations(\(P\)): Functions from \(X\times X \times ...\times X \to X\). Requires that \(P\) is finite.</li>
 </ol>
 
 <p>\(B\subseteq X\) is closed under the operations in \(P\), if for every \(b_1..bn \in B\) and \(f \in P\), \(f(b_1, ...,b_k) \in X\)</p>
 
-<h3 id="iap">\(I(A,P)\)</h3>
+<p><em><strong>Example</strong></em></p>
 
-<p>The set defined inductively from \(X,A,P\) is denoted \(I(A,P)\) is the smallest subset of \(X\) that contains \(A\) and is closed under \(P\).</p>
+\[X = \mathbb{R} , A= {5}, P = \{f1: x-&gt;x+1, f2: x-&gt;x-1\}\]
 
-<p><em><strong>Exampel</strong></em></p>
+\[I(A,P) = \mathbb{I}\]
 
-\[X = Real\space Number , A= {5}, P = \{f1: x-&gt;x+1, f2: x-&gt;x-1\}\]
+<h2 id="some-background-in-set-notation">Some Background in Set Notation</h2>
 
-\[I(A,P) = All \space Integers\]
+<p>Let W be a collection of sets.</p>
 
-<h2 id="does-such-smallest-set-always-exist-yes">Does such smallest set always exist? Yes.</h2>
+<p>Define: \(\cap W = \{x: \forall B \in W, x \in B\}\)</p>
 
-\[I(A,P)= \cap\{B \subseteq X: A \subseteq B, B closed under P\}\]
+<p>Define: \(\cup W = \{x: \exists B \in W, x \in B\}\)</p>
 
-<p>Recall: Given a Set \(W\), \(\cap W = {x: \forall B \in W, x \in B}\)</p>
+<p><em><strong>Example 1</strong></em></p>
 
-<p>Why does the intersection satisfies the requirements of \(I(A,P)\)?</p>
+\[W = \{\{a\},\{a,b,c\},\{a,c\}\}\]
 
-<ol>
-  <li>\(A \subseteq \cap\{B \subseteq X: A \subseteq B, B closed under P\}\). Since \(x \in A\) implies \(x \in B\) for all \(B\) in \(W\)</li>
-</ol>
+\[\cap W = \{a\}\]
 
-<p>To be Continued</p>
+\[\cup W = \mathbb{R}\]
+
+<p><em><strong>Example 2</strong></em></p>
+
+\[W = \{(-R,R) : R &gt; 0\}\]
+
+\[\cap W = \{0\}\]
+
+<p><em><strong>Example 2</strong></em></p>
+
+\[W = \{(0,R) : R &gt; 0\}\]
+
+\[\cap W = \emptyset\]
+
+<blockquote>
+  <p>Claim: For Every \(W\) and every \(B \in W\)</p>
+
+  <p>(a) \(\cap W \subseteq B\)</p>
+
+  <p>(b) \(B \subseteq \cup W\)</p>
+</blockquote>
+
+<h2 id="back-to-the-tool-for-precise-definitions-of-inifinite-sets">Back to the Tool for Precise Definitions of inifinite sets</h2>
+
+<h4 id="iap">\(I(A,P)\)</h4>
+
+<p>The set defined inductively from \(X,A,P\) is denoted \(I(A,P)\) is the smallest subset of \(X\) that contains \(A\) and is closed under the operations in \(P\).</p>
+
+\[I(A,P) = \cap \{B \subseteq X: A \subseteq B, B \space closed\space under P\}\]
+
+<p>Let \(W(A,P)= \{B \subseteq X: A \subseteq B, B \space closed\space under P\}\)</p>
+
+<blockquote>
+  <p>Claim:</p>
+
+  <p>(i) \(A \subseteq \cap W(A,P)\)</p>
+
+  <p>(ii) \(\cap W(A,P)\) is closed under \(P\)</p>
+
+  <p>(iii) \(\cap W(A,P)\) is the minimal set satisfying (i) and (ii)</p>
+
+  <p>(iv) There is no other set satisfying (i),(ii), and (iii)</p>
+</blockquote>
+
+<p><em><strong>Proof (ii)</strong></em></p>
+
+<p>Pick \(b_1, B_2 \in \cap W\) and pick some \(f \in P\), then \(f(b_1, b_2) \in \cap W\).</p>
+
+<p>Pick any \(B \in W(A,P),\space b_1,b_2 \in B,\space B\) is closed, so \(f(b_1, b_2) \in B\).</p>
+
+<p><em><strong>Proof (ii)</strong></em></p>
+
+<p>Let \(D\) be any set satisfying (i), (ii) then \(\cap W \subseteq D\), since in this case \(D\in W\).</p>
+
+<p><em><strong>Proof (iv)</strong></em></p>
+
+<p>If \(E_1, E_2\) are minimal set, then \(E_1 \subseteq E_2\) and \(E_2 \subseteq E_1\).</p>
+
+<p>Thus \(E_1 = E_2\).</p>
 
 
 

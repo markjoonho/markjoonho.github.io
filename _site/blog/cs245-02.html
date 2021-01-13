@@ -14,19 +14,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
     name="description"
-    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+    content="This post is based on University of Waterloo CS 245 Lecture by Professor Shai Ben-David. Since the post is summarized by Joonho Mark Lee, the contents may di..."
   />
   <meta
     property="og:title"
-    content="01. Linux for CS246"
+    content="02. Formal Definition of the Language of Propoitional Logic for CS245"
   />
   <meta
     property="og:description"
-    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+    content="This post is based on University of Waterloo CS 245 Lecture by Professor Shai Ben-David. Since the post is summarized by Joonho Mark Lee, the contents may di..."
   />
   <meta property="og:type" content="website" />
   <title>
-    01. Linux for CS246
+    02. Formal Definition of the Language of Propoitional Logic for CS245
   </title>
 
   <link
@@ -100,7 +100,7 @@
 
 </nav>
   <div class="col-lg-10 mx-auto mt-5 post">
-  <h1><b>01. Linux for CS246</b></h1>
+  <h1><b>02. Formal Definition of the Language of Propoitional Logic for CS245</b></h1>
 
 <p class="post-metadata text-muted">
   13 January 2021 -  
@@ -108,93 +108,77 @@
 
   <br>Tags: 
     
-    <a class="text-decoration-none no-underline" href="/blog/tags#cs-246-object-oriented-software-development">
-      <span class="tag badge badge-pill text-primary border border-primary">CS 246 Object-Oriented Software Development</span>
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-245-logic-and-computaion">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 245 Logic and Computaion</span>
     </a>
     </p>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
 
-<p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
+<p>Source: University of Waterloo CS 245 by Professor <a href="https://www.youtube.com/channel/UCg9V0y9_RxG7hg5GjcyS2OA">Shai Ben-David</a></p>
 
-<h2 id="cs-246---objectives">CS 246 - Objectives</h2>
-
-<ul>
-  <li>Design</li>
-  <li>Implement</li>
-  <li>Test</li>
-  <li>Debug</li>
-</ul>
-
-<p>object-oriented C++ program</p>
-
-<h2 id="design-quality">Design Quality</h2>
+<h1 id="defining-the-language-of-propositional-calculus">Defining the Language of Propositional Calculus</h1>
 
 <ul>
-  <li>Modules with
+  <li>
+    <p>Set of Symbols (Characters): letters</p>
+
     <ul>
-      <li>High Cohesion</li>
-      <li>Low Coupling</li>
+      <li>Logical Symbols: \((, ), \land, \lor, \implies, \neg\)</li>
+      <li>Variables: \(P_1, P_2,...,P_n\)</li>
     </ul>
   </li>
-  <li>Documentation</li>
-  <li>Testing</li>
+  <li>
+    <p>Set of Expressions: finite sequences of symbols</p>
+
+    <ul>
+      <li>\(p\lor q\), (((\land \land)))</li>
+    </ul>
+  </li>
+  <li>
+    <p>Set of Propositions: words</p>
+  </li>
 </ul>
 
-<h2 id="steps">Steps</h2>
+<hr />
 
-<ol>
-  <li>Linux Programming Tools</li>
-  <li>C++ Language</li>
-  <li>Object-Oriented Programming</li>
-  <li>Software Engineering</li>
-</ol>
+<p>\(X\) = the set of expressions</p>
 
-<h1 id="linux-programming-tools">Linux Programming Tools</h1>
+<p>\(A\) = \(\{P_1, P_2, ..., P_n, ...\}\).</p>
 
-<h2 id="bash-shell">Bash Shell</h2>
+<p>\(P\)= \(\{\frac{\alpha, \beta}{(\alpha \lor \beta)}, \frac{\alpha, \beta}{(\alpha \land \beta)}, \frac{\alpha, \beta}{(\alpha \implies \beta)}, \frac{\alpha}{(\neg \alpha)}\}\).</p>
 
-<p><img src="/assets/img/cs246/shell-io1.png" /></p>
+<p>Words = Propositions = \(I(A,P)\)</p>
 
-<p>SSH - Secure Shell Connection</p>
+<hr />
 
-<p><img src="/assets/img/cs246/shell-io2.png" /></p>
+<p><em><strong>Examples of Propositions</strong></em></p>
 
-<ul>
-  <li>Standarad Input <code class="language-plaintext highlighter-rouge">stdin</code>: Place to get input (keyboard).</li>
-  <li>Standard Output <code class="language-plaintext highlighter-rouge">stdout</code>: Place to show output (monitor).</li>
-  <li>Standard Error <code class="language-plaintext highlighter-rouge">stderr</code>: Similar as <code class="language-plaintext highlighter-rouge">stdout</code> however shows error message.</li>
-</ul>
+<p>\(P_1\), \(P_{17}\), \((\neg P_{18})\), \((P_1 \lor P_{100})\), \((\neg (\neg P_{20}))\), …</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> hello2.txt
-Hello
-<span class="nv">$ </span><span class="nb">cat</span> &lt; hello2.txt
-Hello
-<span class="nv">$ </span><span class="nb">cat</span> &lt; hello2.txt <span class="o">&gt;</span> hello3.txt
-<span class="nv">$ </span><span class="nb">cat</span> &lt; hello3.txt
-Hello
-</code></pre></div></div>
+<hr />
 
-<h2 id="file-system-and-paths">File System and Paths</h2>
+<p>A Construction sequence for an expresion \(\alpha\) is a finite sequence \(\alpha\) = \(\alpha_1\), \(\alpha_2\), …, \(\alpha_n\) such that each \(\alpha_i\) is either a member of the core set A or it is the result of applying some \(f \in P\) to \(\alpha_j\), \(\alpha_k\) where \(j\), \(k &lt; i\) .</p>
 
-<p><em><strong>Absolute Paths</strong></em></p>
+<blockquote>
+  <p>Claim: For every \(X\), \(A\), \(P\), and expression \(\alpha\), \(\alpha \in I(A,P)\) if and only if there exists a construction sequence for \(\alpha\) .</p>
+</blockquote>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/                     # root(parent)
-/file.txt/            # check it by $ cd ~
-/etc/
-/etc/file.txt
-/etc/subdir/abc/file.txt
-</code></pre></div></div>
+<hr />
 
-<p><em><strong>Relative Paths</strong></em></p>
+<p><em><strong>Property 1</strong></em></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>file.txt
-subdir/abc/file.txt
-./script.sh         # current directory
-../bin/script.sh    # upper directory
-</code></pre></div></div>
+<p>In every proposition, the number of left brackets ‘(‘ equals the number of right brackets ‘)’.</p>
 
-<p>To be Continued</p>
+<p>How can we show that some property T is satisfied by all members of I(A, P)?</p>
+
+<p>(i) Every member of A have property T,</p>
+
+<p>(ii) If \(\alpha_1, \alpha_2\) has property T and \(f \in P\), then \(f(\alpha_1, \alpha_2)\) has T</p>
+
+<p>If (i) and (ii) meets, then \(I(A,P) \subseteq T\).</p>
+
+<p>To Be Continue</p>
 
 
 

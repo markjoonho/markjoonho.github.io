@@ -1,10 +1,18 @@
 [
   
     {
-      "title"    : "Week 01. Intro, Linux for CS246",
+      "title"    : "01. Linux for CS246",
       "category" : "",
-      "tags"     : "CS 246",
+      "tags"     : "CS 246 Object-Oriented Software Development",
       "url"      : "/blog/cs246-01",
+      "date"     : "2021-01-13 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "02. Formal Definition of the Language of Propoitional Logic for CS245",
+      "category" : "",
+      "tags"     : "CS 245 Logic and Computaion",
+      "url"      : "/blog/cs245-02",
       "date"     : "2021-01-13 00:00:00 +0900"
     } ,
   
@@ -17,9 +25,9 @@
     } ,
   
     {
-      "title"    : "Week 01. Introduction, Formal Definition of the Language of Propoitional Logic for CS245",
+      "title"    : "01. Introduction for CS245",
       "category" : "",
-      "tags"     : "CS 245",
+      "tags"     : "CS 245 Logic and Computaion",
       "url"      : "/blog/cs245-01",
       "date"     : "2021-01-11 00:00:00 +0900"
     } ,
