@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "37. PCA(4) Singular Value Decomposition for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-37",
+      "date"     : "2021-01-14 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "01. Linux for CS246",
       "category" : "",
       "tags"     : "CS 246 Object-Oriented Software Development",
