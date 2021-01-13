@@ -1,19 +1,11 @@
 [
   
     {
-      "title"    : "Week 01. Linux for CS246",
+      "title"    : "Week 01. Intro, Linux for CS246",
       "category" : "",
       "tags"     : "CS 246",
       "url"      : "/blog/cs246-01",
-      "date"     : "2021-01-11 00:00:00 +0900"
-    } ,
-  
-    {
-      "title"    : "Week 01. Introduction, Formal Definition of the Language of Propoitional Logic for CS245",
-      "category" : "",
-      "tags"     : "CS 245",
-      "url"      : "/blog/cs245-01",
-      "date"     : "2021-01-11 00:00:00 +0900"
+      "date"     : "2021-01-13 00:00:00 +0900"
     } ,
   
     {
@@ -21,6 +13,14 @@
       "category" : "",
       "tags"     : "Fast Campus ML",
       "url"      : "/blog/ml-36",
+      "date"     : "2021-01-12 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "Week 01. Introduction, Formal Definition of the Language of Propoitional Logic for CS245",
+      "category" : "",
+      "tags"     : "CS 245",
+      "url"      : "/blog/cs245-01",
       "date"     : "2021-01-11 00:00:00 +0900"
     } ,
   

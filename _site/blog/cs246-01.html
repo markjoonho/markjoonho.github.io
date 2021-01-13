@@ -18,7 +18,7 @@
   />
   <meta
     property="og:title"
-    content="Week 01. Linux for CS246"
+    content="Week 01. Intro, Linux for CS246"
   />
   <meta
     property="og:description"
@@ -26,7 +26,7 @@
   />
   <meta property="og:type" content="website" />
   <title>
-    Week 01. Linux for CS246
+    Week 01. Intro, Linux for CS246
   </title>
 
   <link
@@ -100,10 +100,10 @@
 
 </nav>
   <div class="col-lg-10 mx-auto mt-5 post">
-  <h1><b>Week 01. Linux for CS246</b></h1>
+  <h1><b>Week 01. Intro, Linux for CS246</b></h1>
 
 <p class="post-metadata text-muted">
-  11 January 2021 -  
+  13 January 2021 -  
   <b>less than 1 min read time</b>
 
   <br>Tags: 
@@ -116,6 +116,83 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
 
 <p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
+
+<h2 id="cs-246---objectives">CS 246 - Objectives</h2>
+
+<ul>
+  <li>Design</li>
+  <li>Implement</li>
+  <li>Test</li>
+  <li>Debug</li>
+</ul>
+
+<p>object-oriented C++ program</p>
+
+<h2 id="design-quality">Design Quality</h2>
+
+<ul>
+  <li>Modules with
+    <ul>
+      <li>High Cohesion</li>
+      <li>Low Coupling</li>
+    </ul>
+  </li>
+  <li>Documentation</li>
+  <li>Testing</li>
+</ul>
+
+<h2 id="steps">Steps</h2>
+
+<ol>
+  <li>Linux Programming Tools</li>
+  <li>C++ Language</li>
+  <li>Object-Oriented Programming</li>
+  <li>Software Engineering</li>
+</ol>
+
+<h1 id="linux-programming-tools">Linux Programming Tools</h1>
+
+<h2 id="bash-shell">Bash Shell</h2>
+
+<p><img src="/assets/img/cs246/shell-io1.png" /></p>
+
+<p>SSH - Secure Shell Connection</p>
+
+<p><img src="/assets/img/cs246/shell-io2.png" /></p>
+
+<ul>
+  <li>Standarad Input <code class="language-plaintext highlighter-rouge">stdin</code>: Place to get input (keyboard).</li>
+  <li>Standard Output <code class="language-plaintext highlighter-rouge">stdout</code>: Place to show output (monitor).</li>
+  <li>Standard Error <code class="language-plaintext highlighter-rouge">stderr</code>: Similar as <code class="language-plaintext highlighter-rouge">stdout</code> however shows error message.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> hello2.txt
+Hello
+<span class="nv">$ </span><span class="nb">cat</span> &lt; hello2.txt
+Hello
+<span class="nv">$ </span><span class="nb">cat</span> &lt; hello2.txt <span class="o">&gt;</span> hello3.txt
+<span class="nv">$ </span><span class="nb">cat</span> &lt; hello3.txt
+Hello
+</code></pre></div></div>
+
+<h2 id="file-system-and-paths">File System and Paths</h2>
+
+<p><em><strong>Absolute Paths</strong></em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/                     # root(parent)
+/file.txt/            # check it by $ cd ~
+/etc/
+/etc/file.txt
+/etc/subdir/abc/file.txt
+</code></pre></div></div>
+
+<p><em><strong>Relative Paths</strong></em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>file.txt
+subdir/abc/file.txt
+./script.sh         # current directory
+../bin/script.sh    # upper directory
+</code></pre></div></div>
 
 <p>To be Continued</p>
 
