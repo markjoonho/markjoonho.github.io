@@ -23,6 +23,12 @@ Hi I am **{{ site.author.name }}** :wave:,<br>
 
 ## **Work**
 
+##### _Data Analyst (Part Time, Remote), Crowdworks, Inc_
+
+- January 2021 ~ Current
+
+<br>
+
 ##### _Growth Hacker Assistant (Co-op), Crowdworks, Inc_
 
 - May 2019 ~ December 2019 (8 months)
@@ -42,21 +48,24 @@ Hi I am **{{ site.author.name }}** :wave:,<br>
 
 ## Certification
 
-#### _AI Manager Process_
+##### _AI Manager Process_
 
-- [Korea IT Business Promotion Association](https://koipa.or.kr/index.php), Published: December 2020
+- [Korea IT Business Promotion Association](https://koipa.or.kr/index.php)
+- Published: December 2020
 
 <br>
 
-#### _AI Researcher Process_
+##### _AI Researcher Process_
 
-- [Korea IT Business Promotion Association](https://koipa.or.kr/index.php), Published: December 2020
+- [Korea IT Business Promotion Association](https://koipa.or.kr/index.php)
+- Published: December 2020
 
 <br>
 
 ##### _Llyd Auckland Invitational Mathematics Workshop_
 
-- University of Waterloo, Published: May 2016
+- University of Waterloo
+- Published: May 2016
 
 ---
 
