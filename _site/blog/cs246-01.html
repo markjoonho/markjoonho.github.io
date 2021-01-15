@@ -104,7 +104,7 @@
 
 <p class="post-metadata text-muted">
   13 January 2021 -  
-  <b>less than 1 min read time</b>
+  <b>5 mins read time</b>
 
   <br>Tags: 
     
@@ -117,42 +117,28 @@
 
 <p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
 
-<h2 id="cs-246---objectives">CS 246 - Objectives</h2>
+<hr />
+
+<p>Contents:</p>
 
 <ul>
-  <li>Design</li>
-  <li>Implement</li>
-  <li>Test</li>
-  <li>Debug</li>
+  <li><a href="#the-shell">The Shell</a></li>
+  <li><a href="#the-file-system-and-paths">The File System and Paths</a></li>
+  <li><a href="#file-permission">File Permission</a></li>
+  <li><a href="#changing-file-permissions">Changing File Permissions</a></li>
+  <li><a href="#executing-commands">Executing Commands</a></li>
+  <li><a href="#inputoutput-redirection">Input/Output Redirection</a></li>
+  <li><a href="#command-line-arguments">Command-line Arguments</a></li>
+  <li><a href="#pipes">Pipes</a></li>
+  <li><a href="#globbing-patterns">Globbing Patterns</a></li>
+  <li><a href="#linux-command-summary">Linux Command Summary</a></li>
 </ul>
 
-<p>object-oriented C++ program</p>
+<hr />
 
-<h2 id="design-quality">Design Quality</h2>
+<h1 id="the-shell">The Shell</h1>
 
-<ul>
-  <li>Modules with
-    <ul>
-      <li>High Cohesion</li>
-      <li>Low Coupling</li>
-    </ul>
-  </li>
-  <li>Documentation</li>
-  <li>Testing</li>
-</ul>
-
-<h2 id="steps">Steps</h2>
-
-<ol>
-  <li>Linux Programming Tools</li>
-  <li>C++ Language</li>
-  <li>Object-Oriented Programming</li>
-  <li>Software Engineering</li>
-</ol>
-
-<h1 id="linux-programming-tools">Linux Programming Tools</h1>
-
-<h2 id="bash-shell">Bash Shell</h2>
+<h2 id="input-and-output">Input and Output</h2>
 
 <p><img src="/assets/img/cs246/shell-io1.png" /></p>
 
@@ -160,29 +146,24 @@
 
 <p><img src="/assets/img/cs246/shell-io2.png" /></p>
 
+<h2 id="standard-input-and-output-device">Standard Input and Output Device</h2>
+
 <ul>
   <li>Standarad Input <code class="language-plaintext highlighter-rouge">stdin</code>: Place to get input (keyboard).</li>
   <li>Standard Output <code class="language-plaintext highlighter-rouge">stdout</code>: Place to show output (monitor).</li>
   <li>Standard Error <code class="language-plaintext highlighter-rouge">stderr</code>: Similar as <code class="language-plaintext highlighter-rouge">stdout</code> however shows error message.</li>
 </ul>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> hello2.txt
-Hello
-<span class="nv">$ </span><span class="nb">cat</span> &lt; hello2.txt
-Hello
-<span class="nv">$ </span><span class="nb">cat</span> &lt; hello2.txt <span class="o">&gt;</span> hello3.txt
-<span class="nv">$ </span><span class="nb">cat</span> &lt; hello3.txt
-Hello
-</code></pre></div></div>
+<h1 id="file-system-and-paths">File System and Paths</h1>
 
-<h2 id="file-system-and-paths">File System and Paths</h2>
+<h2 id="absolute-and-relative-paths">Absolute and Relative Paths</h2>
 
 <p><em><strong>Absolute Paths</strong></em></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/                     # root(parent)
-/file.txt/            # check it by $ cd ~
-/etc/
-/etc/file.txt
+/file.txt/            # check it by following
+/etc/                 # $ cd ~
+/etc/file.txt         # $ pwd
 /etc/subdir/abc/file.txt
 </code></pre></div></div>
 
@@ -194,7 +175,169 @@ subdir/abc/file.txt
 ../bin/script.sh    # upper directory
 </code></pre></div></div>
 
-<p>To be Continued</p>
+<h2 id="changing-the-current-directory">Changing the Current Directory</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">$ pwd</code> tells you what directory you are currently sitting in</li>
+  <li><code class="language-plaintext highlighter-rouge">$ cd</code> takes you back home</li>
+  <li><code class="language-plaintext highlighter-rouge">$ cd -</code> takes you to the previous dir you were sitting in</li>
+  <li><code class="language-plaintext highlighter-rouge">$ cd ..</code> takes you to the parent of the current dir</li>
+  <li><code class="language-plaintext highlighter-rouge">$ cd .</code> leaves you where you are</li>
+</ul>
+
+<h1 id="file-permission">File Permission</h1>
+
+<h2 id="command-ls">Command ls</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span>
+<span class="c"># -rw-r--r-- 1 joonholee staff 1563 Dec 28 06:34 Untitled.cc</span>
+<span class="c">#  type/perms    owner   group size   modified      name</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>type</strong>: <code class="language-plaintext highlighter-rouge">-</code> for any ordinary file, <code class="language-plaintext highlighter-rouge">d</code> for a directory.</li>
+  <li><strong>permission</strong>: three groups of three bits, check below.</li>
+  <li><strong>owner</strong>: ID of the user that owns the file. Usually the uer who created file. Able to transfer to another user(using <code class="language-plaintext highlighter-rouge">chown</code>).</li>
+  <li><strong>group</strong>: A user can belog to one or more group. A file can be associated with one group. When a user and a file are in the same group, the group permissions are in effect for that user. Able to change group association.(using <code class="language-plaintext highlighter-rouge">chown</code>)</li>
+  <li><strong>size</strong>: The size of the file in bytes.</li>
+  <li><strong>modified</strong>: The date and time when the file was last modified.</li>
+  <li><strong>name</strong>: The file name.</li>
+</ul>
+
+<h2 id="file-permissions">File Permissions</h2>
+
+<p>Each file or directories have following three types of permissions.</p>
+
+<ul>
+  <li><strong>user permission</strong>: apply to the file’s owner</li>
+  <li><strong>group permission</strong>: apply to members of the file’s group</li>
+  <li><strong>other permission</strong>: apply to every one</li>
+</ul>
+
+<p>Each one of these types may contain three permissions.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Bit</th>
+      <th>Meaning for ordinary file</th>
+      <th>Meaning for direcotries</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">r</code></td>
+      <td>file’s content can be read</td>
+      <td>directory’s content can be read(i.e. <code class="language-plaintext highlighter-rouge">ls</code>, glbbing, tab completion)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">w</code></td>
+      <td>file’s content can be modified</td>
+      <td>directory’s content can be modified</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">x</code></td>
+      <td>file’s content can be executed</td>
+      <td>directory can be navigated into(i.e. <code class="language-plaintext highlighter-rouge">cd</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>These permissions are displayed by <code class="language-plaintext highlighter-rouge">ls</code> at the first nine character.</p>
+
+<p><code class="language-plaintext highlighter-rouge">rwxrw-r--</code> means owner get <code class="language-plaintext highlighter-rouge">rwx</code> permission, group get <code class="language-plaintext highlighter-rouge">rw</code> permission, others get <code class="language-plaintext highlighter-rouge">r</code> permssion.</p>
+
+<p><code class="language-plaintext highlighter-rouge">rw-r-----</code> means owner get <code class="language-plaintext highlighter-rouge">rw</code> permission, group get <code class="language-plaintext highlighter-rouge">r</code>, others get none.</p>
+
+<p>There are other permission <code class="language-plaintext highlighter-rouge">s</code> and <code class="language-plaintext highlighter-rouge">t</code>. If you are curious, check <code class="language-plaintext highlighter-rouge">man chmod</code>.</p>
+
+<h1 id="changing-file-permissions">Changing File Permissions</h1>
+
+<p>Use the command <code class="language-plaintext highlighter-rouge">chmod &lt;mode&gt; &lt;file&gt;</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">&lt;file&gt;</code> is the name of the file you want to change.</p>
+
+<p><code class="language-plaintext highlighter-rouge">&lt;mode&gt;</code> consists of three parts:</p>
+
+<ol>
+  <li>user types: <code class="language-plaintext highlighter-rouge">u</code>(user/owner), <code class="language-plaintext highlighter-rouge">g</code>(group), <code class="language-plaintext highlighter-rouge">o</code>(other), <code class="language-plaintext highlighter-rouge">a</code>(all)</li>
+  <li>operator: <code class="language-plaintext highlighter-rouge">+</code>(add permission), <code class="language-plaintext highlighter-rouge">-</code>(subtract permission), <code class="language-plaintext highlighter-rouge">=</code>(set permission exactly)</li>
+  <li>permissions: <code class="language-plaintext highlighter-rouge">r</code>(read), <code class="language-plaintext highlighter-rouge">w</code>(write), <code class="language-plaintext highlighter-rouge">x</code>(execute)</li>
+</ol>
+
+<p><em><strong>Examples</strong></em></p>
+
+<ul>
+  <li>Give others read permission: <code class="language-plaintext highlighter-rouge">chmod o+r file</code></li>
+  <li>Maxe everyone’s permission to read and execute and remove write permissions: <code class="language-plaintext highlighter-rouge">chmod a=rx file</code></li>
+  <li>Give owner full control: <code class="language-plaintext highlighter-rouge">chmod u+rwx file</code> or <code class="language-plaintext highlighter-rouge">chmod u=rwx file</code></li>
+</ul>
+
+<h1 id="executing-commands">Executing Commands</h1>
+
+<p><code class="language-plaintext highlighter-rouge">bash</code> has two ways to execute commands which are interactive mode and non-interactive mode.</p>
+
+<ul>
+  <li>interactive mode: receives commands directly from the user</li>
+  <li>non-interactive mode: commands are being read from somewhere else, such as a script file</li>
+</ul>
+
+<p>We will learn interactive mode first</p>
+
+<h2 id="the-command-prompt">The command Prompt</h2>
+
+<p>In the interactive mode, shell displyas a prompt while shell is waiting for the input. It usally displays id of current user, current working directory, or computer id. It usually ends with a character such as <code class="language-plaintext highlighter-rouge">$</code> or <code class="language-plaintext highlighter-rouge">%</code>. We can fully customized Prompt by the user.</p>
+
+<p><em><strong>Example</strong></em></p>
+
+<p><code class="language-plaintext highlighter-rouge">joonholee@Joonhoui-MacBookPro Desktop%</code>
+<code class="language-plaintext highlighter-rouge">@ubuntu1804-002%</code></p>
+
+<h2 id="types-of-commands">Types of Commands</h2>
+
+<p><code class="language-plaintext highlighter-rouge">bash</code> can understand a few native commands. However, most of time, you will give commands to execute scripts or programs.</p>
+
+<ul>
+  <li>
+    <p>Scripts: Text file that contain commands in a specific programming language. Cannot executed directyl by the operating system, needs interpreters to read and execute (i.e. bash, python, php, etc)</p>
+  </li>
+  <li>
+    <p>Programs: Files that contain commands in binary format. File contents are sequences of bytes which is for operating system, not by a human. Programs can be executed directly by the operating system. Usual way to create a program is to write it using a program language and compile it.</p>
+  </li>
+</ul>
+
+<p>Whenever you type a command in the prompt <code class="language-plaintext highlighter-rouge">bash</code> will interpret it. First, try to try to find it from native command. If not, look for a script or program on the computer and will execute it if such a script or program is found. Otherwise it shows <code class="language-plaintext highlighter-rouge">Command not found</code>.</p>
+
+<h1 id="inputoutput-redirection">Input/Output Redirection</h1>
+
+<h2 id="command-cat">Command <code class="language-plaintext highlighter-rouge">cat</code></h2>
+
+<p><code class="language-plaintext highlighter-rouge">cat</code> reads the contents of standard input and writes it back to standard output.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat
+</span>Hello, Linux    <span class="c"># input</span>
+Hello, Linux    <span class="c"># output</span>
+^D              <span class="c"># ctrl+D to quit</span>
+</code></pre></div></div>
+
+<h2 id="redirecting-input-and-output">Redirecting Input and Output</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> hello2.txt
+Hello
+<span class="nv">$ </span><span class="nb">cat</span> &lt; hello2.txt
+Hello
+<span class="nv">$ </span><span class="nb">cat</span> &lt; hello2.txt <span class="o">&gt;</span> hello3.txt
+<span class="nv">$ </span><span class="nb">cat</span> &lt; hello3.txt
+Hello
+</code></pre></div></div>
+
+<h1 id="command-line-arguments">Command-line Arguments</h1>
+
+<h1 id="pipes">Pipes</h1>
+
+<h1 id="globbing-patterns">Globbing Patterns</h1>
+
+<h1 id="linux-command-summary">Linux Command Summary</h1>
 
 
 
