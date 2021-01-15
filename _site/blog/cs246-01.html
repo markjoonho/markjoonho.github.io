@@ -104,7 +104,7 @@
 
 <p class="post-metadata text-muted">
   13 January 2021 -  
-  <b>13 mins read time</b>
+  <b>18 mins read time</b>
 
   <br>Tags: 
     
@@ -580,26 +580,8 @@ cs246 : Exam 1
 
 <ul>
   <li>The basic pattern is all normal characters, and it matches the named character.</li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>(XYZ) groups patterns, usually in order to use</td>
-          <td>, *, or + (below) on a whole group.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>(X</td>
-          <td>Y) matches either X or Y, and X or Y may themselves be more sophisticated patterns.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
+  <li>(XYZ) groups patterns, usually in order to use |, *, or + (below) on a whole group.</li>
+  <li>(X|Y) matches either X or Y, and X or Y may themselves be more sophisticated patterns.</li>
   <li>[…] matches any of the characters between the square brackets.</li>
   <li>[…] can also match ranges of characters, specified like a-z.</li>
   <li>[^…] is an inversion of […]. For instance, [^a-z] matches anything other than a lower-case character.</li>
@@ -626,16 +608,233 @@ cs246 : Exam 1
 <p>Bash also has a simple programming language. By putting a sequence of hell commands into a text file and use “.sh” for the file name suffix. For example let’s create <code class="language-plaintext highlighter-rouge">basic.sh</code> as follow.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> basic.sh
-<span class="c">#!/bin/bash -x</span>
+<span class="c">#!/bin/bash</span>
 <span class="nb">date
 whoami
 pwd
 echo</span> <span class="nv">$PATH</span>
 </code></pre></div></div>
 
-<p>shebang line which is <code class="language-plaintext highlighter-rouge">#!/bin/bash</code> does not required, but it’s a good idea. This line tells the executing shell which shell lnaguage the script is written in.</p>
+<p>shebang line which is <code class="language-plaintext highlighter-rouge">#!/bin/bash</code> does not required, but it’s a good idea. This line tells the executing shell which shell lnaguage the script is written in. If you put <code class="language-plaintext highlighter-rouge">-x</code> on the shebang line, it tells bash to produce verbose output.</p>
 
-<p>If you put <code class="language-plaintext highlighter-rouge">-x</code> on the shebang line, it tells bash to produce verbose output.</p>
+<p>Let’s execute it.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> &lt; basic.sh
+<span class="c">#!/bin/bash</span>
+<span class="nb">date
+whoami
+pwd
+echo</span> <span class="nv">$PATH</span>
+
+<span class="nv">$ </span>bash basic.sh
+Fri Jan 15 18:08:39 KST 2021
+joonholee
+/Users/joonholee/Desktop
+/Users/joonholee/opt/anaconda3/bin:/Users/joonholee/opt/anaconda3/condabin:/Library/Frameworks/Python.framework/Versions/3.9/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/joonholee/.gem/ruby/2.6.3p62/bin:/Users/joonholee/.gem/ruby/2.6.0/bin:/usr/local/opt/ruby/bin
+</code></pre></div></div>
+
+<p>It is tedious to write bash every time.</p>
+
+<h3 id="running-a-script-file">Running a Script File</h3>
+
+<p>We will use the relative path as below. However, because of permission, it will deny as follow. Thus, we need to add execute <a href="#file-permission">file permission</a> to user.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./basic.sh
+zsh: permission denied: ./basic.sh
+
+<span class="nv">$ </span><span class="nb">chmod </span>u+x basic.sh
+
+<span class="nv">$ </span>./basic.sh
+Fri Jan 15 18:14:56 KST 2021
+joonholee
+/Users/joonholee/Desktop
+/Users/joonholee/opt/anaconda3/bin:/Users/joonholee/opt/anaconda3/condabin:/Library/Frameworks/Python.framework/Versions/3.9/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/joonholee/.gem/ruby/2.6.3p62/bin:/Users/joonholee/.gem/ruby/2.6.0/bin:/usr/local/opt/ruby/bin
+</code></pre></div></div>
+
+<h3 id="bash-as-a-programming-language">Bash as a programming Language</h3>
+
+<p>Bash also has a simple programming language syntax. This also means that it may be hard to see why script is not working. To check it we should wirte <code class="language-plaintext highlighter-rouge">-x</code> at shbang.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash -x</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">-x</code> prints all the command and its argument. After correct error remove <code class="language-plaintext highlighter-rouge">-x</code>.</p>
+
+<h2 id="variables">Variables</h2>
+
+<p>Bash variables should follow similar naming style to C variable names. When we assigned ‘1’ to variablie ‘x’, NO WHITESPAE between ‘=’. Defining and printing x as follow:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Defining</span>
+<span class="nv">$ x</span><span class="o">=</span>1
+
+<span class="c"># Printing</span>
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">x</span><span class="k">}</span> <span class="c"># When variable name is long, use {}</span>
+1
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$x</span>
+1
+
+<span class="c"># Wrong Printing</span>
+<span class="nv">$ </span><span class="nb">echo </span>x
+x
+</code></pre></div></div>
+
+<p>Ue Global Variable. Using the command <code class="language-plaintext highlighter-rouge">env</code>.</p>
+
+<p>Also defining the Directory.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">dir</span><span class="o">=</span>~/cs246
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">dir</span><span class="k">}</span>
+/Users/joonholee/cs246
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"</span><span class="k">${</span><span class="nv">dir</span><span class="k">}</span><span class="s2">"</span>
+/Users/joonholee/cs246
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s1">'${dir}'</span>
+<span class="k">${</span><span class="nv">dir</span><span class="k">}</span>
+</code></pre></div></div>
+
+<h3 id="special-variables">Special Variables</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variables</th>
+      <th>Meanings</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">$0</code></td>
+      <td>the first parameter of the command-line and its argument</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">$1</code>,<code class="language-plaintext highlighter-rouge">$2</code></td>
+      <td>each command-line argument, based upon its position</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">$#</code></td>
+      <td>the total number of command-line arguments</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">$?</code></td>
+      <td>the exit/return value of the most-recently executed command; used to tell us whether it succeeded or failed. 0 means succes, while not-0 means failure</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em><strong>Example</strong></em></p>
+
+<p>Let’s suppoe we have all the english words in the file <code class="language-plaintext highlighter-rouge">words</code>(each words are divided by new line) which is located in the directory <code class="language-plaintext highlighter-rouge">/usr/share/dict</code>. We want to make the bash script called <code class="language-plaintext highlighter-rouge">isItAWord</code>. Scripts print input when input variable is in <code class="language-plaintext highlighter-rouge">words</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> isItAWord
+<span class="c">#!/bin/bash</span>
+egrep <span class="s2">"^</span><span class="nv">$1</span><span class="s2">$"</span> /usr/share/dict/words
+
+<span class="nv">$ </span>./isItAWord dog
+dog
+
+<span class="nv">$ </span>./isItAWord XXX
+</code></pre></div></div>
+
+<h3 id="selection-statements">Selection Statements</h3>
+
+<p><code class="language-plaintext highlighter-rouge">if</code> statement is enough for this course.</p>
+
+<h3 id="two-general-structure">Two General Structure</h3>
+
+<p><em><strong>First</strong></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if </span>condition1 <span class="p">;</span> <span class="k">then
+  </span>statement1
+  statement2
+<span class="k">elif </span>condition2 <span class="p">;</span> <span class="k">then
+  </span>statement3
+<span class="k">else
+  </span>statement4
+  statement5
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<p><em><strong>Second</strong></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if </span>condition1
+<span class="k">then
+  </span>statement1
+  statement2
+<span class="k">elif </span>condition2
+<span class="k">then
+  </span>statement3
+<span class="k">else
+  </span>statement4
+  statement5
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<h3 id="specifying-conditions">Specifying Conditions</h3>
+
+<p>From bash, spacing is really important. There exists space between <code class="language-plaintext highlighter-rouge">[]</code> and conditions. For example, test that a file name ‘foo.txt’ existed before outputting its content, use following bash command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">[</span> <span class="nt">-e</span> foo.txt <span class="o">]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nb">cat </span>foo.txt
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<p>If I want to compare two strings:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">[</span> <span class="nv">$foo</span> <span class="o">=</span> <span class="s2">"cat"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nb">echo </span>found string <span class="se">\"</span><span class="nb">cat</span><span class="se">\"</span>
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<p>If <code class="language-plaintext highlighter-rouge">foo</code> could contain whitespace such as blanks/spaces/tabs, following is better:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$foo</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"cat"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nb">echo </span>found string <span class="se">\"</span><span class="nb">cat</span><span class="se">\"</span>
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<p>If I wanted to compare two integers:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">[</span> <span class="nv">$foo</span> <span class="nt">-eq</span> 2 <span class="o">]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nb">echo </span>equals 2
+<span class="k">else
+  </span><span class="nb">echo </span>not equal 2
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<p>If you want to combine conditions using “and” or “or”, use the keywords <code class="language-plaintext highlighter-rouge">-a</code> or <code class="language-plaintext highlighter-rouge">-o</code>.</p>
+
+<h3 id="function">Function</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>foo<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">echo</span> <span class="s2">"name is: "</span> <span class="k">${</span><span class="nv">0</span><span class="k">}</span>
+    <span class="nb">echo</span> <span class="s2">"foo argument 1 is: "</span> <span class="k">${</span><span class="nv">1</span><span class="k">}</span>
+    <span class="nb">echo</span> <span class="s2">"foo argument 2 is: "</span> <span class="k">${</span><span class="nv">2</span><span class="k">}</span>
+    <span class="nb">echo</span> <span class="s2">"foo argument 3 is: "</span> <span class="k">${</span><span class="nv">3</span><span class="k">}</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="k">${</span><span class="nv">1</span><span class="k">}</span> <span class="o">=</span> <span class="s2">"cat"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+        return </span>0
+    <span class="k">fi
+    return </span>1
+<span class="o">}</span>
+
+foo <span class="k">${</span><span class="nv">3</span><span class="k">}</span> <span class="k">${</span><span class="nv">2</span><span class="k">}</span> <span class="k">${</span><span class="nv">1</span><span class="k">}</span>
+<span class="nb">echo</span> <span class="s1">'foo returned ${?}'</span> <span class="k">${</span><span class="p">?</span><span class="k">}</span>
+</code></pre></div></div>
+
+<p>When I built above function in file name <code class="language-plaintext highlighter-rouge">./exampleScript.sh</code>. When I am running with following command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./exampleScript.sh fish <span class="s2">"dog woof"</span> <span class="o">&gt;</span> output.txt
+<span class="nv">$ </span><span class="nb">cat </span>output.txt
+name is:  ./exampleScript.sh
+foo argument 1 is:  <span class="nb">cat
+</span>foo argument 2 is:  dog
+foo argument 3 is:  woof
+foo returned <span class="k">${</span><span class="p">?</span><span class="k">}</span> 0
+</code></pre></div></div>
+
+<p>To Be Continued</p>
 
 
 
