@@ -104,7 +104,7 @@
 
 <p class="post-metadata text-muted">
   13 January 2021 -  
-  <b>5 mins read time</b>
+  <b>13 mins read time</b>
 
   <br>Tags: 
     
@@ -131,14 +131,15 @@
   <li><a href="#command-line-arguments">Command-line Arguments</a></li>
   <li><a href="#pipes">Pipes</a></li>
   <li><a href="#globbing-patterns">Globbing Patterns</a></li>
-  <li><a href="#linux-command-summary">Linux Command Summary</a></li>
+  <li><a href="#regular-expressions">Regular Expressions</a></li>
+  <li><a href="#bash-scripts">Bash Scripts</a></li>
 </ul>
 
 <hr />
 
 <h1 id="the-shell">The Shell</h1>
 
-<h2 id="input-and-output">Input and Output</h2>
+<h3 id="input-and-output">Input and Output</h3>
 
 <p><img src="/assets/img/cs246/shell-io1.png" /></p>
 
@@ -146,7 +147,7 @@
 
 <p><img src="/assets/img/cs246/shell-io2.png" /></p>
 
-<h2 id="standard-input-and-output-device">Standard Input and Output Device</h2>
+<h3 id="standard-input-and-output-device">Standard Input and Output Device</h3>
 
 <ul>
   <li>Standarad Input <code class="language-plaintext highlighter-rouge">stdin</code>: Place to get input (keyboard).</li>
@@ -156,7 +157,7 @@
 
 <h1 id="file-system-and-paths">File System and Paths</h1>
 
-<h2 id="absolute-and-relative-paths">Absolute and Relative Paths</h2>
+<h3 id="absolute-and-relative-paths">Absolute and Relative Paths</h3>
 
 <p><em><strong>Absolute Paths</strong></em></p>
 
@@ -175,7 +176,7 @@ subdir/abc/file.txt
 ../bin/script.sh    # upper directory
 </code></pre></div></div>
 
-<h2 id="changing-the-current-directory">Changing the Current Directory</h2>
+<h3 id="changing-the-current-directory">Changing the Current Directory</h3>
 
 <ul>
   <li><code class="language-plaintext highlighter-rouge">$ pwd</code> tells you what directory you are currently sitting in</li>
@@ -187,7 +188,7 @@ subdir/abc/file.txt
 
 <h1 id="file-permission">File Permission</h1>
 
-<h2 id="command-ls">Command ls</h2>
+<h3 id="command-ls">Command <code class="language-plaintext highlighter-rouge">ls</code></h3>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span>
 <span class="c"># -rw-r--r-- 1 joonholee staff 1563 Dec 28 06:34 Untitled.cc</span>
@@ -204,7 +205,7 @@ subdir/abc/file.txt
   <li><strong>name</strong>: The file name.</li>
 </ul>
 
-<h2 id="file-permissions">File Permissions</h2>
+<h3 id="file-permissions">File Permissions</h3>
 
 <p>Each file or directories have following three types of permissions.</p>
 
@@ -284,16 +285,17 @@ subdir/abc/file.txt
 
 <p>We will learn interactive mode first</p>
 
-<h2 id="the-command-prompt">The command Prompt</h2>
+<h3 id="the-command-prompt">The command Prompt</h3>
 
 <p>In the interactive mode, shell displyas a prompt while shell is waiting for the input. It usally displays id of current user, current working directory, or computer id. It usually ends with a character such as <code class="language-plaintext highlighter-rouge">$</code> or <code class="language-plaintext highlighter-rouge">%</code>. We can fully customized Prompt by the user.</p>
 
 <p><em><strong>Example</strong></em></p>
 
-<p><code class="language-plaintext highlighter-rouge">joonholee@Joonhoui-MacBookPro Desktop%</code>
-<code class="language-plaintext highlighter-rouge">@ubuntu1804-002%</code></p>
+<p><code class="language-plaintext highlighter-rouge">joonholee@Joonhoui-MacBookPro Desktop%</code></p>
 
-<h2 id="types-of-commands">Types of Commands</h2>
+<p><code class="language-plaintext highlighter-rouge">@ubuntu1804-002%</code></p>
+
+<h3 id="types-of-commands">Types of Commands</h3>
 
 <p><code class="language-plaintext highlighter-rouge">bash</code> can understand a few native commands. However, most of time, you will give commands to execute scripts or programs.</p>
 
@@ -306,11 +308,11 @@ subdir/abc/file.txt
   </li>
 </ul>
 
-<p>Whenever you type a command in the prompt <code class="language-plaintext highlighter-rouge">bash</code> will interpret it. First, try to try to find it from native command. If not, look for a script or program on the computer and will execute it if such a script or program is found. Otherwise it shows <code class="language-plaintext highlighter-rouge">Command not found</code>.</p>
+<p>Whenever you type a command in the prompt <code class="language-plaintext highlighter-rouge">bash</code> will interpret it. First, try to find it from native command. If not, look for a script or program on the computer and will execute it if such a script or program is found. Otherwise it shows <code class="language-plaintext highlighter-rouge">Command not found</code>.</p>
 
 <h1 id="inputoutput-redirection">Input/Output Redirection</h1>
 
-<h2 id="command-cat">Command <code class="language-plaintext highlighter-rouge">cat</code></h2>
+<h3 id="command-cat">Command <code class="language-plaintext highlighter-rouge">cat</code></h3>
 
 <p><code class="language-plaintext highlighter-rouge">cat</code> reads the contents of standard input and writes it back to standard output.</p>
 
@@ -320,24 +322,320 @@ Hello, Linux    <span class="c"># output</span>
 ^D              <span class="c"># ctrl+D to quit</span>
 </code></pre></div></div>
 
-<h2 id="redirecting-input-and-output">Redirecting Input and Output</h2>
+<h3 id="redirecting-input-and-output">Redirecting Input and Output</h3>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> hello2.txt
-Hello
+Hello               <span class="c"># inputing Hello to hello2.txt</span>
 <span class="nv">$ </span><span class="nb">cat</span> &lt; hello2.txt
-Hello
-<span class="nv">$ </span><span class="nb">cat</span> &lt; hello2.txt <span class="o">&gt;</span> hello3.txt
+Hello               <span class="c"># return inputs in hello2.txt</span>
+<span class="nv">$ </span><span class="nb">cat</span> &lt; hello2.txt <span class="o">&gt;</span> hello3.txt  <span class="c"># inputing all the inputs in hello2.txt to hello3.txt</span>
 <span class="nv">$ </span><span class="nb">cat</span> &lt; hello3.txt
 Hello
+<span class="nv">$ </span><span class="nb">cat</span> &lt; hello2.txt <span class="o">&gt;</span> file2.txt 2&gt; log.txt <span class="c"># inputing all the inputs in hello2.txt to file2.txt, inputing std error to log.txt</span>
 </code></pre></div></div>
 
 <h1 id="command-line-arguments">Command-line Arguments</h1>
 
+<p>Able to pass arguments to a program or script by writing each argument separated by aspace after the command name</p>
+
+<p><em><strong>Example</strong></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> test.txt
+Hello
+My name is joonho Lee.
+Nice to meet you.
+
+<span class="nv">$ </span><span class="nb">cat</span> <span class="nt">-n</span> test.txt
+1 Hello
+2 My name is joonho Lee.
+3 Nice to meet you.
+</code></pre></div></div>
+
+<h3 id="different-between-arguments-and-input-redirection">Different between Arguments and Input Redirection</h3>
+
+<p><code class="language-plaintext highlighter-rouge">$ cat test.txt</code>: cat receive the string(text) “test.txt” then it finds file with that name and read it.</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ cat &lt; test.txt</code>: shell will open test.txt and redirect its content into cat’s standard input.</p>
+
+<p>We can check it through following commands.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo </span>a file.txt
+a file.txt
+
+<span class="nv">$ </span><span class="nb">echo </span>a &lt; file.txt
+a
+</code></pre></div></div>
+
+<h3 id="quoting-arguments">Quoting Arguments</h3>
+
+<p>From bash, shell will treat spaces as separators between arguments. If you want to pass a single argument that contains spaces with it, you need to quote the argument with <code class="language-plaintext highlighter-rouge">'</code> or <code class="language-plaintext highlighter-rouge">"</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo </span>a       b         c
+a b c
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"a       b         c"</span>
+a       b         c
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s1">'a       b         c'</span>
+a       b         c
+</code></pre></div></div>
+
+<p>However, there are difference between <code class="language-plaintext highlighter-rouge">"</code> and <code class="language-plaintext highlighter-rouge">'</code>. Between <code class="language-plaintext highlighter-rouge">"</code>, there exists variable substitution, but between <code class="language-plaintext highlighter-rouge">'</code>, there does not exist variable substitution.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"My shell is </span><span class="nv">$0</span><span class="s2">"</span>
+My shell is <span class="nt">-bash</span>
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s1">'My shell is $0'</span>
+My shell is <span class="nv">$0</span>
+</code></pre></div></div>
+
 <h1 id="pipes">Pipes</h1>
+
+<p>Pipes allow us to use the output of one program as the input of another by connecting the second programs’ <code class="language-plaintext highlighter-rouge">stdin</code> to the first program’s <code class="language-plaintext highlighter-rouge">stdout</code>.</p>
+
+<p><img src="/assets/img/cs246/shell-pipe.png" /></p>
+
+<p><em><strong>Example</strong></em></p>
+
+<p>Let’s try to find the words occur in the first 20 lines of file.txt.</p>
+
+<p>From this, we will use <code class="language-plaintext highlighter-rouge">head -n</code> which gives the first n lines of a file and <code class="language-plaintext highlighter-rouge">wc -w</code> which counts the words in the input.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># It only displays on the terminal</span>
+<span class="nv">$ </span><span class="nb">head</span> <span class="nt">-20</span> file.txt | <span class="nb">wc</span> <span class="nt">-w</span>
+
+<span class="c"># It save the answer to word.txt</span>
+<span class="nv">$ </span><span class="nb">cat</span> &lt; file.txt | <span class="nb">head</span> <span class="nt">-20</span> |wc <span class="nt">-2</span> <span class="o">&gt;</span> words.txt
+</code></pre></div></div>
+
+<h3 id="using-output-as-command-line-arguments">Using Output as Command-line arguments</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> file.txt
+Hello World
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="si">$(</span><span class="nb">cat</span> &lt; file.txt<span class="si">)</span>
+Hello World
+</code></pre></div></div>
 
 <h1 id="globbing-patterns">Globbing Patterns</h1>
 
-<h1 id="linux-command-summary">Linux Command Summary</h1>
+<p>Globbing is that the shell automatically expand a few wildcard patterns to match all the files that satisfy the pattern.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># finds all (non-hidden) files in the current directory</span>
+<span class="nv">$ </span><span class="nb">cat</span> <span class="k">*</span>.txt
+</code></pre></div></div>
+
+<p>Following operators can be used in globbing patterns:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Operator</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">*</code></td>
+      <td>matches zero or more characters</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">?</code></td>
+      <td>matches one character</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">[abc]</code></td>
+      <td>matches exactly one of the characters in the brackets</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">[!abc]</code></td>
+      <td>matches any character except the ones in the brackets</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">[a-z]</code></td>
+      <td>matches any character in the given range</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">{pat1, pat2}</code></td>
+      <td>matches either <code class="language-plaintext highlighter-rouge">pat1</code> or <code class="language-plaintext highlighter-rouge">pat2</code>(note no spaces)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em><strong>Example</strong></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> file.txt
+hello
+
+<span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> file1.txt
+hello1
+
+<span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> file2.txt
+hello2
+
+<span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> file3.txt
+hello 3
+
+<span class="nv">$ </span><span class="nb">cat</span> &lt; file?.txt
+hello1
+hello2
+hello3
+
+<span class="nv">$ </span><span class="nb">cat</span> &lt; <span class="o">[</span>a-f]ile.txt
+hello
+
+<span class="nv">$ </span><span class="nb">cat</span> &lt; <span class="k">*</span>.txt
+hello
+hello1
+hello2
+hello3
+</code></pre></div></div>
+
+<h1 id="regular-expressions">Regular Expressions</h1>
+
+<h3 id="introduction-to-pattern-matching">Introduction to Pattern Matching</h3>
+
+<p>One of most common ways to do with pipes is processed data and one of the most common ways of processing data is pattern matching.</p>
+
+<p>We will learn <code class="language-plaintext highlighter-rouge">egrep</code>. <code class="language-plaintext highlighter-rouge">egrep</code> find certian string from files, output evey line that contains certain string.</p>
+
+<p><em><strong>Example</strong></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># There exists file as follow</span>
+<span class="nv">$ </span><span class="nb">cat</span> &lt; tasks.txt
+CS241: Finish assignment 1
+CS246: Assignment 2
+cs246 : Exam 1
+ANTH221: Exam 1
+anth221: Discuss conflict with CS246
+
+<span class="c"># Exactly CS246.</span>
+<span class="nv">$ </span>egrep <span class="s2">"CS246"</span> &lt; tasks.txt
+CS246: Assignment 2
+anth221: Discuss conflict with CS246
+</code></pre></div></div>
+
+<p>However, from this, we cannot get “cs246”. Thus, we will use regular expressions that egrep accepas and more powerful than globbing pattern. We will use <code class="language-plaintext highlighter-rouge">(a|b)</code> or option <code class="language-plaintext highlighter-rouge">-i</code>. <code class="language-plaintext highlighter-rouge">(a|b)</code> means a or b. <code class="language-plaintext highlighter-rouge">-i</code> makes its pattern matching case-insensitive.</p>
+
+<blockquote>
+  <p>globbing pattens and regular expression is different!!!</p>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Exactly CS246, cs246.</span>
+<span class="nv">$ </span>egrep <span class="s2">"(CS246|cs246)"</span> &lt; tasks.txt
+CS246: Assignment 2
+cs246 : Exam 1
+anth221: Discuss conflict with CS246
+
+<span class="c"># Exactly CS246, cs246.</span>
+<span class="nv">$ </span>egrep <span class="s2">"(CS|cs)246"</span> &lt; tasks.txt
+CS246: Assignment 2
+cs246 : Exam 1
+anth221: Discuss conflict with CS246
+
+<span class="c"># Exactly Cs246, CS246, cs246, cS246</span>
+<span class="nv">$ </span>egrep <span class="nt">-i</span> <span class="s2">"cs246"</span> &lt; tasks.txt
+CS246: Assignment 2
+cs246 : Exam 1
+anth221: Discuss conflict with CS246
+</code></pre></div></div>
+
+<p>However, what we need is about print cs246’s task(excepting anth221). Thus, we will use <code class="language-plaintext highlighter-rouge">^</code> which means match the beginning of a line.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Exactly CS246, cs246.</span>
+<span class="nv">$ </span>egrep <span class="s2">"^(CS|cs)246:"</span> &lt; tasks.txt
+CS246: Assignment 2
+</code></pre></div></div>
+
+<p>However, it also hides “cs246 : Exam 1”. This is the because of space. We will solve it through Advanced Patterns.</p>
+
+<h3 id="advanced-patterns">Advanced Patterns</h3>
+
+<p>First, we will try is using <code class="language-plaintext highlighter-rouge">( |:)</code> which means space or :.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>egrep <span class="s2">"^(CS|cs)246( |:)"</span> &lt; tasks.txt
+CS246: Assignment 2
+cs246 : Exam 1
+</code></pre></div></div>
+
+<p>However, this solution is a bit unsatisfying. We will use ` ?` which means exists space or not.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>egrep <span class="s2">"^(CS|cs)246 ?:"</span> &lt; tasks.txt
+CS246: Assignment 2
+cs246 : Exam 1
+</code></pre></div></div>
+
+<p>If you want to make more than one character optional, just use <code class="language-plaintext highlighter-rouge">()</code>.</p>
+
+<p>We can also use ` *` which means that there exist space, many spaces, or not.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>egrep <span class="s2">"^(CS|cs)246 *:"</span> &lt; tasks.txt
+CS246: Assignment 2
+cs246 : Exam 1
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge"> *</code> allows zero space. However, if you do not want zero space, you can your ` +`.</p>
+
+<h3 id="pattern-reference">Pattern Reference</h3>
+
+<ul>
+  <li>The basic pattern is all normal characters, and it matches the named character.</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>(XYZ) groups patterns, usually in order to use</td>
+          <td>, *, or + (below) on a whole group.</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>(X</td>
+          <td>Y) matches either X or Y, and X or Y may themselves be more sophisticated patterns.</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>[…] matches any of the characters between the square brackets.</li>
+  <li>[…] can also match ranges of characters, specified like a-z.</li>
+  <li>[^…] is an inversion of […]. For instance, [^a-z] matches anything other than a lower-case character.</li>
+  <li>
+    <ul>
+      <li>matches repetition of a pattern, 0 or more times.</li>
+    </ul>
+  </li>
+  <li>
+    <ul>
+      <li>matches repetition of a pattern, 1 or more times.</li>
+    </ul>
+  </li>
+  <li>? matches repetition of a pattern, 0 or 1 time.</li>
+  <li>. matches any single character.</li>
+  <li>The special patterns ^ and $ match the beginning and end of a line, respectively.</li>
+  <li>If you want to search (,),[, or ] use back slush such as <code class="language-plaintext highlighter-rouge">\(</code>, <code class="language-plaintext highlighter-rouge">\)</code>, etc.</li>
+</ul>
+
+<h1 id="bash-scripts">Bash Scripts</h1>
+
+<h2 id="creating-a-script-file">Creating a Script File</h2>
+
+<p>Bash also has a simple programming language. By putting a sequence of hell commands into a text file and use “.sh” for the file name suffix. For example let’s create <code class="language-plaintext highlighter-rouge">basic.sh</code> as follow.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&gt;</span> basic.sh
+<span class="c">#!/bin/bash -x</span>
+<span class="nb">date
+whoami
+pwd
+echo</span> <span class="nv">$PATH</span>
+</code></pre></div></div>
+
+<p>shebang line which is <code class="language-plaintext highlighter-rouge">#!/bin/bash</code> does not required, but it’s a good idea. This line tells the executing shell which shell lnaguage the script is written in.</p>
+
+<p>If you put <code class="language-plaintext highlighter-rouge">-x</code> on the shebang line, it tells bash to produce verbose output.</p>
 
 
 
