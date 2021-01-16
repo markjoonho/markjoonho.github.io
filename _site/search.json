@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "39. PCA(6) Kernel PCA for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-39",
+      "date"     : "2021-01-16 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "38. PCA(5) How to use SVD for Machine Learning",
       "category" : "",
       "tags"     : "Fast Campus ML",
