@@ -1,6 +1,22 @@
 [
   
     {
+      "title"    : "40. PCA Practice for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML, Fast Campus ML practice",
+      "url"      : "/blog/ml-40",
+      "date"     : "2021-01-17 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "02. Software Testing for CS246",
+      "category" : "",
+      "tags"     : "CS 246 Object-Oriented Software Development",
+      "url"      : "/blog/cs246-02",
+      "date"     : "2021-01-16 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "39. PCA(6) Kernel PCA for Machine Learning",
       "category" : "",
       "tags"     : "Fast Campus ML",

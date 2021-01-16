@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta
+    property="og:title"
+    content="02. Software Testing for CS246"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta property="og:type" content="website" />
+  <title>
+    02. Software Testing for CS246
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>02. Software Testing for CS246</b></h1>
+
+<p class="post-metadata text-muted">
+  16 January 2021 -  
+  <b>5 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-246-object-oriented-software-development">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 246 Object-Oriented Software Development</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
+
+<hr />
+
+<p>Contents:</p>
+
+<ul>
+  <li><a href="#what-are-software-tests">What are Software Tests</a></li>
+  <li><a href="#types-of-software-tests">Types of Software Tests</a></li>
+  <li><a href="#whiteblack-box-tests">White/Black Box Tests</a></li>
+  <li><a href="#best-practices-and-considerations">Best Practices and Considerations</a></li>
+</ul>
+
+<hr />
+
+<h1 id="what-are-software-testing">What are Software Testing</h1>
+
+<p>Software testing is as importnat as writing code. There are two ways to do software Testing which are human testing and automated(machine) testing</p>
+
+<h3 id="human-testing">Human Testing</h3>
+
+<p>A person manually verifies whether program is intended and identify existing errors (bugs).</p>
+
+<p>Test plan should be created, based on the requirement specifications. Without plan, some existing errors may not be discovered.</p>
+
+<p>Some times Human Testing is goot, but it is difficult to scale human testing for large software(time-consuming).</p>
+
+<h3 id="automatedmachine-testing">Automated(machine) Testing</h3>
+
+<p>Automatically test the software and compare the results with the expected ones. <em><strong>test suites</strong></em> contain a list of input sets and matching expected outputs by the requirement specifications.</p>
+
+<p>Also specify the necessary command-line arguments, expected error messages, and return value.</p>
+
+<p>Any discrepancy is logged, so human developer can later identify the errors.</p>
+
+<h3 id="testing-is-not-debugging">Testing is not Debugging!</h3>
+
+<ul>
+  <li>Testing: identifies the errors but do not solve them</li>
+  <li>Debugging: process that identifies the cause of known errors to solve them.</li>
+</ul>
+
+<ol>
+  <li>Test is conducted and an error is identified.</li>
+  <li>Developer debugs the code to identify the cause of the error.</li>
+  <li>Developer fixes and generate new version.</li>
+  <li>New test is conducted that the error was indeed corrected.</li>
+</ol>
+
+<h1 id="types-of-software-tests">Types of Software Tests</h1>
+
+<h3 id="unit-tests">Unit Tests</h3>
+
+<p>Conducted at the lowest level. Testing only one specific module/unit of the software.</p>
+
+<h3 id="integration-tests">Integration Tests</h3>
+
+<p>Conducted a level above the unit test. Aim to verify the different module/units of the software work correctly together.</p>
+
+<h3 id="functional-tests-system-tests">Functional Tests (System Tests)</h3>
+
+<p>Focus on the business requirements of the application. Conducted by executing application with a specific set of inputs and verifying if the application produces the correct outputs.</p>
+
+<h3 id="acceptance-tests">Acceptance Tests</h3>
+
+<p>A formal process in which the client must verify that the produced software meets all the requirement so it can be accepted.</p>
+
+<ul>
+  <li>alpha testing: in the controlled environment of the developer</li>
+  <li>beta testing: after the alpha testing, in the user’s environment</li>
+</ul>
+
+<h3 id="regression-tests">Regression Tests</h3>
+
+<p>Conducted after any modification in the software, to ensure that it continues working as intended. (Check that the modification did not introduce new errors)</p>
+
+<h3 id="performance-tests">Performance Tests</h3>
+
+<p>Designed to verify if the run-time performance of the system will be adequate.</p>
+
+<h3 id="accessibility-usability-and-user-experience-tests">Accessibility, Usability, and User Experience Tests</h3>
+
+<p>Verify the quality of the experience of the user interacting with the system.</p>
+
+<h1 id="whiteblack-box-tests">White/Black Box Tests</h1>
+
+<p>When creating software tests, we can use a white-box or black-box approach, or combine them(gre-box).</p>
+
+<h3 id="white-box-tests">White-box Tests</h3>
+
+<p>It is created with knowledge of the internal structure of program. It is generally used when we need to verify the internal structures or workings of a program, instead of the expected functional requirements.</p>
+
+<p>Can do at any level, but more common for unit tests.</p>
+
+<h3 id="black-box-tests">Black-box Tests</h3>
+
+<p>It is created based only on the requirement specifications, without any knowledge of the internal structure of the program.</p>
+
+<p>Goal is verify if the software works according to the specification, without being concerned with how it works.</p>
+
+<p>Can do at any level, but more common for functional and acceptance tests.</p>
+
+<h3 id="grey-box-tests">Grey-box Tests</h3>
+
+<p>MIXED of white and black box tests. Help the tester make better-informed decisions about how to test each requirement.</p>
+
+<p>Good approach for performance tests.</p>
+
+<h3 id="example">Example</h3>
+
+<p>Let’s say our code is as below</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">max</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">a</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">b</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>From the code, if we create white-box test, it will be like below:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Inputs: a = 5, b = 10 | Output: 10
+Inputs: a = -1, b = -2 | Output: -1
+</code></pre></div></div>
+
+<p>It looks like correct. However, if the specification is as below, it might be wrong.</p>
+
+<blockquote>
+  <p>Compare the absolute value of the two arguments and return the higher of them.</p>
+</blockquote>
+
+<p>If this is specification, our implementation is incorrect. With this specification, we can make our black-box test:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Inputs: a = 5, b = 10 | Output: 10
+Inputs: a = -1, b = -2 | Output: -2
+</code></pre></div></div>
+
+<p>It returns incorrect output and we can find there exists error.</p>
+
+<p>Thus, when creating test cases, good practice is start with black-box tests, then supplement with grey and white-box tests.</p>
+
+<h3 id="creating-black-box-tests">Creating Black-box Tests</h3>
+
+<ul>
+  <li>Identify the different classes of input (numeric: positive, negative, etc)</li>
+  <li>Test the boundaries of valid ranges (edge case: min, max)</li>
+  <li>Test multiple simultaneous boundaries (corner cases)</li>
+  <li>Test extreme cases (within reason)</li>
+  <li>Intuition: believe your experience!</li>
+</ul>
+
+<h3 id="creating-white-box-tests">Creating White-box Tests</h3>
+
+<ul>
+  <li>Logical paths through the program</li>
+  <li>Make sure that every function runs(check all of lines of code run)</li>
+</ul>
+
+<h1 id="best-practice-and-considerations">Best Practice and Considerations</h1>
+
+<h3 id="testing-is-an-ongoing-operation">Testing is an ongoing operation.</h3>
+
+<p>Test should always begin before start coding, by creating test plans and implementing automated tests.</p>
+
+<p>Then they continue while coding.</p>
+
+<h3 id="testing-cannot-guarantee-correctness">Testing cannot guarantee correctness.</h3>
+
+<p>If test fail, than you can prove wrongness in the software.</p>
+
+<p>If test pass, than it is not a guarantee that the software is correct. Test themselves can be woring, or may be specific cases were not covered by any test.</p>
+
+<h3 id="testing-is-not-easy">Testing is not easy.</h3>
+
+<p>There is no formula to create good tests. There may be a psychological barrier (I don’t want to find out error from my code). However, testing is realy important! It is better to identify during tests than in a real user situation.</p>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

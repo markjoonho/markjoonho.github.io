@@ -8,8 +8,7 @@ remote_theme: YoussefRaafatNasry/portfolYOU
 
 ### Plugins ###
 plugins:
-  # - jemoji
-  - jekyll-include-cache # 추가
+  - jemoji
 
 ### Navbar Settings ###
 nav_exclude: # The following paths are excluded from navbar
