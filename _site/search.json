@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "41. Naive Bayes Classifier for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-41",
+      "date"     : "2021-01-18 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "40. PCA Practice for Machine Learning",
       "category" : "",
       "tags"     : "Fast Campus ML, Fast Campus ML practice",
