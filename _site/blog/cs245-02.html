@@ -114,7 +114,7 @@
 
 <p class="post-metadata text-muted">
   13 January 2021 -  
-  <b>less than 1 min read time</b>
+  <b>3 mins read time</b>
 
   <br>Tags: 
     
@@ -127,60 +127,51 @@
 
 <p>Source: University of Waterloo CS 245 by Professor <a href="https://www.youtube.com/channel/UCg9V0y9_RxG7hg5GjcyS2OA">Shai Ben-David</a></p>
 
-<h1 id="defining-the-language-of-propositional-calculus">Defining the Language of Propositional Calculus</h1>
+<h3 id="defining-the-language-of-propositional-calculus">Defining the Language of Propositional Calculus</h3>
 
 <ul>
   <li>
-    <p>Set of Symbols (Characters): letters</p>
+    <p>Universe (\(\sum\)): Set of all strings over the following sets</p>
 
     <ul>
-      <li>Logical Symbols: \((, ), \land, \lor, \implies, \neg\)</li>
-      <li>Variables: \(P_1, P_2,...,P_n\)</li>
+      <li>Propositional Variables: \(p, p_1, p_2,...,p_n,..., q, q_1,...\)</li>
+      <li>Logical Connectives: \(\land, \lor, \to, \neg\)</li>
+      <li>Punctuation: \((, )\)</li>
     </ul>
-  </li>
-  <li>
-    <p>Set of Expressions: finite sequences of symbols</p>
-
-    <ul>
-      <li>\(p\lor q\), (((\land \land)))</li>
-    </ul>
-  </li>
-  <li>
-    <p>Set of Propositions: words</p>
   </li>
 </ul>
 
-<hr />
+\[X = \sum\]
 
-<p>\(X\) = the set of expressions</p>
+<ul>
+  <li>Core Set: Set of all propositions variablse (Atomic Formulas).</li>
+</ul>
 
-<p>\(A\) = \(\{P_1, P_2, ..., P_n, ...\}\).</p>
+\[A = \{P_1, P_2, ..., P_n, ...\}\]
 
-<p>\(P\)= \(\{\frac{\alpha, \beta}{(\alpha \lor \beta)}, \frac{\alpha, \beta}{(\alpha \land \beta)}, \frac{\alpha, \beta}{(\alpha \implies \beta)}, \frac{\alpha}{(\neg \alpha)}\}\).</p>
+<ul>
+  <li>Operations: \(P = \{p\neg, p\land, p\lor, p\to\}\)</li>
+</ul>
 
-<p>Words = Propositions = \(I(A,P)\)</p>
-
-<hr />
-
-<p><em><strong>Examples of Propositions</strong></em></p>
-
-<p>\(P_1\), \(P_{17}\), \((\neg P_{18})\), \((P_1 \lor P_{100})\), \((\neg (\neg P_{20}))\), …</p>
+\[P = \{\frac{\alpha, \beta}{(\alpha \lor \beta)}, \frac{\alpha, \beta}{(\alpha \land \beta)}, \frac{\alpha, \beta}{(\alpha \implies \beta)}, \frac{\alpha}{(\neg \alpha)}\}\]
 
 <hr />
 
-<p>A Construction sequence for an expresion \(\alpha\) is a finite sequence \(\alpha\) = \(\alpha_1\), \(\alpha_2\), …, \(\alpha_n\) such that each \(\alpha_i\) is either a member of the core set A or it is the result of applying some \(f \in P\) to \(\alpha_j\), \(\alpha_k\) where \(j\), \(k &lt; i\) .</p>
+<h3 id="how-to-decide-if-a-string-is-a-wff">How to decide if a string is a WFF?</h3>
 
-<blockquote>
-  <p>Claim: For every \(X\), \(A\), \(P\), and expression \(\alpha\), \(\alpha \in I(A,P)\) if and only if there exists a construction sequence for \(\alpha\) .</p>
-</blockquote>
+<p>Definition: \(WFF = I(A,P)\) - The words of propositional calculous.</p>
 
-<hr />
+<p>How can we show that \(p_1, p_2 \notin WFF\)?</p>
 
-<p><em><strong>Property 1</strong></em></p>
+<p>Find some separating property \(T \subseteq X\) such that \(I(A,P)\subseteq T\) but \(X \notin T\).</p>
 
-<p>In every proposition, the number of left brackets ‘(‘ equals the number of right brackets ‘)’.</p>
+<p>Conclusion: Need a tool for shwoing that some property T holds for all members of I(A, P)?</p>
 
-<p>How can we show that some property T is satisfied by all members of I(A, P)?</p>
+<h5 id="property1">Property1</h5>
+
+<p>Every WFF is either a propositional variables or it starts with ‘(‘.</p>
+
+<h5 id="proof-steps">Proof Steps</h5>
 
 <p>(i) Every member of A have property T,</p>
 
@@ -188,7 +179,78 @@
 
 <p>If (i) and (ii) meets, then \(I(A,P) \subseteq T\).</p>
 
-<p>To Be Continue</p>
+<hr />
+
+<h3 id="claim">Claim</h3>
+
+<p>Every WFF has the same number of left and right brackets.</p>
+
+<h5 id="proof-by-generalized-induction">Proof (By generalized induction)</h5>
+
+<p>Induction Base: \(\alpha\) in \(A\) then \(\#_l (\alpha) = 0\), \(\#_r (\alpha) = 0\).</p>
+
+<p>Induction Hypothesis: \(\#_l (\alpha)\) = \(\#_r (\alpha)\) and \(\#_l (\beta)\) = \(\#_r (\beta)\)</p>
+
+<p>Induction Step: Assume that \(\alpha\), \(\beta\) have property.</p>
+
+<p>Need to show the property still holds for \((\ne \alpha), (\alpha \land \beta), (\alpha \lor \beta), (\alpha \Rightarrow \beta)\)</p>
+
+<p>\(\#_l((\alpha \land \beta))\) = \(1 + \#_l (\alpha) + \#_l (\beta)\)</p>
+
+<p>\(\#_l((\alpha \land \beta))\) = \(\#_r (\alpha) + \#_r (\beta) + 1\)</p>
+
+<p>To conclude invoke the induction hypothesis.</p>
+
+<hr />
+
+<p>Given a sequence of symbols \(\alpha = a_1, a_2, ..., a_n\), a sequence \(b_1, b_2, ..., b_k\) is a proper initial segment of \(\alpha\), if for every \(i \leq k\), \(b_i = a_i\) and \(1\leq k &lt; n\).</p>
+
+<h3 id="claim-1">Claim</h3>
+
+<p>If \(\alpha\) is a WFF and \(\beta\) is a proper initial segment of \(\alpha\), then \(\#_l (\alpha)\) &gt; \(\#_r (\alpha)\).</p>
+
+<h5 id="proof-by-generalized-induction-1">Proof (By generalized induction)</h5>
+
+<p>Induction Base: \(\alpha \in A\). In this case, \(\alpha\) has only a single symbol, therefore it has no proper initial segments and property holds vacously.</p>
+
+<p>Induction Hypothesis:</p>
+
+<p>Induction Step: Assume \(\alpha, \beta\) enjoy the property and need to show that so do \((\ne \alpha), (\alpha \land \beta), (\alpha \lor \beta), (\alpha \Rightarrow \beta)\).</p>
+
+<p>Let \(\gamma\) be a proper initial segment of \((\alpha \land \beta)\).</p>
+
+<p>Case 1: \(\gamma = (\)</p>
+
+<p>Case 2: \(\gamma\) = (\(\gamma'\) is a proper initial segment of \(\alpha\)</p>
+
+<p>By te induction hypothesis, \(\#_l (\gamma')\) &gt; \(\#_r (\gamma')\) since \(\gamma'\) is proper initial segment of \(\alpha\).</p>
+
+<p>\(\#_l (\gamma)\) = \(\#_l (\gamma') + 1\) &gt; \(\#_r (\gamma')\) = \(\#_r (\gamma)\)</p>
+
+<p>Case 3: \(\gamma\) = \((\alpha\)</p>
+
+<p>case 4: \(\gamma\) = \((\alpha \land\)</p>
+
+<p>case 5: \(\gamma\) = \((\alpha \land \gamma'\) where \(\gamma'\) is proper initial segments of \(\beta\).</p>
+
+<p>case 6: \(\gamma\) = \((\alpha \land \beta\)</p>
+
+<hr />
+
+<h3 id="test-for-being-a-wff">Test for being a WFF.</h3>
+
+<p>Input: Some expression \(\alpha \in X\)</p>
+
+<p>Output: Decision if it is a WFF</p>
+
+<ul>
+  <li>(0) Check if \(\alpha\) is a propositional variable.</li>
+  <li>(1) Check if it starts with ‘(‘ and ends with ‘)’.</li>
+</ul>
+
+<p><img src="/assets/img/cs245/lec3-1.jpg" /></p>
+
+<p><span style="color:red"> \(\alpha\) is WFF if and only if the tree leaves are all propositional varaibles. </span></p>
 
 
 

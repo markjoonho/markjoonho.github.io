@@ -114,7 +114,7 @@
 
 <p class="post-metadata text-muted">
   11 January 2021 -  
-  <b>3 mins read time</b>
+  <b>4 mins read time</b>
 
   <br>Tags: 
     
@@ -127,9 +127,11 @@
 
 <p>Source: University of Waterloo CS 245 by Professor <a href="https://www.youtube.com/channel/UCg9V0y9_RxG7hg5GjcyS2OA">Shai Ben-David</a></p>
 
-<h2 id="what-is-logic">What is Logic?</h2>
+<h3 id="what-is-logic">What is Logic?</h3>
 
 <p>It focuses on how to reliably get from assumptions to conclusions.</p>
+
+<p><span style="color:red">It is not about distinguishing truth from falsehood</span>.</p>
 
 <p>Example: \(F=ma\)</p>
 
@@ -139,7 +141,9 @@
   <li>Logician: If whenever \(X=yz\) then \(y =\frac{X}{z}\). This statement works then if \(F=ma\) then \(a=\frac{F}{m}\)</li>
 </ul>
 
-<h2 id="example-of-logical-argument">Example of Logical Argument</h2>
+<hr />
+
+<h3 id="example-of-logical-argument">Example of Logical Argument</h3>
 
 <ul>
   <li>
@@ -176,11 +180,13 @@ Is B a finite set?</p>
 2. Mark is not going to be millionaire by the age of 25
 </code></pre></div></div>
 
-<h2 id="goal">Goal</h2>
+<hr />
+
+<h3 id="goal-of-formal-logic">Goal of Formal Logic</h3>
 
 <ul>
   <li>Develop Reliable tools for going from assumptions to implied conclusions.</li>
-  <li>Do not rely on any Natural Language for that purpose.</li>
+  <li>Do not rely on any Natural Language(ambiguous) for that purpose.</li>
   <li>Constructing(and analyzing) formal languages.
     <ul>
       <li>Propositional Logic: \(p\lor q \implies s\)</li>
@@ -190,52 +196,106 @@ Is B a finite set?</p>
   </li>
 </ul>
 
-<h2 id="syntax-vs-sementics">Syntax vs Sementics</h2>
+<hr />
+
+<h3 id="syntax-vs-sementics">Syntax vs Sementics</h3>
 
 <p>Syntax: Form of the language</p>
 
 <p>Sementics: Meaning of the language</p>
 
-<h2 id="syntax-of-propositional-logic">Syntax of Propositional Logic</h2>
+<ol>
+  <li>Develop the system purely on the synstax side.</li>
+  <li>Show that this coincides with what we intended derivation in such a system to mean.</li>
+</ol>
+
+<hr />
+
+<h3 id="syntax-of-propositional-logic">Syntax of Propositional Logic</h3>
 
 <p>Defined the set of all valid <em><strong>Words</strong></em> in this language.</p>
 
-<p>What tools do we have for formally or precisely defining a set?</p>
+<p>These will form the set of <span styl="color:red">Well Formed Formulas</span></p>
+
+<hr />
+
+<h3 id="how-to-define-sets">How to Define Sets?</h3>
 
 <ol>
-  <li>Make a list of all members of the set. (0,2,4,…)</li>
-  <li>By a common characteristic. (number that are divisible by 2)</li>
+  <li>Make a list of all elements of the set (0,2,4,…)</li>
+  <li>Identifying a common characteristic (number that are divisible by 2)</li>
+  <li>Inductive definition</li>
 </ol>
 
-<h1 id="tool-for-precise-definitions-of-inifinite-sets">Tool for Precise Definitions of inifinite sets</h1>
+<hr />
 
-<h2 id="inductive-definitions-of-sets">Inductive Definitions of Sets</h2>
+<h3 id="inductive-definitions-of-sets">Inductive Definitions of Sets</h3>
+
+<p>Use Inductive Definition of sets when:</p>
+
+<ul>
+  <li><span style="color:red">I cannot make a list</span></li>
+  <li><span style="color:red">I cannot give a common characteristic</span></li>
+</ul>
 
 <p>It is consists of followings:</p>
 
 <ol>
-  <li>Universe set(Domain Set): \(X\)</li>
+  <li>Universe set: \(X\)</li>
   <li>Core set: \(A\subseteq X\)</li>
   <li>Set of Operations(\(P\)): Functions from \(X\times X \times ...\times X \to X\). Requires that \(P\) is finite.</li>
 </ol>
 
-<p>\(B\subseteq X\) is closed under the operations in \(P\), if for every \(b_1..bn \in B\) and \(f \in P\), \(f(b_1, ...,b_k) \in X\)</p>
+<p>Define <span style="color:red">\(I(A,P)\)</span> as the set of elements of \(X\) that contains \(A\) and is closed under the operations in \(P\).</p>
 
-<p><em><strong>Example</strong></em></p>
+\[I(A,P) = \cap \{B \subseteq X: A \subseteq B, B \space closed\space under P\}\]
+
+<h5 id="example"><span style="color:blue">Example</span></h5>
 
 \[X = \mathbb{R} , A= {5}, P = \{f1: x-&gt;x+1, f2: x-&gt;x-1\}\]
 
-\[I(A,P) = \mathbb{I}\]
+<p>\(I(A,P) = \mathbb{I}\)
+\(W(A,P)= \{B \subseteq X: A \subseteq B, B \space closed\space under P\}\)</p>
 
-<h2 id="some-background-in-set-notation">Some Background in Set Notation</h2>
+<hr />
 
-<p>Let W be a collection of sets.</p>
+<h3 id="claim">Claim</h3>
+
+<p>(i) \(A \subseteq \cap W(A,P)\)</p>
+
+<p>(ii) \(\cap W(A,P)\) is closed under \(P\)</p>
+
+<p>(iii) \(\cap W(A,P)\) is the minimal set satisfying (i) and (ii)</p>
+
+<p>(iv) There is no other set satisfying (i),(ii), and (iii)</p>
+
+<hr />
+
+<h5 id="proof-ii">Proof (ii)</h5>
+
+<p>Pick \(b_1, B_2 \in \cap W\) and pick some \(f \in P\), then \(f(b_1, b_2) \in \cap W\).</p>
+
+<p>Pick any \(B \in W(A,P),\space b_1,b_2 \in B,\space B\) is closed, so \(f(b_1, b_2) \in B\).</p>
+
+<h5 id="proof-iii">Proof (iii)</h5>
+
+<p>Let \(D\) be any set satisfying (i), (ii) then \(\cap W \subseteq D\), since in this case \(D\in W\).</p>
+
+<h5 id="proof-iv">Proof (iv)</h5>
+
+<p>If \(E_1, E_2\) are minimal set, then \(E_1 \subseteq E_2\) and \(E_2 \subseteq E_1\).</p>
+
+<p>Thus \(E_1 = E_2\).</p>
+
+<hr />
+
+<h3 id="some-background-in-set-notation">Some Background in Set Notation</h3>
 
 <p>Define: \(\cap W = \{x: \forall B \in W, x \in B\}\)</p>
 
 <p>Define: \(\cup W = \{x: \exists B \in W, x \in B\}\)</p>
 
-<p><em><strong>Example 1</strong></em></p>
+<h5 id="example-1"><span style="color:blue">Example 1</span></h5>
 
 \[W = \{\{a\},\{a,b,c\},\{a,c\}\}\]
 
@@ -243,63 +303,37 @@ Is B a finite set?</p>
 
 \[\cup W = \mathbb{R}\]
 
-<p><em><strong>Example 2</strong></em></p>
+<h5 id="example-2"><span style="color:blue">Example 2</span></h5>
 
 \[W = \{(-R,R) : R &gt; 0\}\]
 
 \[\cap W = \{0\}\]
 
-<p><em><strong>Example 2</strong></em></p>
+<h5 id="example-3"><span style="color:blue">Example 3</span></h5>
 
 \[W = \{(0,R) : R &gt; 0\}\]
 
 \[\cap W = \emptyset\]
 
-<blockquote>
-  <p>Claim: For Every \(W\) and every \(B \in W\)</p>
+<hr />
 
-  <p>(a) \(\cap W \subseteq B\)</p>
+<h3 id="claim-1">Claim</h3>
 
-  <p>(b) \(B \subseteq \cup W\)</p>
-</blockquote>
+<p>For Every \(W\) and every \(B \in W\)</p>
 
-<h2 id="back-to-the-tool-for-precise-definitions-of-inifinite-sets">Back to the Tool for Precise Definitions of inifinite sets</h2>
+<p>(a) \(\cap W \subseteq B\)</p>
 
-<h4 id="iap">\(I(A,P)\)</h4>
+<p>(b) \(B \subseteq \cup W\)</p>
 
-<p>The set defined inductively from \(X,A,P\) is denoted \(I(A,P)\) is the smallest subset of \(X\) that contains \(A\) and is closed under the operations in \(P\).</p>
+<hr />
 
-\[I(A,P) = \cap \{B \subseteq X: A \subseteq B, B \space closed\space under P\}\]
+<h3 id="construction-sequence">Construction Sequence</h3>
 
-<p>Let \(W(A,P)= \{B \subseteq X: A \subseteq B, B \space closed\space under P\}\)</p>
+<p>A Construction sequence for an expresion \(\alpha\) is a finite sequence \(\alpha\) = \(\alpha_1\), \(\alpha_2\), …, \(\alpha_n\) such that each \(\alpha_i\) is either a member of the core set A or it is the result of applying some \(f \in P\) to previously occuring \(\alpha_j\), \(\alpha_k\) where \(j\), \(k &lt; i\) .</p>
 
-<blockquote>
-  <p>Claim:</p>
+<h5 id="claim-2">Claim</h5>
 
-  <p>(i) \(A \subseteq \cap W(A,P)\)</p>
-
-  <p>(ii) \(\cap W(A,P)\) is closed under \(P\)</p>
-
-  <p>(iii) \(\cap W(A,P)\) is the minimal set satisfying (i) and (ii)</p>
-
-  <p>(iv) There is no other set satisfying (i),(ii), and (iii)</p>
-</blockquote>
-
-<p><em><strong>Proof (ii)</strong></em></p>
-
-<p>Pick \(b_1, B_2 \in \cap W\) and pick some \(f \in P\), then \(f(b_1, b_2) \in \cap W\).</p>
-
-<p>Pick any \(B \in W(A,P),\space b_1,b_2 \in B,\space B\) is closed, so \(f(b_1, b_2) \in B\).</p>
-
-<p><em><strong>Proof (ii)</strong></em></p>
-
-<p>Let \(D\) be any set satisfying (i), (ii) then \(\cap W \subseteq D\), since in this case \(D\in W\).</p>
-
-<p><em><strong>Proof (iv)</strong></em></p>
-
-<p>If \(E_1, E_2\) are minimal set, then \(E_1 \subseteq E_2\) and \(E_2 \subseteq E_1\).</p>
-
-<p>Thus \(E_1 = E_2\).</p>
+<p>For every \(X\), \(A\), \(P\), and expression \(\alpha \in I(A,P)\) if and only if there exists a construction sequence for \(\alpha\) .</p>
 
 
 
