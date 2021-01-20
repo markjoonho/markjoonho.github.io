@@ -1,6 +1,22 @@
 [
   
     {
+      "title"    : "Tips for Myself",
+      "category" : "",
+      "tags"     : "Tips",
+      "url"      : "/blog/tips",
+      "date"     : "2021-01-20 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "42. Naive Bayes Practice for Machine Learning",
+      "category" : "",
+      "tags"     : "Fast Campus ML, Fast Campus ML practice",
+      "url"      : "/blog/ml-42",
+      "date"     : "2021-01-19 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "41. Naive Bayes Classifier for Machine Learning",
       "category" : "",
       "tags"     : "Fast Campus ML",
