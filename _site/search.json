@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "03-01. Introduction to C++ for CS246",
+      "category" : "",
+      "tags"     : "CS 246 Object-Oriented Software Development",
+      "url"      : "/blog/cs245-03",
+      "date"     : "2021-01-21 00:00:00 +0900"
+    } ,
+  
+    {
       "title"    : "Tips for Myself",
       "category" : "",
       "tags"     : "Tips",
