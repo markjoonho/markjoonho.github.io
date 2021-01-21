@@ -114,7 +114,7 @@
 
 <p class="post-metadata text-muted">
   21 January 2021 -  
-  <b>7 mins read time</b>
+  <b>9 mins read time</b>
 
   <br>Tags: 
     
@@ -137,7 +137,7 @@
   <li><a href="#compilation">Compilation</a></li>
   <li><a href="#input-and-output">Input and Output</a></li>
   <li><a href="#error-handling">Error Handling</a></li>
-  <li><a href="#">File I/O</a></li>
+  <li><a href="#file-io">File I/O</a></li>
   <li><a href="#formatting-output">Formatting Output</a></li>
   <li><a href="#strings">Strings</a></li>
   <li><a href="#string-streams">String Streams</a></li>
@@ -487,6 +487,96 @@ int main() {
 <p><code class="language-plaintext highlighter-rouge">cin</code>’s operator <code class="language-plaintext highlighter-rouge">!</code> has been defined to return the contents of the fail bit by calling <code class="language-plaintext highlighter-rouge">fail()</code>. (Overloading: talk about it later)</p>
 
 <h3 id="version-3">Version 3</h3>
+
+<p>In C, <code class="language-plaintext highlighter-rouge">&lt;&lt;</code> and <code class="language-plaintext highlighter-rouge">&gt;&gt;</code> used to shift bits either to the left or to the right by some amount.</p>
+
+<p>In C++, the operators <code class="language-plaintext highlighter-rouge">&lt;&lt;</code> and <code class="language-plaintext highlighter-rouge">&gt;&gt;</code> are overloaded for output and input when the object on the left-hand side of the operator are output and input streams.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>When i is an integer this is executing the command:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span><span class="n">i</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">operator&gt;&gt;</code> return <code class="language-plaintext highlighter-rouge">cin</code> and <code class="language-plaintext highlighter-rouge">cin</code> needs to be able to be read from multiple times so that I can write commands such as:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="n">z</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>This is equivelent to:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span> <span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span> <span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span> <span class="n">cin</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">y</span><span class="p">),</span> <span class="n">z</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Let’s start rewriting <code class="language-plaintext highlighter-rouge">readInts.cc</code> into <code class="language-plaintext highlighter-rouge">readInts3.cc</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> ./readInts3.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+int main() {
+    int i;
+    while (true) {
+        if (!(cin &gt;&gt; i)) break;
+        cout &lt;&lt; i &lt;&lt; endl;
+    }
+}
+</code></pre></div></div>
+
+<h3 id="version-4">Version 4</h3>
+
+<p>Move the read-and-test into the loop condition test from the loop body.</p>
+
+<p>Let’s start rewriting <code class="language-plaintext highlighter-rouge">readInts.cc</code> into <code class="language-plaintext highlighter-rouge">readInts4.cc</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> ./readInts4.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+int main() {
+    int i;
+    while (cin &gt;&gt; i) {
+        cout &lt;&lt; i &lt;&lt; endl;
+    }
+}
+</code></pre></div></div>
+
+<h3 id="version-5">Version 5</h3>
+
+<p>We will now modify our program to skip all non-integer input. We can now reall all integers and echo them to standard output until the eof signal is detected.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>readInts5.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+int main() {
+    int i;
+    while ( true ) {
+        if ( ! ( cin &gt;&gt; i ) ) {     // Remember, operator! === fail()
+            if ( cin.eof() ) break;
+            cin.clear();            // Clear the fail bit
+            cin.ignore();           // Throw away the offending character
+        } else {
+            cout &lt;&lt; i &lt;&lt; endl;
+        }
+    }
+}
+</code></pre></div></div>
+
+<h1 id="file-io">File I/O</h1>
+
+<p>To be continued</p>
 
 
 
