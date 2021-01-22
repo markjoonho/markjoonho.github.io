@@ -97,7 +97,9 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/assets/img/ml44/2021-01-23-ml-44">k-Nearest Neighborhood Algorithm Practice</a>
+
+      <a class="nav-item nav-link " href="/projects/">Projects</a>
 
       <a class="nav-item nav-link active" href="/blog/">Blog</a>
 
@@ -114,7 +116,7 @@
 
 <p class="post-metadata text-muted">
   21 January 2021 -  
-  <b>9 mins read time</b>
+  <b>10 mins read time</b>
 
   <br>Tags: 
     
@@ -576,7 +578,40 @@ int main() {
 
 <h1 id="file-io">File I/O</h1>
 
-<p>To be continued</p>
+<p>Reading from a file is identical to reading from standard input. We will include <code class="language-plaintext highlighter-rouge">fstream</code> and use <code class="language-plaintext highlighter-rouge">ifstream</code> type.</p>
+
+<p>From now, let’s create the code that reads from input file and save input to output file.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;fstream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ifstream</span> <span class="n">infile</span><span class="p">{</span> <span class="s">"input.txt"</span> <span class="p">};</span>
+    <span class="n">ofstream</span> <span class="n">outfile</span><span class="p">{</span> <span class="s">"output.txt"</span> <span class="p">};</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">infile</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="n">infile</span><span class="p">.</span><span class="n">fail</span><span class="p">()</span> <span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+        <span class="n">outfile</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>More Documentation: <a href="http://www.cplusplus.com/doc/tutorial/files/">http://www.cplusplus.com/doc/tutorial/files/</a></p>
+
+<h1 id="formatting-output">Formatting Output</h1>
+
+<p>Sometimes, we have a chance to formatting the output other than through use of whitespace. We will use the library <code class="language-plaintext highlighter-rouge">iomanip</code>.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">20</span> <span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
 
 
 
