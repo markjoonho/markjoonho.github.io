@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta
+    property="og:title"
+    content="03-01. Introduction to C++ for CS246"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>
+    03-01. Introduction to C++ for CS246
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"
+    async
+  ></script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/assets/img/ml44/2021-01-23-ml-44">k-Nearest Neighborhood Algorithm Practice</a>
+
+      <a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>03-01. Introduction to C++ for CS246</b></h1>
+
+<p class="post-metadata text-muted">
+  21 January 2021 -  
+  <b>10 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-246-object-oriented-software-development">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 246 Object-Oriented Software Development</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
+
+<hr />
+
+<p>Contents:</p>
+
+<ul>
+  <li><a href="#introduction-to-c">Introduction to C++</a></li>
+  <li><a href="#basics">Basics</a></li>
+  <li><a href="#compilation">Compilation</a></li>
+  <li><a href="#input-and-output">Input and Output</a></li>
+  <li><a href="#error-handling">Error Handling</a></li>
+  <li><a href="#file-io">File I/O</a></li>
+  <li><a href="#formatting-output">Formatting Output</a></li>
+  <li><a href="#strings">Strings</a></li>
+  <li><a href="#string-streams">String Streams</a></li>
+  <li><a href="#command-line-arguments">Command-line arguments</a></li>
+  <li><a href="#functions">Functions</a></li>
+  <li><a href="#overloading">Overloading</a></li>
+  <li><a href="#structures">Structures</a></li>
+  <li><a href="#constants">Constants</a></li>
+  <li><a href="#parameter-passing">Parameter Passing</a></li>
+  <li><a href="#references">References</a></li>
+  <li><a href="#dynamic-memory-allocation">Dynamic Memory Allocation</a></li>
+  <li><a href="#pointers-and-optional-files">Pointers and Optional files</a></li>
+  <li><a href="#returning-information">Returning Information</a></li>
+  <li><a href="#operator-overloading">Operator Overloading</a></li>
+</ul>
+
+<hr />
+
+<h1 id="introduction-to-c">Introduction to C++</h1>
+
+<p>C++ has wide-spread acceptance and continually evolving. It has been extended to contain the majority of the newest features, while providing backwards compability with C.</p>
+
+<p>Able to program both at very hight level of abstraction, as well as work right down at the machine level if necessary.</p>
+
+<h3 id="good-resources">Good Resources</h3>
+
+<ul>
+  <li><a href="https://en.cppreference.com/w/">C++reference</a> - recommend</li>
+  <li><a href="https://www.cplusplus.com/">cplusplus.com</a> - recommend</li>
+  <li><a href="https://isocpp.org/faq">FAQ</a></li>
+</ul>
+
+<h3 id="c-standards">C++ Standards</h3>
+
+<p>In this course, we will use C++14 standards. It means that 2014 C++ standard.</p>
+
+<hr />
+
+<h1 id="basics">Basics</h1>
+
+<h3 id="basics-through-hello-world">Basics through “Hello World”</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// This is the program wrtten by C</span>
+<span class="cp">#include &lt;stdio.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Hello World!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// This is the program wrtten by C++</span>
+<span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Hello World!"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Two of them are same code but written as different language.</p>
+
+<p>Difference:</p>
+
+<ul>
+  <li>In C, <code class="language-plaintext highlighter-rouge">printf</code> always writes to the standard output stream.</li>
+  <li>
+    <p>In C++, we have to specify the name of the standard out put stream. <code class="language-plaintext highlighter-rouge">std::cout</code>(Character Out)</p>
+  </li>
+  <li>In C, new line <code class="language-plaintext highlighter-rouge">"\n"</code>.</li>
+  <li>In C++, new line <code class="language-plaintext highlighter-rouge">std::endl</code></li>
+</ul>
+
+<p>We must specify the <code class="language-plaintext highlighter-rouge">std</code> namespace like <code class="language-plaintext highlighter-rouge">std::cout</code>. Writing <code class="language-plaintext highlighter-rouge">std::</code> in front of everything gets tedious very quickly, so there are two other ways to handle this as follow:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">count</span> <span class="o">&lt;&lt;</span> <span class="s">"Hello World!"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// It looks nice but there are good reasons not to do this.</span>
+<span class="c1">// We talk about the preprocessor in more detail.</span>
+<span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">count</span> <span class="o">&lt;&lt;</span> <span class="s">"Hello World!"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="compilation">Compilation</h1>
+
+<blockquote>
+  <p>Unlike a bash script, we cannot run a C or C++ directly. You first have to use a compiler to create an executable file.</p>
+</blockquote>
+
+<ol>
+  <li>Programming Language File</li>
+  <li>Produce Machine-Readable Instructions (first preprocessing)</li>
+  <li>Compiling (Transforming C++ code into Assembler code)</li>
+  <li>Assembling (Transforming Assembler code into Machine code)</li>
+  <li>Linking (combining several pieces of machine code (objrct files) into a single executable file)</li>
+</ol>
+
+<p>Take more detail in CS241 course.</p>
+
+<p>From cs246, we will use GCC compiler, where <code class="language-plaintext highlighter-rouge">g++</code> is front-end.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>hello.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+
+int main() {
+std::cout &lt;&lt; "Hello World!" &lt;&lt; std::endl
+}
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ hello.cc
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a.out hello.cc
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./a.out
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello World!
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ <span class="nt">-std</span><span class="o">=</span>c++14 <span class="nt">-o</span> hello hello.cc
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a.out hello hello.cc
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./hello
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello World!
+</code></pre></div></div>
+
+<p>There exists few other options you can pass into the compiler’s command-line</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Options</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-g</code></td>
+      <td>Produce debugging information. The GNU debugger, <code class="language-plaintext highlighter-rouge">gbd</code>, can work with this debugging information. Makes your code larger, but useful!</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-c</code></td>
+      <td>Produce an object file (ends in .o) that conists of assembler output. Useful when we discuss <em>separate compilation</em>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-Wall</code></td>
+      <td>Enable all the warnings about constructions that some users consider questionable, and that are easy to avoid.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-Wextra</code></td>
+      <td>Enable some extra warnings that aren’t enable by <code class="language-plaintext highlighter-rouge">-wall</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-Wpedantic</code></td>
+      <td>Ensure that your code follows the strict ISO C++standard.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-D</code></td>
+      <td>Let us define a macro name as a command-line argument to the compiler.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h1 id="input-and-output">Input and Output</h1>
+
+<p>There are three global variables in the <code class="language-plaintext highlighter-rouge">std</code> namespaces that define the stream objects used for basic Input(stdin) and Output(stdout, stderror).</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>C++</th>
+      <th>C</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cin</code></td>
+      <td><code class="language-plaintext highlighter-rouge">stdin</code></td>
+      <td>Reads from standard input.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cout</code></td>
+      <td><code class="language-plaintext highlighter-rouge">stdout</code></td>
+      <td>Writes to standard output.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cerr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">stderr</code></td>
+      <td>Writes to standard error.</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>Output streams:
+    <ul>
+      <li>Use <code class="language-plaintext highlighter-rouge">&lt;&lt;</code> operator to output to the stream.</li>
+      <li>Stream name should be on the left-hand side of the operator.</li>
+      <li>Information to output must be on the right-hand side.</li>
+    </ul>
+  </li>
+  <li>Input streams:
+    <ul>
+      <li>Use <code class="language-plaintext highlighter-rouge">&gt;&gt;</code> operator to input from the stream.</li>
+      <li>Stream name should be on the left-hand side of the operator.</li>
+      <li>Variables that will contain the information read must be on the right-hand side.</li>
+      <li>Input operator handles whitespace (blanks, tabs, newline) between integer value.</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>add.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+using namespace std;
+int main(){
+    int x, y;
+    cin &gt;&gt; x &gt;&gt; y;
+    cout &lt;&lt; x + y &lt;&lt; endl;
+    return 0;
+}
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ <span class="nt">-std</span><span class="o">=</span>c++14 add.cc
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./a.out
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>123   123
+246
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./a.out
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>123
+123
+246
+</code></pre></div></div>
+
+<p>We should check that the user’s input is proper integer value. We can use the methods <code class="language-plaintext highlighter-rouge">fail()</code> or <code class="language-plaintext highlighter-rouge">eof()</code>, as in:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">(</span> cin.fail<span class="o">()</span> <span class="o">)</span> <span class="o">{</span>...<span class="o">}</span>
+<span class="k">if</span> <span class="o">(</span> cin.eof<span class="o">()</span> <span class="o">)</span> <span class="o">{</span>...<span class="o">}</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>readInts.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int i;
+    while (true) {
+	    cin &gt;&gt; i;
+	    if (cin.fail()) break;
+	    cout &lt;&lt; i &lt;&lt; endl;
+    }
+}
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ readInts.cc
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./a.out
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1 2 3
+1
+2
+3
+45
+45
+21 12 31 a
+21
+12
+31
+</code></pre></div></div>
+
+<h1 id="error-handling">Error Handling</h1>
+
+<p>Our prebious <code class="language-plaintext highlighter-rouge">readInts.cc</code> is not terribly robust, and in fact silently fails when it reads a non-integer value. It would be much more informatic to handle the error, informing the user of the program, and still let the program continue.</p>
+
+<h3 id="version-2">Version 2</h3>
+
+<p>Let’s start rewriting <code class="language-plaintext highlighter-rouge">readInts.cc</code> into <code class="language-plaintext highlighter-rouge">readInts2.cc</code>. We will use operator <code class="language-plaintext highlighter-rouge">!</code> to the standard input stream object, <code class="language-plaintext highlighter-rouge">cin</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>readInts2.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int i;
+    while (true) {
+        cin &gt;&gt; i;
+        if (!cin) break;
+        count &lt;&lt; i &lt;&lt; endl;
+    }
+}
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// These are same</span>
+<span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">cin</span> <span class="p">)</span> <span class="p">{...}</span>
+<span class="k">if</span> <span class="p">(</span> <span class="n">cin</span><span class="p">.</span><span class="k">operator</span><span class="o">!</span><span class="p">()</span> <span class="p">)</span> <span class="p">{...}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">cin</code>’s operator <code class="language-plaintext highlighter-rouge">!</code> has been defined to return the contents of the fail bit by calling <code class="language-plaintext highlighter-rouge">fail()</code>. (Overloading: talk about it later)</p>
+
+<h3 id="version-3">Version 3</h3>
+
+<p>In C, <code class="language-plaintext highlighter-rouge">&lt;&lt;</code> and <code class="language-plaintext highlighter-rouge">&gt;&gt;</code> used to shift bits either to the left or to the right by some amount.</p>
+
+<p>In C++, the operators <code class="language-plaintext highlighter-rouge">&lt;&lt;</code> and <code class="language-plaintext highlighter-rouge">&gt;&gt;</code> are overloaded for output and input when the object on the left-hand side of the operator are output and input streams.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>When i is an integer this is executing the command:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span><span class="n">i</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">operator&gt;&gt;</code> return <code class="language-plaintext highlighter-rouge">cin</code> and <code class="language-plaintext highlighter-rouge">cin</code> needs to be able to be read from multiple times so that I can write commands such as:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="n">z</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>This is equivelent to:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span> <span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span> <span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span> <span class="n">cin</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">y</span><span class="p">),</span> <span class="n">z</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Let’s start rewriting <code class="language-plaintext highlighter-rouge">readInts.cc</code> into <code class="language-plaintext highlighter-rouge">readInts3.cc</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> ./readInts3.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+int main() {
+    int i;
+    while (true) {
+        if (!(cin &gt;&gt; i)) break;
+        cout &lt;&lt; i &lt;&lt; endl;
+    }
+}
+</code></pre></div></div>
+
+<h3 id="version-4">Version 4</h3>
+
+<p>Move the read-and-test into the loop condition test from the loop body.</p>
+
+<p>Let’s start rewriting <code class="language-plaintext highlighter-rouge">readInts.cc</code> into <code class="language-plaintext highlighter-rouge">readInts4.cc</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> ./readInts4.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+int main() {
+    int i;
+    while (cin &gt;&gt; i) {
+        cout &lt;&lt; i &lt;&lt; endl;
+    }
+}
+</code></pre></div></div>
+
+<h3 id="version-5">Version 5</h3>
+
+<p>We will now modify our program to skip all non-integer input. We can now reall all integers and echo them to standard output until the eof signal is detected.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>readInts5.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+int main() {
+    int i;
+    while ( true ) {
+        if ( ! ( cin &gt;&gt; i ) ) {     // Remember, operator! === fail()
+            if ( cin.eof() ) break;
+            cin.clear();            // Clear the fail bit
+            cin.ignore();           // Throw away the offending character
+        } else {
+            cout &lt;&lt; i &lt;&lt; endl;
+        }
+    }
+}
+</code></pre></div></div>
+
+<h1 id="file-io">File I/O</h1>
+
+<p>Reading from a file is identical to reading from standard input. We will include <code class="language-plaintext highlighter-rouge">fstream</code> and use <code class="language-plaintext highlighter-rouge">ifstream</code> type.</p>
+
+<p>From now, let’s create the code that reads from input file and save input to output file.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;fstream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ifstream</span> <span class="n">infile</span><span class="p">{</span> <span class="s">"input.txt"</span> <span class="p">};</span>
+    <span class="n">ofstream</span> <span class="n">outfile</span><span class="p">{</span> <span class="s">"output.txt"</span> <span class="p">};</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">infile</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="n">infile</span><span class="p">.</span><span class="n">fail</span><span class="p">()</span> <span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+        <span class="n">outfile</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>More Documentation: <a href="http://www.cplusplus.com/doc/tutorial/files/">http://www.cplusplus.com/doc/tutorial/files/</a></p>
+
+<h1 id="formatting-output">Formatting Output</h1>
+
+<p>Sometimes, we have a chance to formatting the output other than through use of whitespace. We will use the library <code class="language-plaintext highlighter-rouge">iomanip</code>.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">20</span> <span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>
