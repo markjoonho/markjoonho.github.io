@@ -97,9 +97,7 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/assets/img/ml44/2021-01-23-ml-44">k-Nearest Neighborhood Algorithm Practice</a>
-
-      <a class="nav-item nav-link " href="/projects/">Projects</a>
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
 
       <a class="nav-item nav-link active" href="/blog/">Blog</a>
 
@@ -115,8 +113,8 @@
   <h1><b>03-01. Introduction to C++ for CS246</b></h1>
 
 <p class="post-metadata text-muted">
-  21 January 2021 -  
-  <b>10 mins read time</b>
+  24 January 2021 -  
+  <b>19 mins read time</b>
 
   <br>Tags: 
     
@@ -608,10 +606,330 @@ int main() {
 </span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">20</span> <span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">20</span> <span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">dec</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">oct</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+   <span class="p">}</span>
 <span class="p">}</span>
 
 </code></pre></div></div>
+
+<ul>
+  <li>Using <code class="language-plaintext highlighter-rouge">setw(3)</code> to set the width of the information to 3 characters.</li>
+  <li>Using <code class="language-plaintext highlighter-rouge">dec</code>, <code class="language-plaintext highlighter-rouge">oct</code> to make the integer <code class="language-plaintext highlighter-rouge">i</code> to be printed in different system.
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">dec</code> is base 10</li>
+      <li><code class="language-plaintext highlighter-rouge">oct</code> is base 8</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ test.cc
+<span class="nv">$ </span>./a.out
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  0  0
+  1  1
+  2  2
+  3  3
+  4  4
+  5  5
+  6  6
+  7  7
+  8 10
+  9 11
+ 10 12
+ 11 13
+ 12 14
+ 13 15
+ 14 16
+ 15 17
+ 16 20
+ 17 21
+ 18 22
+ 19 23
+</code></pre></div></div>
+
+<p>This is our Output!</p>
+
+<p>Let’s take a look at one more example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">95</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">//print hexa type</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">dec</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="kt">float</span> <span class="n">price</span> <span class="o">=</span> <span class="mf">2.00</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">fixed</span> <span class="o">&lt;&lt;</span> <span class="n">showpoint</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">price</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ test.cc
+<span class="nv">$ </span>./a.out
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5f
+5f
+95
+2.00
+</code></pre></div></div>
+
+<ul>
+  <li>Once we change the integer value to <code class="language-plaintext highlighter-rouge">hex</code>, it is sticky!</li>
+  <li><code class="language-plaintext highlighter-rouge">showpoint</code> force the printing of the decimal point in our floating point number.</li>
+  <li><code class="language-plaintext highlighter-rouge">setprecision</code> specifies the number of digits after the decimal point to print.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">showpoint</code> with <code class="language-plaintext highlighter-rouge">setprecision</code> is a good, simple way to print currency.</p>
+
+<p>More Info: <a href="https://en.cppreference.com/w/cpp/io/manip">cppreference</a></p>
+
+<h1 id="strings">Strings</h1>
+
+<ul>
+  <li>In C, memory needs to be explicitly managed. Need to shrink/grow array explicitly.</li>
+  <li>In C, easy to overwrite ‘\0’ and corrupt memory.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// This is for C</span>
+<span class="c1">// Array of characters. Terminated by the null character, '\0'.</span>
+<span class="c1">// char *</span>
+<span class="kt">char</span> <span class="o">*</span> <span class="n">s</span> <span class="o">=</span> <span class="s">"Hello"</span><span class="p">;</span>
+
+<span class="c1">// char []</span>
+<span class="kt">char</span> <span class="n">name</span> <span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="s">"Jane</span><span class="se">\0</span><span class="s">"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>In C++, manages memory for you.</li>
+  <li>In C++, safer to manipulate.</li>
+</ul>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// This is for C++</span>
+<span class="cp">#include &lt;string&gt;
+</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span> <span class="o">=</span> <span class="s">"Hello"</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">{</span> <span class="s">"Jane"</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>C++ has <code class="language-plaintext highlighter-rouge">string</code> library!</p>
+</blockquote>
+
+<h3 id="operations">Operations</h3>
+
+<p>Source: <a href="https://www.cplusplus.com/reference/string/string/">cplusplus</a></p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// equality</span>
+<span class="n">s1</span> <span class="o">==</span> <span class="n">s2</span>
+
+<span class="c1">// inequality</span>
+<span class="n">s1</span> <span class="o">!=</span> <span class="n">s2</span>
+
+<span class="c1">// comparison</span>
+<span class="n">s1</span> <span class="o">&lt;=</span> <span class="n">s2</span>
+<span class="n">s1</span> <span class="o">&lt;</span> <span class="n">s2</span>
+<span class="n">s1</span> <span class="o">&gt;=</span> <span class="n">s2</span>
+<span class="n">s1</span> <span class="o">&gt;</span> <span class="n">s2</span>
+
+<span class="c1">// length</span>
+<span class="n">s1</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">s1</span><span class="p">.</span><span class="n">length</span><span class="p">()</span>
+
+<span class="c1">// fetch individual characters</span>
+<span class="n">s1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">s1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1">// concatenation</span>
+<span class="n">s1</span> <span class="o">=</span> <span class="n">s2</span> <span class="o">+</span> <span class="n">s3</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="input-output">Input/ Output</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>From the above we can figure out that string ignores all the whitespace.</p>
+
+<p>Now we will use getline!</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iomanip&gt;
+#include &lt;string&gt;
+</span>
+<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">getline</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span> <span class="p">{</span>
+	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="o">++</span> <span class="o">&lt;&lt;</span> <span class="s">": </span><span class="se">\"</span><span class="s">"</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="sc">'\"'</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>From this, we keep place input until we’ve got eof!</p>
+
+<h1 id="string-streams">String Streams</h1>
+
+<p>C++ there us unusual type <a href="https://www.cplusplus.com/reference/sstream/stringstream/">stringstream</a>, available through the <code class="language-plaintext highlighter-rouge">sstream</code> library.This is the hybrid of <code class="language-plaintext highlighter-rouge">std::string</code> class and <code class="language-plaintext highlighter-rouge">iostream</code> classes.</p>
+
+<p>We can read, write to, write from strings using stream operators.</p>
+
+<p>(Recommend to use the type explicitly. <code class="language-plaintext highlighter-rouge">istringstream</code>: input, <code class="language-plaintext highlighter-rouge">ostringstream</code>: output)</p>
+
+<h3 id="input-string-streams">Input String Streams</h3>
+
+<p>We are using input string stremas to take an existing string. Let’s see the example.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="cp">#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">s1</span><span class="p">{</span> <span class="s">"The quick brown fox</span><span class="se">\n</span><span class="s">jumped over the lazy</span><span class="se">\t</span><span class="s"> dog."</span> <span class="p">};</span>
+    <span class="n">istringstream</span> <span class="n">ss1</span><span class="p">{</span> <span class="n">s1</span> <span class="p">};</span>
+    <span class="k">while</span> <span class="p">(</span> <span class="n">ss1</span> <span class="o">&gt;&gt;</span> <span class="n">s</span> <span class="p">)</span> <span class="p">{</span>                    <span class="c1">//split it by white space.</span>
+         <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">string</span> <span class="n">s2</span><span class="p">{</span> <span class="s">"Smith,Jane,99999999,Yu,Yaoliang,99999998"</span> <span class="p">};</span>
+    <span class="n">istringstream</span> <span class="n">ss2</span><span class="p">{</span> <span class="n">s2</span> <span class="p">};</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"***"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span> <span class="n">getline</span><span class="p">(</span> <span class="n">ss2</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="sc">','</span> <span class="p">)</span> <span class="p">)</span> <span class="p">{</span>      <span class="c1">//split it by comma.</span>
+         <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>For s1 we split the string by whitespace!</p>
+
+<p>For s2 we split the string by comma using getline!</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ istringstream.cc
+<span class="nv">$ </span>./a.out
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The
+quick
+brown
+fox
+jumped
+over
+the
+lazy
+dog.
+***
+Smith
+Jane
+99999999
+Yu
+Yaoliang
+99999998
+</code></pre></div></div>
+
+<h3 id="output-string-streams">Output String Streams</h3>
+
+<p>In cs246, you don’t allow to use it.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;sstream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="n">ostringstream</span> <span class="n">ss</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">lo</span> <span class="p">{</span><span class="mi">1</span><span class="p">},</span> <span class="n">hi</span> <span class="p">{</span><span class="mi">100</span><span class="p">};</span>
+  <span class="n">ss</span> <span class="o">&lt;&lt;</span> <span class="s">"Enter a # between "</span> <span class="o">&lt;&lt;</span> <span class="n">lo</span> <span class="o">&lt;&lt;</span> <span class="s">" and "</span> <span class="o">&lt;&lt;</span> <span class="n">hi</span><span class="p">;</span>
+  <span class="n">string</span> <span class="n">s</span> <span class="p">{</span><span class="n">ss</span><span class="p">.</span><span class="n">str</span><span class="p">()};</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This c++ code prints “Enter a # between 1 and 10”.</p>
+
+<h1 id="command-line-arguments">Command-line Arguments</h1>
+
+<p>The <code class="language-plaintext highlighter-rouge">main</code> function takes two arguments, <code class="language-plaintext highlighter-rouge">argc</code> and <code class="language-plaintext highlighter-rouge">argv</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">argc</code> representing the number of arguments the program received.</p>
+
+<p><code class="language-plaintext highlighter-rouge">argv</code> representing the array of arguments. (<code class="language-plaintext highlighter-rouge">char **</code> an array of <code class="language-plaintext highlighter-rouge">char</code> pointers, rather than an array of C++ strings.)</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// This code is in file test.cc</span>
+<span class="cp">#include &lt;iostream&gt;
+</span><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">argi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">argi</span> <span class="o">&lt;</span> <span class="n">argc</span><span class="p">;</span> <span class="n">argi</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">argv</span><span class="p">[</span><span class="n">argi</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ test.cc <span class="nt">-o</span> hello
+<span class="nv">$ </span>./hello This is a testing
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./hello
+This
+is
+a
+testing
+</code></pre></div></div>
+
+<h3 id="command-line-arguments-vs-standard-input">Command-line Arguments vs Standard Input</h3>
+
+<p>Command-line Argumnet and Standard Inputs are absolutely different.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">line</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">get_line</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">,</span> <span class="n">line</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">line</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>From this, we can only read Standard Input! Thus, let’s change the code!</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">bool</span> <span class="n">hadArg</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">inf</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">inf</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="p">{</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]};</span>
+		<span class="n">hadArg</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">line</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">hadArg</span> <span class="o">?</span> <span class="n">inf</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">,</span> <span class="n">line</span><span class="p">))</span> <span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">line</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>From this, we can read command line argument!</p>
 
 
 

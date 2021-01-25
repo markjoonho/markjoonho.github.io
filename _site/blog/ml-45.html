@@ -18,7 +18,7 @@
   />
   <meta
     property="og:title"
-    content="38. PCA(5) How to use SVD for Machine Learning"
+    content="45. Linear Discriminant Analysis for Machine Learning"
   />
   <meta
     property="og:description"
@@ -32,7 +32,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>
-    38. PCA(5) How to use SVD for Machine Learning
+    45. Linear Discriminant Analysis for Machine Learning
   </title>
 
   <link
@@ -110,11 +110,11 @@
 
 </nav>
   <div class="col-lg-10 mx-auto mt-5 post">
-  <h1><b>38. PCA(5) How to use SVD for Machine Learning</b></h1>
+  <h1><b>45. Linear Discriminant Analysis for Machine Learning</b></h1>
 
 <p class="post-metadata text-muted">
-  15 January 2021 -  
-  <b>2 mins read time</b>
+  25 January 2021 -  
+  <b>less than 1 min read time</b>
 
   <br>Tags: 
     
@@ -123,237 +123,34 @@
     </a>
     </p>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a></p>
 
-<p>Source: <a href="https://www.fastcampus.co.kr/">Fast Campus</a>, <a href="https://youtu.be/FgakZw6K1QQ">StatQuest with Josh Starmer</a></p>
+<h1 id="background">Background</h1>
 
-<h2 id="1-mean-centering">1. Mean Centering</h2>
+<p>Before to start with LDA, there is an assumption.</p>
 
 <ul>
-  <li>For 1000 data</li>
-  <li>Z1 mean: -0.0289, Z2 mean: 0.0288</li>
+  <li>Eah groups are having Gaussian distribution.</li>
+  <li>Each groups are having similar covariance structure.</li>
 </ul>
 
-<p><em><strong>Original</strong></em></p>
+<p><img src="/assets/img/ml45/background.png" /></p>
 
-<table>
-  <thead>
-    <tr>
-      <th> </th>
-      <th>Z1</th>
-      <th>Z2</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0</td>
-      <td>2.0046</td>
-      <td>-1.0718</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>0.1823</td>
-      <td>0.2250</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>-0.5197</td>
-      <td>0.2620</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>-0.6507</td>
-      <td>-1.7142</td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td>0.3236</td>
-      <td>-3.0723</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><em><strong>Mean Centering</strong></em></p>
-
-<table>
-  <thead>
-    <tr>
-      <th> </th>
-      <th>Z1</th>
-      <th>Z2</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0</td>
-      <td>2.0334</td>
-      <td>-1.1006</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>0.2112</td>
-      <td>0.1962</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>-0.4909</td>
-      <td>0.2332</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>-0.6219</td>
-      <td>-1.7430</td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td>0.3525</td>
-      <td>-3.1011</td>
-    </tr>
-  </tbody>
-</table>
-
-<h5 id="visualize-how-mean-centering-works">Visualize how Mean Centering Works</h5>
-
-<p><img src="/assets/img/ml38/data.png" /></p>
-
-<p><img src="/assets/img/ml38/mean_centering.png" /></p>
-
-<h2 id="2-svd-start">2. SVD Start</h2>
+<h3 id="characteristics-of-decision-boundary">Characteristics of Decision Boundary</h3>
 
 <ul>
-  <li>For 3 Data sets</li>
-</ul>
-
-\[X=UDV^T = \begin{bmatrix}
--0.0309 &amp; -0.0216 \\
--0.0001 &amp; -0.0092 \\
-0.0071 &amp; 0.0060
-\end{bmatrix}
-\begin{bmatrix}
-71.54 &amp; 0 \\
-0 &amp; 31.15
-\end{bmatrix}
-\begin{bmatrix}
--0.70 &amp; 0.71 \\
-0.71 &amp; 0.70
-\end{bmatrix}^T\]
-
-<h2 id="3-using-svd-get-eigen-vector-eigen-value">3. Using SVD, Get eigen vector, eigen value</h2>
-
-\[U = \begin{bmatrix}
--0.0309 &amp; -0.0216 \\
--0.0001 &amp; -0.0092 \\
-0.0071 &amp; 0.0060
-\end{bmatrix},
-D = \begin{bmatrix}
-71.54 &amp; 0 \\
-0 &amp; 31.15
-\end{bmatrix},
-V = \begin{bmatrix}
--0.70 &amp; 0.71 \\
-0.71 &amp; 0.70
-\end{bmatrix}\]
-
-<ul>
-  <li>
-    <p>Recall: \((X^T X)v_i\) = \(d_i^2v_i\), \(i=1,...,p\)</p>
-
+  <li>Orthogonal Axis to the Boundary
     <ul>
-      <li>\(v_i\): eigen vectors</li>
-      <li>\(d_i^2\): eigen values</li>
+      <li>Consider the shape of data that orthogonal projection to the axis.</li>
     </ul>
   </li>
+  <li>Maximize the difference between mean of each groups.</li>
+  <li>Minimize the each groups’ variance.</li>
 </ul>
 
-<p>Since \(Cov(X) =\frac{(X^T X)}{n-1}\),</p>
+<p><img src="/assets/img/ml45/boundary.png" /></p>
 
-<ul>
-  <li>
-    <p>\(Cov(X)v_i\) =\(\frac{(X^T X)}{n-1} v_i\) = \(\frac{d_i^2}{n-1} v_i\)</p>
-
-    <ul>
-      <li>\(v_i\): eigen vectors</li>
-      <li>\(\frac{d_i^2}{n-1}\): eigen values</li>
-    </ul>
-  </li>
-  <li>
-    <p>\(\lambda_1 = \frac{71.54^2}{1000-1}\), \(\lambda_2 = \frac{31.15^2}{1000-1}\), \(v_1 = \begin{bmatrix} -0.70 \\ 0.71 \end{bmatrix}\), \(v_2 = \begin{bmatrix} 0.71 \\ -0.70 \end{bmatrix}\)</p>
-  </li>
-</ul>
-
-<h2 id="4-pc-score-calculation">4. PC score Calculation</h2>
-
-<ul>
-  <li>\(X\) = \(UDV^T\)</li>
-  <li>\(XV\) = \(UD\) = \(\begin{bmatrix}
--0.0309 &amp; -0.0216 \\
--0.0001 &amp; -0.0092 \\
-0.0071 &amp; 0.0060
-\end{bmatrix}
-\begin{bmatrix}
-71.54 &amp; 0 \\
-0 &amp; 31.15
-\end{bmatrix}\) = \(\begin{bmatrix}
--2.21 &amp; -0.67 \\
--0.01 &amp; -0.29 \\
-0.51 &amp; 0.19
-\end{bmatrix}\)</li>
-</ul>
-
-<h2 id="5-geometical-meaning-of-pc-score">5. Geometical Meaning of PC score</h2>
-
-<h5 id="visualize-of-pc1-pc2">Visualize of PC1, PC2</h5>
-
-<p><img src="/assets/img/ml38/pc1-0.png" />
-<img src="/assets/img/ml38/pc1.png" />
-<img src="/assets/img/ml38/pc1-1.png" />
-\(d_1 + d_2 + ... + d_6\)= PC1’s sum of squared distance = PC2’ eigen value
-<img src="/assets/img/ml38/pc1-4.png" />
-\(d_1 + d_2 + ... + d_6\)= PC2’s sum of squared distance = PC2’ eigen value</p>
-
-<p><img src="/assets/img/ml38/pc1-2.png" />
-<img src="/assets/img/ml38/pc1-3.png" /></p>
-
-<p>Data with p variables and n samples</p>
-
-<p>\(XV\) = \(UD\), \(X\) = \(\begin{bmatrix}
-X_1^T \\
-.\\.\\
-X_n^T
-\end{bmatrix}\) = \(\begin{bmatrix}
-x_{1i}, &amp; ..., &amp; x_{1p} \\
-. &amp; .&amp;.&amp;\\
-x_{ni}, &amp; ..., &amp; x_{np} \\
-\end{bmatrix}\), \(V = \begin{bmatrix}
-v_1 &amp;
-...&amp;
-v_p
-\end{bmatrix}\)</p>
-
-<ul>
-  <li>\(i^{th}\) data’s PC score = \(x_i^TV\) = \(\begin{bmatrix}
-x_i^Tv_1 &amp;
-...&amp;
-x_i^Tv_p
-\end{bmatrix}\)</li>
-</ul>
-
-<h2 id="6-analyze-using-pc-score">6. Analyze using PC score</h2>
-
-<ul>
-  <li>Use PC score as an explanation variables</li>
-  <li>Select q PC scroem from p variables(which has large eigen value)</li>
-</ul>
-
-\[Y = \begin{bmatrix} 1 &amp; PC_1 &amp; ... &amp; PC_q \end{bmatrix}
-\begin{bmatrix}
-\beta_0 \\
-\beta_1\\
-.\\
-.\\
-.\\
-\beta_q
-\end{bmatrix} + \epsilon\]
+<p>To be Continued</p>
 
 
 

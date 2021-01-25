@@ -1,11 +1,19 @@
 [
   
     {
-      "title"    : "03. Semantics of Propoitional Logic for CS245",
+      "title"    : "45. Linear Discriminant Analysis for Machine Learning",
       "category" : "",
-      "tags"     : "CS 245 Logic and Computaion",
-      "url"      : "/blog/cs245-03",
-      "date"     : "2021-01-23 00:00:00 +0900"
+      "tags"     : "Fast Campus ML",
+      "url"      : "/blog/ml-45",
+      "date"     : "2021-01-25 00:00:00 +0900"
+    } ,
+  
+    {
+      "title"    : "03-01. Introduction to C++ for CS246",
+      "category" : "",
+      "tags"     : "CS 246 Object-Oriented Software Development",
+      "url"      : "/blog/cs246-03",
+      "date"     : "2021-01-24 00:00:00 +0900"
     } ,
   
     {
@@ -17,11 +25,11 @@
     } ,
   
     {
-      "title"    : "03-01. Introduction to C++ for CS246",
+      "title"    : "03. Semantics of Propoitional Logic for CS245",
       "category" : "",
-      "tags"     : "CS 246 Object-Oriented Software Development",
-      "url"      : "/blog/cs246-03",
-      "date"     : "2021-01-21 00:00:00 +0900"
+      "tags"     : "CS 245 Logic and Computaion",
+      "url"      : "/blog/cs245-03",
+      "date"     : "2021-01-22 00:00:00 +0900"
     } ,
   
     {
