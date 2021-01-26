@@ -150,7 +150,32 @@
 
 <p><img src="/assets/img/ml45/boundary.png" /></p>
 
-<p>To be Continued</p>
+<h1 id="mathematical-concept">Mathematical Concept</h1>
+
+<h3 id="multivariate-normal-distribution">Multivariate Normal Distribution</h3>
+
+<ul>
+  <li>As the correlation increase more 3 dimemnsional graph appears.</li>
+</ul>
+
+<p><img src="/assets/img/ml45/page1.png" />
+<img src="/assets/img/ml45/page2.png" /></p>
+
+<h3 id="definition-of-linear-discriminant-function">Definition of Linear Discriminant Function</h3>
+
+\[\sigma_k(x) = x^T \sum^{-1} \mu_k -\frac{1}{2} \mu_k^T \sum^{-1}\mu_k + log\pi_k\]
+
+<ul>
+  <li>We need to calculate \(\hat{\pi_k}\), \(\hat{\mu_k}\), \(\hat{\sum}\).
+    <ul>
+      <li>\(\hat{\pi_k}\) = \(\frac{N_k}{N}\) probability that k group appears</li>
+      <li>\(\hat{\mu_k}\) = \(\frac{\sum_{y_i=k}x_i}{N_k}\) sample mean of k group</li>
+      <li>\(\hat{\sum}\) = \(\frac{(\sum_{k=1}^K(\sum_{y_i=k}(x_i - \hat{\mu_k})(x_i - \hat{\mu_k})^T))}{(N-K)}\)</li>
+    </ul>
+  </li>
+</ul>
+
+\[\hat{y} = argmax_{k=1,...,K}\space \sigma_k(x)\]
 
 
 
