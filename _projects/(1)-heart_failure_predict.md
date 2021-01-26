@@ -22,7 +22,7 @@ import seaborn as sns
 # Set API Username, API Key
 import os
 os.environ['KAGGLE_USERNAME'] = 'markjoonholee'
-os.environ['KAGGLE_KEY'] = '3041de6eb89e34c46bd4d8e4d9944962'
+os.environ['KAGGLE_KEY'] = 'xxxxxxxxxxxxxxxxxxxxx'
 ```
 
 ### Download Data
@@ -42,6 +42,22 @@ os.environ['KAGGLE_KEY'] = '3041de6eb89e34c46bd4d8e4d9944962'
       inflating: heart_failure_clinical_records_dataset.csv
 
 ### Read CSV
+
+```
+1. Age: age of patient (in years)
+2. Anaemia: Decrease of red blood cells or hemoglobin
+3. High blood pressure: If a patient has hypertension
+4. Creatinine phosphokinase: Level of the CPK enzyme in the blood (mcg/L)
+5. Diabetes: If the patient has diabetes
+6. Ejection fraction: Percentage of blood leaving the heart at each contraction
+7. Sex: Woman or man
+8. Platelets: Platelets in the blood (kiloplatelets/mL)
+9. Serum creatinine: Level of creatinine in the blood (mg/dL)
+10. Serum sodium: Level of sodium in the blood (mEq/L)
+11. Smoking: If the patient smokes
+12. Time: Follow-up period (in days)
+13. (target) death event: If the patient died during the follow-up period
+```
 
 ```python
 # Using Pandas Library
