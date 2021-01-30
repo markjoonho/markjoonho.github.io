@@ -18,7 +18,7 @@
   />
   <meta
     property="og:title"
-    content="45. Linear Discriminant Analysis for Machine Learning"
+    content="47. Support Vector Machine for Machine Learning"
   />
   <meta
     property="og:description"
@@ -32,7 +32,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>
-    45. Linear Discriminant Analysis for Machine Learning
+    47. Support Vector Machine for Machine Learning
   </title>
 
   <link
@@ -110,10 +110,10 @@
 
 </nav>
   <div class="col-lg-10 mx-auto mt-5 post">
-  <h1><b>45. Linear Discriminant Analysis for Machine Learning</b></h1>
+  <h1><b>47. Support Vector Machine for Machine Learning</b></h1>
 
 <p class="post-metadata text-muted">
-  25 January 2021 -  
+  29 January 2021 -  
   <b>less than 1 min read time</b>
 
   <br>Tags: 
@@ -127,111 +127,80 @@
 
 <h1 id="background">Background</h1>
 
-<p>Before to start with LDA, there is an assumption.</p>
-
 <ul>
-  <li>Eah groups are having Gaussian distribution.</li>
-  <li>Each groups are having similar covariance structure.</li>
+  <li>It focuses on the boundary.</li>
+  <li>Find the boundary that maximize the margin.</li>
 </ul>
 
-<p><img src="/assets/img/ml45/background.png" /></p>
-
-<h3 id="characteristics-of-decision-boundary">Characteristics of Decision Boundary</h3>
+<p><img src="/assets/img/ml/ml-47/background.png" /></p>
 
 <ul>
-  <li>Orthogonal Axis to the Boundary
+  <li>There exists the case that cannot separate two classes.
     <ul>
-      <li>Consider the shape of data that orthogonal projection to the axis.</li>
+      <li>Allow some error and make boundary</li>
     </ul>
   </li>
-  <li>Maximize the difference between mean of each groups.</li>
-  <li>Minimize the each groups’ variance.</li>
 </ul>
 
-<p><img src="/assets/img/ml45/boundary.png" /></p>
+<p><img src="/assets/img/ml/ml-47/calc.png" /></p>
+
+<ul>
+  <li>
+    <p>Categorical Variable</p>
+
+    <ul>
+      <li>Support Vector Classifier</li>
+      <li>Distinguish model cost using the bot in margin, and place at different class.</li>
+    </ul>
+  </li>
+  <li>
+    <p>Continuous Variable</p>
+
+    <ul>
+      <li>Support Vector Regression</li>
+      <li>Dot which are place outside of margin</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="/assets/img/ml/ml-47/compare.png" /></p>
 
 <h1 id="mathematical-concept">Mathematical Concept</h1>
 
-<h3 id="multivariate-normal-distribution">Multivariate Normal Distribution</h3>
+<h3 id="decision-boundary">Decision Boundary</h3>
+
+<p>How to divide two classes of dots?</p>
+
+<p><img src="/assets/img/ml/ml-47/math1.png" /></p>
 
 <ul>
-  <li>As the correlation increase more 3 dimemnsional graph appears.</li>
+  <li>Blue dot: \(-x+3 &gt; 0\)</li>
+  <li>Yellow dot: \(-x+3 &lt; 0\)</li>
 </ul>
 
-<p><img src="/assets/img/ml45/page1.png" />
-<img src="/assets/img/ml45/page2.png" /></p>
-
-<h3 id="definition-of-linear-discriminant-function">Definition of Linear Discriminant Function</h3>
-
-\[\sigma_k(x) = x^T \sum^{-1} \mu_k -\frac{1}{2} \mu_k^T \sum^{-1}\mu_k + log\pi_k\]
+<p>What if the graph is p dimension?</p>
 
 <ul>
-  <li>We need to calculate \(\hat{\pi_k}\), \(\hat{\mu_k}\), \(\hat{\sum}\).
-    <ul>
-      <li>\(\hat{\pi_k}\) = \(\frac{N_k}{N}\) probability that k group appears</li>
-      <li>\(\hat{\mu_k}\) = \(\frac{\sum_{y_i=k}x_i}{N_k}\) sample mean of k group</li>
-      <li>\(\hat{\sum}\) = \(\frac{(\sum_{k=1}^K(\sum_{y_i=k}(x_i - \hat{\mu_k})(x_i - \hat{\mu_k})^T))}{(N-K)}\)</li>
-    </ul>
-  </li>
+  <li>\(h_a(x)\) = \(a_0 + a^Tx\) = \(a_0 + a_1x_1 + ... + a_px_p\)</li>
+  <li>Blue dot: \(h_a(x)&gt;0\)</li>
+  <li>Yellow dot: \(h_a(x)&lt;0\)</li>
 </ul>
 
-\[\hat{y} = argmax_{k=1,...,K}\space \sigma_k(x)\]
-
-<h3 id="projection">Projection</h3>
-
-<p><img src="/assets/img/ml45/projection.png" width="500px" /></p>
-
-\[proj_uv = \frac{v \cdot u}{\mid u\mid^2} u\]
+<h3 id="lagrange-multiplier">Lagrange Multiplier</h3>
 
 <ul>
-  <li>Goal: Minimize variance, Maximize average</li>
+  <li>When we are solving optimization problem, maximize \(f(x, y)\) and limit \(g(x,y) \leq c\).</li>
 </ul>
 
-<p><img src="/assets/img/ml45/boundary.png" /></p>
-
-<p><img src="/assets/img/ml45/project.png" /></p>
-
-<h3 id="relationship-between-projection-and-eigen-vector">Relationship between Projection and Eigen Vector</h3>
-
-<p><img src="/assets/img/ml45/eigen.png" /></p>
-
-<h3 id="relationship-between-projection-and-distribution-model">Relationship between Projection and Distribution model</h3>
-
-<p><img src="/assets/img/ml45/overall.png" /></p>
-
-<h3 id="advantage-of-lda">Advantage of LDA</h3>
+<p><img src="/assets/img/ml/ml-47/math2.png" /></p>
 
 <ul>
-  <li>We care about the covariance structure between independence varaiable (In Naive bayes we don’t care covariance structure).</li>
-  <li>Most of the model is robust.</li>
+  <li>Tangent line of \(f(x,y)\) makes the extreme point.</li>
 </ul>
 
-<h3 id="disadvantage-of-lda">Disadvantage of LDA</h3>
+<p><img src="/assets/img/ml/ml-47/math3.png" /></p>
 
-<ul>
-  <li>We need more sample data than independence variable.</li>
-  <li>If the data is out of normal normal distribution, hard to explain.</li>
-  <li>When the covaraiance structure is different between y, we must use QDA</li>
-</ul>
-
-<h3 id="quadratic-discriminant-analysis">Quadratic Discriminant Analysis</h3>
-
-<ul>
-  <li>
-    <p>Same as LDA but remove assumption about \(\sum\)</p>
-
-    <ul>
-      <li>We can use it even if each categories has different covariance structure.</li>
-    </ul>
-  </li>
-  <li>
-    <p>Quadratic discriminant functions</p>
-  </li>
-</ul>
-
-<p><img src="/assets/img/ml45/qda-form.png" /></p>
-
-<p><img src="/assets/img/ml45/qda.png" /></p>
+<p>To be Continued</p>
 
 
 

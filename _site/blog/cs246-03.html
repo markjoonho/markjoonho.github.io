@@ -114,7 +114,7 @@
 
 <p class="post-metadata text-muted">
   24 January 2021 -  
-  <b>19 mins read time</b>
+  <b>42 mins read time</b>
 
   <br>Tags: 
     
@@ -930,6 +930,662 @@ testing
 </code></pre></div></div>
 
 <p>From this, we can read command line argument!</p>
+
+<h1 id="function">Function</h1>
+
+<p>Basic format of C++ function is as similar as C.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">return_type</span> <span class="nf">function_name</span><span class="p">(</span> <span class="n">type1</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">type2</span> <span class="n">arg2</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
+    <span class="p">...</span>
+    <span class="k">return</span> <span class="n">value</span> <span class="n">of</span> <span class="n">appropriate</span> <span class="n">type</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="example">Example:</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">add1</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">value</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">add1</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Forgetting have a <code class="language-plaintext highlighter-rouge">return</code> statement when a return type other than <code class="language-plaintext highlighter-rouge">void</code> is specified can leand to your program behaving eratically.</p>
+</blockquote>
+
+<h3 id="forward-declaration">Forward Declaration</h3>
+
+<p>Common in C and C++ to give a list of all of the necessary declarations at the beginning and then provide the definitions later.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// file name: forwardGood.cc</span>
+<span class="cp">#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">bool</span> <span class="nf">odd</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+
+<span class="kt">bool</span> <span class="nf">even</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">odd</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="nf">odd</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">even</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">boolalpha</span> <span class="o">&lt;&lt;</span> <span class="n">even</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">even</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span>
+      <span class="o">&lt;&lt;</span> <span class="n">odd</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">odd</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ forwardGood.cc
+<span class="nv">$ </span>./a.out
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>false true true false
+</code></pre></div></div>
+
+<h1 id="overloading">Overloading</h1>
+
+<h3 id="overloading-functions">Overloading functions</h3>
+
+<p>C++ allows a function to be <a href="https://www.cplusplus.com/doc/tutorial/functions2/">overloaded</a>. It means that I can have more than one function with the exact same function name so long as the number of arguments and/or their types are different.</p>
+
+<h3 id="example-1-it-works">Example 1: It works</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="kt">int</span> <span class="nf">add1</span><span class="p">(</span><span class="kt">int</span> <span class="n">v1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">v2</span><span class="p">)</span> <span class="p">{</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"add1(int, int): "</span><span class="p">;</span>
+   <span class="k">return</span> <span class="n">v1</span> <span class="o">+</span> <span class="n">v2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">add1</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"add1(int): "</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">char</span> <span class="nf">add1</span><span class="p">(</span><span class="kt">char</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"add1(char): "</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">add1</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">add1</span><span class="p">(</span><span class="sc">'m'</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">add1</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="example-2-it-doesnt-work">Example 2: It doesn’t work</h3>
+
+<ul>
+  <li>When we compile following code, it causes error.</li>
+</ul>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="cp">#include &lt;iostream&gt;
+</span><span class="kt">int</span> <span class="nf">add1</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"add1(int): "</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">char</span> <span class="nf">add1</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"add1(char): "</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">+</span><span class="sc">'a'</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">add1</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">add1</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>t2.cc: In function "char add1(int)":
+t2.cc:6:6: error: ambiguating new declaration of "char add1(int)"
+char add1(int value) {
+    ^~~~
+t2.cc:2:5: note: old declaration "int add1(int)"
+int add1(int value) {
+    ^~~~
+</code></pre></div></div>
+
+<blockquote>
+  <p>When try to call <code class="language-plaintext highlighter-rouge">add1</code> passing in a real number (<code class="language-plaintext highlighter-rouge">float</code>), the compiler will compain that it doesn’t know which version of <code class="language-plaintext highlighter-rouge">add1</code> to use.</p>
+</blockquote>
+
+<h3 id="default-parameter">Default Parameter</h3>
+
+<p>If you want to make similar function without writing the same code, use default parameter.</p>
+
+<h3 id="example-1">Example 1:</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">processInput</span><span class="p">(</span><span class="kt">bool</span> <span class="n">log</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">processInput</span><span class="p">(</span><span class="kt">bool</span> <span class="n">log</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ofstream</span> <span class="n">logfile</span><span class="p">{</span><span class="s">"log.text"</span><span class="p">};</span>
+    <span class="n">string</span> <span class="n">line</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span> <span class="n">getline</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">,</span> <span class="n">line</span> <span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// process input</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="n">log</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// write processed output to logfile</span>
+        <span class="p">}</span> <span class="c1">// if</span>
+    <span class="p">}</span> <span class="c1">// while</span>
+<span class="p">}</span> <span class="c1">//processInput</span>
+</code></pre></div></div>
+
+<p>From this, if you do not write log, there exist default value so it works!</p>
+
+<blockquote>
+  <p>If some of your parameters have default values, and some do not, all of those with default values must come after those without default values in the list of arguments.</p>
+</blockquote>
+
+<h3 id="example-2">Example 2:</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">printSuiteFile</span><span class="p">(</span> <span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="s">"suite.txt"</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="n">ifstream</span> <span class="n">file</span><span class="p">{</span> <span class="n">name</span> <span class="p">};</span>
+  <span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span> <span class="n">file</span> <span class="o">&gt;&gt;</span> <span class="n">s</span> <span class="p">)</span> <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">printSuiteFile</span><span class="p">();</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="n">printSuiteFile</span><span class="p">(</span> <span class="s">"suite2.txt"</span> <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>suite.txt
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>testA
+testB
+testC
+testD
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>suite2.txt
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>testE
+testF
+testG
+testH
+</code></pre></div></div>
+
+<p>From this, if you compile and run program as follow, it will show like this:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ filename.cc
+<span class="nv">$ </span>./a.out
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>testA
+testB
+testC
+testD
+
+testE
+testF
+testG
+testH
+</code></pre></div></div>
+
+<h1 id="structures">Structures</h1>
+
+<p>Use <code class="language-plaintext highlighter-rouge">struct</code> keyword to collect information that isn’t of the same type. (If they are in same type, use <code class="language-plaintext highlighter-rouge">array</code>)</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// struct in C</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">Node_t</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">value</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">Node_T</span> <span class="o">*</span> <span class="n">next</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">Node</span><span class="p">;</span>
+
+<span class="n">Node</span> <span class="o">*</span> <span class="n">head</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">Node</span> <span class="n">n</span><span class="p">;</span>
+<span class="n">n</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="n">n</span><span class="p">.</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// struct in C++</span>
+<span class="k">struct</span> <span class="nc">Node</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">value</span><span class="p">;</span>
+    <span class="n">Node</span> <span class="o">*</span> <span class="n">next</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">Node</span> <span class="o">*</span> <span class="n">head</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+<span class="n">Node</span> <span class="n">n</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">},</span> <span class="n">n1</span> <span class="o">=</span> <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="n">head</span><span class="p">};</span>
+</code></pre></div></div>
+
+<ul>
+  <li>C++ does not require the type definition.</li>
+  <li>Keyword <code class="language-plaintext highlighter-rouge">struct</code> does not need to be repeated in all of the variable declaration.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">nullptr</code> instead of NULL</li>
+</ul>
+
+<h3 id="wrong-example">Wrong Example:</h3>
+
+<p><code class="language-plaintext highlighter-rouge">Node next;</code> is wrong. You are in the middle of defining the defining type, and the definition is not complete you reach the closing ‘}’. So compiler cannot know how much space to allocate! Easy way to fix is using pointer.</p>
+
+<pre><code class="language-C++">struct Node {
+    int value;
+    Node next;
+};
+</code></pre>
+
+<h1 id="constants">Constants</h1>
+
+<p>Immutable variables.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">const</span> <span class="kt">int</span> <span class="n">MAX_GRADE</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">double</span> <span class="n">PI</span> <span class="o">=</span> <span class="mf">3.14159</span><span class="p">;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Must Initialize const!</p>
+</blockquote>
+
+<p>We can also const a <code class="language-plaintext highlighter-rouge">struct</code>.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Node</span> <span class="n">n1</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">};</span>
+<span class="k">const</span> <span class="n">Node</span> <span class="n">n2</span> <span class="o">=</span> <span class="n">n1</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h1 id="parameter-passing">Parameter Passing</h1>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">inc</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="p">{</span><span class="mi">5</span><span class="p">};</span>
+    <span class="n">inc</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If we run this code, we passed the variable <code class="language-plaintext highlighter-rouge">x</code> and print <code class="language-plaintext highlighter-rouge">5</code>.</p>
+
+<p>This process is <strong>call_by_value</strong>. We can use the copy and return.</p>
+
+<p>However other way to do is using pointer and address of the parameter.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="kt">void</span> <span class="nf">inc</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">++*</span><span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="p">{</span><span class="mi">5</span><span class="p">};</span>
+    <span class="n">inc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="references">References</h1>
+
+<blockquote>
+  <p>You should pass information by reference, rather than by pointer since it makes it eaier to write the function code.</p>
+</blockquote>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">lvalue</code> : Take the address of an expression. Appear on the left-hand side.</li>
+  <li><code class="language-plaintext highlighter-rouge">rvalue</code> : Otherwise.</li>
+</ul>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="kt">int</span> <span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="nb">nullptr</span>
+<span class="c1">// From this, x and ptr are both lvalues.</span>
+</code></pre></div></div>
+
+<h3 id="what-is-reference">What is Reference?</h3>
+
+<p>Reference is an lvalue that acts like a constant pointer but the compiler automatically dereferences it. It must be initialize when it defined.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="o">&amp;</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">y</span><span class="p">;</span>
+	<span class="n">y</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span>
+	<span class="o">*</span><span class="n">ptr</span> <span class="o">+=</span> <span class="mi">3</span><span class="p">;</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>10
+</code></pre></div></div>
+
+<p>From this, <code class="language-plaintext highlighter-rouge">y</code> is an <code class="language-plaintext highlighter-rouge">lvalue reference</code>. <code class="language-plaintext highlighter-rouge">y</code> is an alias for <code class="language-plaintext highlighter-rouge">x</code>.</p>
+
+<h3 id="example-1-1">Example 1:</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">inc</span><span class="p">(</span><span class="kt">int</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">x</span> <span class="p">{</span><span class="mi">5</span><span class="p">};</span>
+  <span class="n">inc</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="example-2-1">Example 2:</h3>
+
+<p>Since we place the 5 directly, and return 5, we should use <code class="language-plaintext highlighter-rouge">const</code> to maintain the address.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">inc</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">inc</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="summary">Summary:</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">ReallyBig</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span> <span class="c1">// struct that holds a *lot* of information</span>
+
+<span class="kt">int</span> <span class="nf">f</span><span class="p">(</span> <span class="n">ReallyBig</span> <span class="n">rb</span> <span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>  <span class="c1">// Copies rb. Potentially slow; but see move/copy ellision later!</span>
+<span class="kt">int</span> <span class="nf">g</span><span class="p">(</span> <span class="n">ReallyBig</span> <span class="o">&amp;</span><span class="n">rb</span> <span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span> <span class="c1">// Copies the alias. Fast; but, allows rb to be changed!</span>
+<span class="kt">int</span> <span class="nf">h</span><span class="p">(</span> <span class="k">const</span> <span class="n">ReallyBig</span> <span class="o">&amp;</span> <span class="n">rb</span> <span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span> <span class="c1">// Fast. No copy and rb cannot be changed.</span>
+</code></pre></div></div>
+
+<h1 id="dynamic-memory-allocation">Dynamic Memory Allocation</h1>
+
+<p>This is same as C but uses term automatic versus dynamic storage.</p>
+
+<ul>
+  <li>We will use <code class="language-plaintext highlighter-rouge">new</code> and <code class="language-plaintext highlighter-rouge">delete</code> for this course.</li>
+  <li>Type safe (allocates space of the appropriate size and returns a pointer of the appropriate type.)</li>
+</ul>
+
+<h3 id="example-1">Example:</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="k">struct</span> <span class="nc">Node</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+    <span class="n">Node</span> <span class="o">*</span> <span class="n">next</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Node</span> <span class="n">n</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">};</span>
+    <span class="n">Node</span> <span class="o">*</span> <span class="n">np</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">n</span><span class="p">.</span><span class="n">data</span> <span class="o">&lt;&lt;</span> <span class="sc">' '</span> <span class="o">&lt;&lt;</span> <span class="n">np</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">np</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The program is stored in memory.</p>
+
+<p><img src="/assets/img/cs246/dyn01.jpg" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">n</code> is allocated on the stack. Data fields have been initialized.</p>
+
+<p><img src="/assets/img/cs246/dyn02.jpg" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">np</code> is allocated on the stack. On top, <code class="language-plaintext highlighter-rouge">next</code> fielld is allocated.</p>
+
+<p><img src="/assets/img/cs246/dyn03.jpg" /></p>
+
+<p>Delete the allocated memory of heap.</p>
+
+<p>When the program reaches the closing brace, local variables are popped from the stack in the reverse order to creation.</p>
+
+<p><img src="/assets/img/cs246/dyn04.jpg" /></p>
+
+<h3 id="dynamic-array-allocation">Dynamic Array Allocation</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">Node</span> <span class="p">{</span>
+   <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+   <span class="n">Node</span> <span class="o">*</span> <span class="n">next</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">Node</span> <span class="o">*</span> <span class="n">nodeArray</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="p">...</span>
+<span class="n">nodeArray</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">data</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="n">nodeArray</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">next</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="k">delete</span> <span class="p">[]</span>  <span class="n">nodeArray</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Allocate an array of 10 nodes. We should match the <code class="language-plaintext highlighter-rouge">new</code> and <code class="language-plaintext highlighter-rouge">delete</code>. From this, we should write [] doing <code class="language-plaintext highlighter-rouge">delete</code>. Without [] it only delete the first element of the array.</p>
+
+<h1 id="pointers-and-optional-files">Pointers and Optional Files</h1>
+
+<p>It is common to reading from standard input and writing to standard output. The convention in Linux/UNIX, use square brackets in the documentation to show that these command-line arguments are optional</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./test <span class="o">[</span> input-file-name <span class="o">[</span>output-file-name] <span class="o">]</span>
+</code></pre></div></div>
+
+<p>C++ uses the same syntax as C for obtaining the command-line arguments.</p>
+
+<p>Our <code class="language-plaintext highlighter-rouge">main</code> routine shows that they has two arguments.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">argc</code>: number of arguments</li>
+  <li><code class="language-plaintext highlighter-rouge">argv</code>: array of <code class="language-plaintext highlighter-rouge">NULL</code> terminated C-style strings</li>
+</ul>
+
+<p><img src="/assets/img/cs246/io.jpg" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">argv</code> will be an array of 4 C strings where the last one is a <code class="language-plaintext highlighter-rouge">nullptr</code>.</p>
+
+<h3 id="example-2">Example:</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+</span>
+<span class="kt">void</span> <span class="nf">usage</span><span class="p">(</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pgmname</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">pgmname</span> <span class="o">&lt;&lt;</span> <span class="s">" [ input-file-name [output-file-name] ]"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span> <span class="c1">// usage</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[]</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">istream</span> <span class="o">*</span> <span class="n">infile</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">ostream</span> <span class="o">*</span> <span class="n">outfile</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="o">||</span> <span class="n">argc</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">usage</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">);</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span> <span class="c1">// if</span>
+
+    <span class="k">switch</span><span class="p">(</span> <span class="n">argc</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">outfile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">ofstream</span><span class="p">{</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]};</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">outfile</span> <span class="o">==</span> <span class="nb">nullptr</span> <span class="o">||</span> <span class="n">outfile</span><span class="o">-&gt;</span><span class="n">fail</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">delete</span> <span class="n">outfile</span><span class="p">;</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"ERROR: unable to open output file </span><span class="se">\"</span><span class="s">"</span>
+                    <span class="o">&lt;&lt;</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="sc">'"'</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+                <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="p">}</span> <span class="c1">// if</span>
+
+        <span class="k">case</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">infile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="p">{</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]};</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">ifile</span> <span class="o">==</span> <span class="nb">nullptr</span> <span class="o">||</span> <span class="n">infile</span><span class="o">-&gt;</span><span class="n">fail</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">delete</span> <span class="n">infile</span><span class="p">;</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"ERROR: unable to open input file </span><span class="se">\"</span><span class="s">"</span>
+                    <span class="o">&lt;&lt;</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="sc">'"'</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+                <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="p">}</span> <span class="c1">// if</span>
+            <span class="k">break</span><span class="p">;</span>
+
+        <span class="nl">default:</span>
+            <span class="c1">// do nothing</span>
+            <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span> <span class="c1">// switch</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">line</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="o">*</span><span class="n">infile</span><span class="p">,</span> <span class="n">line</span><span class="p">))</span> <span class="p">{</span>
+        <span class="o">*</span><span class="n">outfile</span> <span class="o">&lt;&lt;</span> <span class="n">line</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span> <span class="c1">// while</span>
+
+    <span class="k">if</span> <span class="p">(</span> <span class="n">infile</span> <span class="o">!=</span> <span class="o">&amp;</span><span class="n">std</span><span class="o">::</span><span class="n">cin</span> <span class="p">)</span> <span class="k">delete</span> <span class="n">infile</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">outfile</span> <span class="o">!=</span> <span class="o">&amp;</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="p">)</span> <span class="k">delete</span> <span class="n">outfile</span><span class="p">;</span>
+<span class="p">}</span> <span class="c1">// main</span>
+</code></pre></div></div>
+
+<h1 id="returning-information">Returning Information</h1>
+
+<p>Three ways to return information.</p>
+
+<ul>
+  <li>Return by <code class="language-plaintext highlighter-rouge">value</code></li>
+  <li>Return by <code class="language-plaintext highlighter-rouge">pointer</code></li>
+  <li>Return by <code class="language-plaintext highlighter-rouge">reference</code></li>
+</ul>
+
+<p>We will show the example using <code class="language-plaintext highlighter-rouge">Node</code> type.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">Node</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+    <span class="n">Node</span> <span class="o">*</span> <span class="n">next</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="return-by-value">Return by Value</h3>
+
+<p>Copying it onto the run-time stack. Copying <code class="language-plaintext highlighter-rouge">n</code> is potentially expensive depending upon what is involved when we copy a node.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Node</span> <span class="nf">getMeANode</span><span class="p">(</span> <span class="kt">int</span> <span class="n">value</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">Node</span> <span class="n">n</span> <span class="p">{</span><span class="n">value</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">};</span>
+    <span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="return-by-pointer">Return by Pointer</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Node</span> <span class="o">*</span> <span class="nf">getMeANode</span><span class="p">(</span> <span class="kt">int</span> <span class="n">value</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">Node</span> <span class="o">*</span> <span class="n">nptr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">{</span><span class="n">value</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">};</span>
+    <span class="k">return</span> <span class="n">nptr</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">Node</span> <span class="o">*</span> <span class="n">newNode</span> <span class="o">=</span> <span class="n">getMeANode</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<span class="k">delete</span> <span class="o">*</span> <span class="n">newNode</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>We should call <code class="language-plaintext highlighter-rouge">delete</code> after using thi; otherwise, we’ll have a memory leak.</p>
+
+<h3 id="return-by-reference">Return by Reference</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Node</span> <span class="o">&amp;</span> <span class="n">getMeANode</span><span class="p">(</span> <span class="kt">int</span> <span class="n">value</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">Node</span> <span class="o">*</span> <span class="n">nptr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">{</span><span class="n">value</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">};</span>
+   <span class="k">return</span> <span class="o">*</span><span class="n">nptr</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">Node</span> <span class="o">&amp;</span> <span class="n">newNode</span> <span class="o">=</span> <span class="n">getMeANode</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<span class="k">delete</span> <span class="o">&amp;</span> <span class="n">newNode</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h1 id="operator-overloading">Operator Overloading</h1>
+
+<p>Also able to overloading the operator +, -, *, /, etc.</p>
+
+<p>Let’s make a vector add Operator.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">vec</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">vec</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">vec</span> <span class="o">&amp;</span> <span class="n">v1</span><span class="p">,</span> <span class="k">const</span> <span class="n">vec</span> <span class="o">&amp;</span> <span class="n">v2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">vec</span> <span class="n">v</span><span class="p">{</span><span class="n">v1</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">v2</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v1</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">v2</span><span class="p">.</span><span class="n">y</span><span class="p">};</span>
+    <span class="k">return</span> <span class="n">v</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">vec</span> <span class="n">v1</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span> <span class="n">v2</span> <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">};</span>
+    <span class="n">vec</span> <span class="n">v3</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">+</span> <span class="n">v2</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Similarly let’s make vector multiple operator.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vec</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">vec</span> <span class="o">&amp;</span> <span class="n">v1</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">vec</span> <span class="p">{</span><span class="n">v1</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">k</span><span class="p">,</span> <span class="n">v1</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">k</span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>From this, we can calculate <code class="language-plaintext highlighter-rouge">v1 * k</code>, but we cannot calculate <code class="language-plaintext highlighter-rouge">k * v1</code>. Thus, let’s overloading the function.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vec</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span> <span class="k">const</span> <span class="n">vec</span> <span class="o">&amp;</span> <span class="n">v1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">vec</span> <span class="p">{</span><span class="n">v1</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">k</span><span class="p">,</span> <span class="n">v1</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">k</span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Since we’ve already defined how to multiply <code class="language-plaintext highlighter-rouge">v1 * k</code>, we can make it even better.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vec</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span> <span class="k">const</span> <span class="n">vec</span> <span class="o">&amp;</span> <span class="n">v1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">vec</span> <span class="n">v1</span> <span class="o">*</span> <span class="n">k</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="overloading-">Overloading «</h3>
+
+<p>Overloading the input and output operator is bit more complex.</p>
+
+<p>Let’s try to add <code class="language-plaintext highlighter-rouge">%</code> sign to indicate that it is a percentage out of 100.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">Grade</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">theGrade</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">out</span><span class="p">,</span> <span class="k">const</span> <span class="n">Grade</span> <span class="o">&amp;</span> <span class="n">g</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="n">g</span><span class="p">.</span><span class="n">theGrade</span> <span class="o">&lt;&lt;</span> <span class="sc">'%'</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">Grade</span> <span class="n">sue</span><span class="p">{</span><span class="mi">95</span><span class="p">};</span>
+<span class="n">ofstream</span> <span class="n">outfile</span><span class="p">{</span> <span class="s">"final_grades.txt"</span> <span class="p">};</span>
+<span class="p">...</span>
+<span class="n">outfile</span> <span class="o">&lt;&lt;</span> <span class="s">"Sue's final grade is: "</span> <span class="o">&lt;&lt;</span> <span class="n">sue</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="rules-for-writing-an-output-operator">Rules for writing an output operator:</h3>
+
+<ol>
+  <li>The return type is always(<code class="language-plaintext highlighter-rouge">std::ostream &amp;</code>).</li>
+  <li>The function name is always <code class="language-plaintext highlighter-rouge">operator&lt;&lt;</code>.</li>
+  <li>The first parameter is always the output stream, (<code class="language-plaintext highlighter-rouge">std::ostream &amp;</code>).</li>
+  <li>The second parameter is alway the information being output.</li>
+  <li>Before you do anything else, write the <code class="language-plaintext highlighter-rouge">return</code> to return whatever the name of the output stream is.</li>
+</ol>
+
+<h3 id="overloading-1">Overloading »</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">istream</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">istream</span> <span class="o">&amp;</span> <span class="n">in</span><span class="p">,</span> <span class="n">Grade</span> <span class="o">&amp;</span> <span class="n">g</span> <span class="p">)</span> <span class="p">{</span>
+   <span class="n">in</span> <span class="o">&gt;&gt;</span> <span class="n">g</span><span class="p">.</span><span class="n">theGrade</span><span class="p">;</span>
+   <span class="k">if</span> <span class="p">(</span> <span class="n">g</span><span class="p">.</span><span class="n">theGrade</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">)</span> <span class="n">g</span><span class="p">.</span><span class="n">theGrade</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+   <span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="n">g</span><span class="p">.</span><span class="n">theGrade</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="p">)</span> <span class="n">g</span><span class="p">.</span><span class="n">theGrade</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+   <span class="k">return</span> <span class="n">in</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="rules-for-writing-an-input-operator">Rules for writing an input operator:</h3>
+
+<ol>
+  <li>The return type is always (std::istream &amp;).</li>
+  <li>The function name is always operator».</li>
+  <li>The first parameter is always the input stream, (std::istream &amp;).</li>
+  <li>The second parameter is always the information being read in. It will be a reference.</li>
+  <li>Before you do anything else, write the return statement to return whatever the name of the input stream is.</li>
+</ol>
 
 
 
