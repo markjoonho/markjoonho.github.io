@@ -114,7 +114,7 @@
 
 <p class="post-metadata text-muted">
   22 January 2021 -  
-  <b>8 mins read time</b>
+  <b>12 mins read time</b>
 
   <br>Tags: 
     
@@ -445,11 +445,11 @@
 
 <h3 id="claim-3">Claim:</h3>
 
-<p>\(\alpha\) logically implies \(\beta\) if and only if $$(\alpha \to \beta) is a tautology.</p>
+<p>\(\alpha\) logically implies \(\beta\) if and only if \((\alpha \to \beta)\) is a tautology.</p>
 
 <h3 id="proof">Proof:</h3>
 
-<p>Assume \(\alpah\) logically implies \(\beta\).</p>
+<p>Assume \(\alpha\) logically implies \(\beta\).</p>
 
 <p>By way of contradiction, if \((\alpha \to \beta)\) is not a tautology then for some truth assignment \(V\), \(\bar V(\alpha \to \beta) = False\).</p>
 
@@ -463,7 +463,7 @@
 
 <h3 id="claim-4">Claim:</h3>
 
-<p>If \(\alpha\) is a contradiction, then for every \(\beat\), \(\alpha\) logically imply \(\beta\).</p>
+<p>If \(\alpha\) is a contradiction, then for every \(\beta\), \(\alpha\) logically imply \(\beta\).</p>
 
 <h3 id="prove">Prove:</h3>
 
@@ -609,7 +609,227 @@
 
 <p>\(\alpha_1\) = \(p_1 \land ... \land p_n\)</p>
 
-<p>\(\alpha_{2^n}\) = \(((\neg p_1) \land ... \land (\net p_n))\)</p>
+<p>\(\alpha\_{2^n}\) = \(((\neg p_1) \land ... \land (\neg p_n))\)</p>
+
+<h3 id="example-6">Example</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>\(P_1\)</th>
+      <th>\(P_2\)</th>
+      <th>\(P_3\)</th>
+      <th>\(f()\)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>\(\alpha_1\)</td>
+      <td>T</td>
+      <td>T</td>
+      <td>T</td>
+      <td>T</td>
+    </tr>
+    <tr>
+      <td>\(\alpha_2\)</td>
+      <td>T</td>
+      <td>T</td>
+      <td>F</td>
+      <td>F</td>
+    </tr>
+    <tr>
+      <td>\(\alpha_3\)</td>
+      <td>T</td>
+      <td>F</td>
+      <td>T</td>
+      <td>F</td>
+    </tr>
+    <tr>
+      <td>\(\alpha_4\)</td>
+      <td>T</td>
+      <td>F</td>
+      <td>F</td>
+      <td>T</td>
+    </tr>
+    <tr>
+      <td>\(\alpha_5\)</td>
+      <td>F</td>
+      <td>T</td>
+      <td>T</td>
+      <td>T</td>
+    </tr>
+    <tr>
+      <td>\(\alpha_6\)</td>
+      <td>F</td>
+      <td>T</td>
+      <td>F</td>
+      <td>T</td>
+    </tr>
+    <tr>
+      <td>\(\alpha_7\)</td>
+      <td>F</td>
+      <td>F</td>
+      <td>T</td>
+      <td>T</td>
+    </tr>
+    <tr>
+      <td>\(\alpha_8\)</td>
+      <td>F</td>
+      <td>F</td>
+      <td>F</td>
+      <td>F</td>
+    </tr>
+  </tbody>
+</table>
+
+\[\alpha_f
+
+\equiv ((p_1 \land p_2 \land p_3)\lor(p_1 \land (\neg p_2) \land (\neg p_3))\lor((\neg p_1) \land p_2 \land p_3)\lor((\neg p_1) \land p_2 \land (\neg p_3))\lor((\neg p_1) \land (\neg p_2) \land p_3))\]
+
+\[\alpha_f \equiv \alpha_1 \lor \alpha_4 \lor \alpha_5 \lor \alpha_6 \lor \alpha_7\]
+
+<h3 id="conclusion">Conclusion:</h3>
+
+<p>\(\{\neg, \land, \lor\}\) is adequate.</p>
+
+<p>Note the if a set \(S\) of functions is adequate and \(S \subseteq S'\) then \(S'\) is also adequate.</p>
+
+<h3 id="corollary">Corollary</h3>
+
+<p>\(\{\neg, \land, \lor, \rightarrow\}\) is adequate.</p>
+
+<hr />
+
+<h3 id="claim-8">Claim:</h3>
+
+<p>The set of connectives \(\{\land, \lor, \rightarrow\}\) is not adequate.</p>
+
+<h3 id="proof-2">Proof:</h3>
+
+<p>We wish to show that there exists a truth function \(f\) such that \(f \notin I(propositional variables, \{\land, \lor, \rightarrow\})\)</p>
+
+<p>Let us pick the property \(f(T,T,...,T) = T\).</p>
+
+<p>\(V_t(f) = T\) where \(V_t\) is the all-T assignment.</p>
+
+<p>Let us show that this applies to every \(f \in I(A, \{\neg, \land, \lor\})\) by generalized induction.</p>
+
+<h5 id="base-case">Base Case:</h5>
+
+<p>Trivially holds for \(\alpha \equiv p\) for any \(p\).</p>
+
+<h5 id="induction-step">Induction Step:</h5>
+
+<p>Assume \(\alpha_1, \alpha_2\) satisfy the claim, show that so do \((\alpha_1 \land \alpha_2), (\alpha_1 \lor \alpha_2), (\alpha_1 \rightarrow \alpha_2)\).</p>
+
+<hr />
+
+<h3 id="claim-9">Claim:</h3>
+
+<p>The set \(\{\neg, \lor \}\) is adequate.</p>
+
+<h3 id="proof-3">Proof:</h3>
+
+<p>It suffices to show that \(\{\neg, \lor \}\) can express every connectives in some know to be adequate set \(S\).</p>
+
+<p>In particular, if suffices to show that we can express (the truth table of) \(\land\) by \(\{\neg, \lor \}\).</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>\(p_1\)</th>
+      <th>\(p_2\)</th>
+      <th>\((\neg((\neg p_1)\lor (\neg p_2)))\)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>T</td>
+      <td>T</td>
+      <td>T</td>
+    </tr>
+    <tr>
+      <td>T</td>
+      <td>F</td>
+      <td>F</td>
+    </tr>
+    <tr>
+      <td>F</td>
+      <td>T</td>
+      <td>F</td>
+    </tr>
+    <tr>
+      <td>F</td>
+      <td>F</td>
+      <td>F</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h3 id="semantic-notions-for-sets-of-proposition">Semantic Notions for sets of Proposition</h3>
+
+<p>We saw:</p>
+
+<ol>
+  <li>\(\sum\) is satisfiable</li>
+  <li>\(\sum \vDash \alpha\).</li>
+</ol>
+
+<h3 id="a-new-notion">A new Notion:</h3>
+
+<p>\(\sum\) is complete if for every propositional formula \(\alpha\), either \(\sum \vDash \alpha\) or \(\sum \vDash \neg \alpha\).</p>
+
+<p>\(\sum_1\) = \(\{(\neg p_1), (\neg p_2), ...\}\)</p>
+
+<p>\(\sum_1 \vDash \alpha\) if and only if \(V_F(\alpha)\) = \(T\) where \(V_F\) is the all-F assignment.</p>
+
+<p>Therefer for every \(\alpha\), either \(\sum_1 \vDash \alpha\) or \(\sum_1 \vDash \neg \alpha\).</p>
+
+<p>\(\sum_2\) = \(\{p_1, (\neg p_1)\}\)</p>
+
+<p>\(\sum\) is a complete and satisfiable if it is both complete and satisfiable.</p>
+
+<p>Such \(\sum\) has, for every \(\alpha\), \(\sum \vDash \alpha\) or \(\sum \vDash \neg \alpha\) but never both.</p>
+
+<hr />
+
+<h3 id="theorem-1">Theorem:</h3>
+
+<p>The set of vectors \(A\) in some vector space \(V\) is a basis if and only if it is a linearly independent set and it spans \(V\) if and only if it is a maximal independent set.</p>
+
+<p>\(\sum\) is maximally satisfiable if \(\sum is satisfiable and for every\)\alpha\(, if\)\sum \notvDash \alpha\(then\)\sum U {\alpha}$$ is not satisfiable.</p>
+
+<hr />
+
+<h3 id="theorem-2">Theorem:</h3>
+
+<p>For every set of propositional formulas \(\sum\) the following are equivalent:</p>
+
+<ol>
+  <li>\(\sum\) is complete and satisfiable.</li>
+  <li>\(\sum\) is maximally satisfiable.</li>
+</ol>
+
+<h3 id="proof-4">Proof:</h3>
+
+<h5 id="1---2">1 -&gt; 2</h5>
+
+<p>Let \(\sum\) be complete and satisfiable, given \(\alpha\), if \(\sum \notvDash \alpha\) then, by completeness, \(\sum \vDash (\neg \alpha)\), therefore $$\sum U {\alpha } is not satisfiable.</p>
+
+<h5 id="2---1">2 -&gt; 1</h5>
+
+<p>Let \(\sum\) be max-satisfiable need to show it is complete. Pick any \(\alpha\), either \(\sum \vDash \alpha\) or, if \(\sum \notvDash \alpha\), then \(\sum U \{\alpha\} i not satisfiable. Namely, any assignment V that satisfies\)\sum\(fails to satisfy\)\alpha$$.</p>
+
+<p>Therefore, such an assignment satisfies \(\neg \alpha\). Thus, \(\sum \vDash (\neg \alpha)\).</p>
+
+<hr />
+
+<h3 id="thinking-exercise">Thinking Exercise:</h3>
+
+<p>Prove that any \(\sum\) is maximally satisfiable if and only if there is exactly one \(V\) that satisfies all formulas in \(\sum\).</p>
 
 
 
