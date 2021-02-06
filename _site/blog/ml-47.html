@@ -200,7 +200,62 @@
 
 <p><img src="/assets/img/ml/ml-47/math3.png" /></p>
 
-<p>To be Continued</p>
+<h1 id="support-vector-machine-definition">Support Vector Machine Definition</h1>
+
+<p>Define the SVM as below.</p>
+
+<p>\(f(x)\) = \(x^T \beta + \beta_0\) = 0</p>
+
+<ul>
+  <li>We need condition that \(\|\beta\|\) = 1</li>
+</ul>
+
+<p><img src="/assets/img/ml/ml-47/background.png" /></p>
+
+<p>Decision Rule</p>
+
+<ul>
+  <li>If \(x^T \beta + \beta_0\) &gt; 0 then \(y = 1\) otherwise, \(y = -1\).</li>
+  <li>\(y_i(x_i^T \beta + \beta_0)\) &gt; 0</li>
+</ul>
+
+<p>SVM focuses on maximizing the margin</p>
+
+<ul>
+  <li>\(max_{\beta , \beta_0 , \|\beta\| = 1 } \space M\).
+    <ul>
+      <li>\(y_i(x_i^T \beta + \beta_0) \geq\) \(M(1-error_i)\).</li>
+      <li>\(error_i \geq\) 0</li>
+      <li>\(\sum_i error_i \leq constant\).</li>
+    </ul>
+  </li>
+</ul>
+
+<p>We can also use following formula</p>
+
+<ul>
+  <li>\(min_{\beta, \beta_0}\|\beta\|\).
+    <ul>
+      <li>\(y_i(x_i^T \beta + \beta_0) \geq\) 1-error_i\(,\)M = 1 \/ |\beta|$$</li>
+      <li>\(error_i \geg\) 0</li>
+      <li>\(\sum_i error_i \leq constant\).</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>When Constant is greater, allow error.</strong></p>
+
+<p><img src="/assets/img/ml/ml-47/calc.png" /></p>
+
+<p>Cost Function</p>
+
+\[min*{\beta, \beta_0} \frac{1}{2} \|\beta\|^2 + C \sum*{i=1}^N error_i\]
+
+<ul>
+  <li>s.t. \(error_i \geq 0\), \(y_i(x_i^T \beta + \beta_0) \geq 1 - error_i\)</li>
+  <li>When C is bigger, less error.</li>
+  <li>When C is infinity, do not allow error.</li>
+</ul>
 
 
 

@@ -114,7 +114,7 @@
 
 <p class="post-metadata text-muted">
   22 January 2021 -  
-  <b>12 mins read time</b>
+  <b>17 mins read time</b>
 
   <br>Tags: 
     
@@ -800,7 +800,7 @@
 
 <p>The set of vectors \(A\) in some vector space \(V\) is a basis if and only if it is a linearly independent set and it spans \(V\) if and only if it is a maximal independent set.</p>
 
-<p>\(\sum\) is maximally satisfiable if \(\sum is satisfiable and for every\)\alpha\(, if\)\sum \notvDash \alpha\(then\)\sum U {\alpha}$$ is not satisfiable.</p>
+<p>\(\sum\) is maximally satisfiable if \(\sum is satisfiable and for every\)\alpha\(, if\)\sum \nvDash \alpha\(then\)\sum\(U\){\alpha}$$ is not satisfiable.</p>
 
 <hr />
 
@@ -817,11 +817,11 @@
 
 <h5 id="1---2">1 -&gt; 2</h5>
 
-<p>Let \(\sum\) be complete and satisfiable, given \(\alpha\), if \(\sum \notvDash \alpha\) then, by completeness, \(\sum \vDash (\neg \alpha)\), therefore $$\sum U {\alpha } is not satisfiable.</p>
+<p>Let \(\sum\) be complete and satisfiable, given \(\alpha\), if \(\sum \nvDash \alpha\) then, by completeness, \(\sum \vDash (\neg \alpha)\), therefore \(\sum\) U $${\alpha } is not satisfiable.</p>
 
 <h5 id="2---1">2 -&gt; 1</h5>
 
-<p>Let \(\sum\) be max-satisfiable need to show it is complete. Pick any \(\alpha\), either \(\sum \vDash \alpha\) or, if \(\sum \notvDash \alpha\), then \(\sum U \{\alpha\} i not satisfiable. Namely, any assignment V that satisfies\)\sum\(fails to satisfy\)\alpha$$.</p>
+<p>Let \(\sum\) be max-satisfiable need to show it is complete. Pick any \(\alpha\), either \(\sum \vDash \alpha\) or, if \(\sum \nvDash \alpha\), then \(\sum\) U \(\{\alpha\} i not satisfiable. Namely, any assignment V that satisfies\)\sum\(fails to satisfy\)\alpha$$.</p>
 
 <p>Therefore, such an assignment satisfies \(\neg \alpha\). Thus, \(\sum \vDash (\neg \alpha)\).</p>
 
@@ -830,6 +830,302 @@
 <h3 id="thinking-exercise">Thinking Exercise:</h3>
 
 <p>Prove that any \(\sum\) is maximally satisfiable if and only if there is exactly one \(V\) that satisfies all formulas in \(\sum\).</p>
+
+<hr />
+
+<h1 id="review">Review</h1>
+
+<p>\(\sum\) of wff’s</p>
+
+<ul>
+  <li>is “satisfiable”: if \(\exists v\) such that \(v(\alpha) = T\) for \(\forall \alpha \in \sum\)</li>
+  <li>is “logically implies \(\alpha\)” (\(\sum \vDash \alpha\)): if \(\forall v\) satisfy \(\sum\) then \(v(\alpha) = T\)</li>
+  <li>is “complete” for \(\alpha\) \(\sum \vDash \alpha\) or \(\sum \vDash (\neg \alpha)\).</li>
+  <li>is “maximally satisfiable” for \(\alpha\) whenever \(\sum \nvDash \alpha) then\)\sum\(U\){\alpha }$$ not satisfiable</li>
+</ul>
+
+<h3 id="theorem-3">Theorem</h3>
+
+<p>\(\sum\) is complete and satisfiable if and only if \(\sum\) is maximally satisfiable.</p>
+
+<h3 id="fact">Fact</h3>
+
+<p>\(\sum \vDash \alpha\) if and only if \(\sum\) U \(\{\neg \alpha \}\) is not satisfiable.</p>
+
+<p>\(\sum \nvDash \alpha\) if and only if \(\sum\) U \(\{\neg \alpha \}\) is satisfiable.</p>
+
+<hr />
+
+<h3 id="theoremfinite-models">Theorem(Finite Models)</h3>
+
+<p>\(\sum \vDash \alpha, \exists \sum_0 \subseteq \sum, \sum_0\) finite</p>
+
+<p>\(\sum_0 \vDash \alpha\).</p>
+
+<h3 id="idea">Idea</h3>
+
+<blockquote>
+  <p>restrict \(\sum\) to the varibales in \(\alpha\).</p>
+</blockquote>
+
+<p>\(\sum\)= \(\{(p_0 \lor p_1),(p_0 \lor p_2),...,(p_0 \lor p_i),...\}\)</p>
+
+<p>\(\alpha\) = \(p_0\)</p>
+
+<h3 id="intuition">Intuition</h3>
+
+<blockquote>
+  <p>look at truth table for alpha</p>
+</blockquote>
+
+<table>
+  <thead>
+    <tr>
+      <th>\(p_0\)</th>
+      <th>\(p_1\)</th>
+      <th>\(p_2\)</th>
+      <th>. . .</th>
+      <th>\(p_n\)</th>
+      <th>\(\alpha\)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>F</td>
+      <td>F</td>
+      <td>F</td>
+      <td>. . .</td>
+      <td>F</td>
+      <td>F</td>
+    </tr>
+    <tr>
+      <td>.</td>
+      <td>.</td>
+      <td>.</td>
+      <td>. . .</td>
+      <td>.</td>
+      <td>T</td>
+    </tr>
+    <tr>
+      <td>:</td>
+      <td>:</td>
+      <td>:</td>
+      <td>: : :</td>
+      <td>:</td>
+      <td>:</td>
+    </tr>
+    <tr>
+      <td>.</td>
+      <td>.</td>
+      <td>.</td>
+      <td>. . .</td>
+      <td>.</td>
+      <td>F</td>
+    </tr>
+    <tr>
+      <td>T</td>
+      <td>T</td>
+      <td>T</td>
+      <td>. . .</td>
+      <td>T</td>
+      <td>T</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>From this we only care about when \(\alpha = F\). (\(\sum \vdash \alpha\))</p>
+
+<h3 id="proof-5">Proof</h3>
+
+<p>Let \(v_i\) be the \(i^{th}\) truth assignment for the False entries. (\(v_i(\alpha)=F)\)</p>
+
+<p>Consider \(\sum\) under \(v_i\), because \(\sum \vDash \alpha\) we know \(\exists \alpha_i \in \sum\), \(v_i(\alpha_i) = F\).</p>
+
+<p>Define \(\sum = \{\alpha_i \mid for all i \}\),</p>
+
+<hr />
+
+<h3 id="claim-10">Claim</h3>
+
+<p>\(\sum_0 \vDash \alpha\) (\(\sum_0\) U $${\neg \alpha} not satisfiable)</p>
+
+<p>Assume by way of contradiction \(\sum_0\) U \(\{\neg \alpha\}\) is satisfiable.</p>
+
+<p>Which means \(\exists v, v(\neg \alpha) = T, v(\alpha) = F\)</p>
+
+<p>Since v satisfies \(\sum_0\) then \(v(\alpha_i) = T \forall i\)</p>
+
+<p>Thus, Contradiction!</p>
+
+<hr />
+
+<h3 id="definition">Definition</h3>
+
+<p>\(\sum\) is finitely satisfiable (FS) if and only if \(\forall \sum_0 \subseteq \sum\), \(\sum_0\) finite, then \(\sum_0\) is also satsifiable.</p>
+
+<hr />
+
+<h3 id="theorem-compactness-theorem">Theorem (Compactness Theorem)</h3>
+
+<p>\(\sum\) is satisfiable if and only if \(\sum\) is FS.</p>
+
+<p>“Finite Models” if and only if “Compactness Theorem”</p>
+
+<p>&lt;= By Contrapositive</p>
+
+<p>Suppose \(\forall \sum_0 \subseteq \sum\), \(\sum_0\) is finite \(\sum_0 \nvDash \alpha\).</p>
+
+<p>From that \(\sum \_0\) U \(\{\neg \alpha \}\) is satisfiable.</p>
+
+<p>=&gt; \(\sum U \{\neg \alpha \}\) is satisfiable(compactness)</p>
+
+<p>applied to \(\sum\) U \({\neg \alpha}\) and if a finite subset is satisfiable, then so is any subset of that.</p>
+
+<p>=&gt; \(\sum \nvDash \alpha\)</p>
+
+<p>but =&gt; harder (exercise)</p>
+
+<hr />
+
+<h3 id="proof-outline-compactness">Proof Outline (Compactness)</h3>
+
+<ul>
+  <li>extend \(\sum\) to \(\sum \subseteq \delta\), \(\delta\) is also FS for every \(\alpha\), either \(\alpha \in \delta\), \(\neg \alpha \in \delta\).</li>
+  <li>find a \(v\) that satisfies \(\delta\)</li>
+  <li>\(v\) satisfies \(\sum\)</li>
+</ul>
+
+<h3 id="lemma-1">Lemma 1</h3>
+
+<blockquote>
+  <p>There exists some ordering all wff’s \(\alpha_1, \alpha_2, ..., \alpha_i ...\) such that every wff has a unique index.</p>
+</blockquote>
+
+<h3 id="idea-1">Idea</h3>
+
+<blockquote>
+  <p>Sort all wff’s</p>
+</blockquote>
+
+<p>Problem even \(\mid \alpha \mid =k\) there are infinitely many indices.</p>
+
+<h3 id="solution">Solution</h3>
+
+<p>\(f: \{\neg, \land, \lor, \to, (, ) \}\) U \(A \to \mathbb{N}\)</p>
+
+<p>There is such an f (say by sorting A).</p>
+
+<p>We have \(\alpha\) = \(x_1, x_2, ... x_n\).</p>
+
+<p>(Godel numbering) \(p_1^{f(x_1)} p_2^{f(x_2)} ... p_n^{f(x_n)}\) where \(p_i\) is the \(i^{th}\) prime number.</p>
+
+<p>Theorem of arithmetic applies any number =&gt; \(f(x_1), ... , f(x_n)\)</p>
+
+<p>\(f(x_i)\) is the number of \(i^{th}\) prime</p>
+
+<h3 id="lemma-2">Lemma 2</h3>
+
+<blockquote>
+  <p>If \(\sum\) is FS, then \(\sum\) U \(\{\alpha\}\) or \(\sum\) U \(\{\neg \alpha\}\) are FS.</p>
+</blockquote>
+
+<p>Assume by way of contradition \(\sum\) U \(\{\alpha\}\) and \(\sum\) U \(\{\neg \alpha\}\) are not FS.</p>
+
+<p>\(\sum_0 \subseteq \sum\) U \(\{\alpha\}\) -&gt; not fs</p>
+
+<p>\(\sum_1 \subseteq \sum\) U \(\{\neg \alpha\}\) -&gt; not fs</p>
+
+<p>\(\sum ' = \sum_0\) U \(\sum_1\) \ \(\{\alpha. \neg \alpha\}\) \(\subseteq \sum\), finite</p>
+
+<p>=&gt; \(\sum '\) must be satisfiable =&gt; \(\exists v\) satisfies \(\sum '\)</p>
+
+<p>=&gt; either \(v(\alpha)\) = T or \(v(\neg \alpha)\) = F.</p>
+
+<p>=&gt; satisfies \(\sum_0\) or \(\sum\)</p>
+
+<p>Thus, contradiction!</p>
+
+<p>Construct \(\delta\)</p>
+
+\[\delta_0 = \sum\]
+
+<p>By Lemma 1, we have \(\alpha_i\)</p>
+
+<p>For every i,</p>
+
+<p>\(\delta_{i+1} =\)\delta_i\(U\){\alpha_i } $$ if FS</p>
+
+<p>\(\delta_{i+1} =\)\delta_i\(U\){\neg \alpha_i } $$ else (this is FS)</p>
+
+<p>Lemma 2 says well-defined.</p>
+
+\[\delta = U_{i\geq 0} \delta\]
+
+<p>What about \(\delat\)?</p>
+
+<ul>
+  <li>
+\[\sum \subseteq \delta\]
+  </li>
+  <li>For every \(\alpha\), either \(\alpha \in \delta\) or \((\neg \alpha) \in \delta\).</li>
+  <li>\(\delta\) is FS (\(\delta_i\) is FS) (every finnite subset of \(\delta\) is also a finite subset of some \(\delta_i\))</li>
+</ul>
+
+<p>Show that \(\delta\) is satisfiable.</p>
+
+<p>Define</p>
+
+<p>\(v(p) = T\) if \(p\in \delta\)</p>
+
+<p>\(v(p) = F\) if \(p\nin \delta\)</p>
+
+\[p \in A\]
+
+<hr />
+
+<h3 id="clain">Clain</h3>
+
+<blockquote>
+  <p>\(v(\alpha) = T\) iff \(\alpha \in \delta\)</p>
+</blockquote>
+
+<h3 id="proof-6">Proof</h3>
+
+<p>By structural induction on all WFF.</p>
+
+<h5 id="base-case-1">Base Case</h5>
+
+<p>\(\alpha \in A\), \(v(\alpha) = T\) iff \(\alpha \in \delta\)</p>
+
+<h5 id="inductive-step">Inductive Step</h5>
+
+<p>\(\{\neg, \land\}\) adequate</p>
+
+<ol>
+  <li>\(\alpha\) = \((\neg \beta)\)</li>
+</ol>
+
+<p>\(v(\alpha)\) = T</p>
+
+<p>iff \(v(\beta)\) = F (by the truth table)</p>
+
+<p>iff \(\beta \nin \delta\) (by IH)</p>
+
+<p>iff \((\neg \beta) \in \delta\) (by \(\delta\) construction)</p>
+
+<ol>
+  <li>\(\alpha\) = \((\beta \land \gamma)\)</li>
+</ol>
+
+<p>\(v(\alpha)\) = T</p>
+
+<p>iff \(v(\beta)\) = T and \(v(\gamma)\) = T (by Truth Table)</p>
+
+<p>iff \(\beta \in \delta\) and \(\gamma \in \delta\) (by IH)</p>
+
+<p>…</p>
+
+\[\]
 
 
 
