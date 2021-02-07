@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "03-02. Preprocessing and Compilation for CS246",
+      "category" : "",
+      "tags"     : "CS 246 Object-Oriented Software Development",
+      "url"      : "/blog/cs246-04",
+      "date"     : "2021-02-06 00:00:00 -0500"
+    } ,
+  
+    {
       "title"    : "47. Support Vector Machine for Machine Learning",
       "category" : "",
       "tags"     : "Fast Campus ML",

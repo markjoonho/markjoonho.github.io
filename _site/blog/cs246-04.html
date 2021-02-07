@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta
+    property="og:title"
+    content="03-02. Preprocessing and Compilation for CS246"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>
+    03-02. Preprocessing and Compilation for CS246
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"
+    async
+  ></script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>03-02. Preprocessing and Compilation for CS246</b></h1>
+
+<p class="post-metadata text-muted">
+  06 February 2021 -  
+  <b>15 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-246-object-oriented-software-development">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 246 Object-Oriented Software Development</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
+
+<hr />
+
+<p>Contents:</p>
+
+<ul>
+  <li><a href="#the-preprocessor">The Preprocesor</a>
+    <ul>
+      <li><a href="#the-preprocessor-1">The Preprocessr</a></li>
+      <li><a href="#constant-definition">Constant Definition</a></li>
+      <li><a href="#conditional-compilation">Conditional Compilation</a></li>
+      <li><a href="#preprocessor-commenting">Preprocessor Commenting</a></li>
+      <li><a href="#preprocessor-definition-in-the-command-line">Preprocessor Definitions in the Command Line</a></li>
+    </ul>
+  </li>
+  <li><a href="#separate-compilation">Separate Compilation</a>
+    <ul>
+      <li><a href="#separate-compilation-1">Separate Compilation</a></li>
+      <li><a href="#global-variables">Global Variables</a></li>
+    </ul>
+  </li>
+  <li><a href="#make-and-makefiles">Make and Makefiles</a>
+    <ul>
+      <li><a href="#make-and-makefiles-1">Make and Makefiles</a></li>
+      <li><a href="#targets-and-recipes">Targets and Recipes</a></li>
+      <li><a href="#phony-targets">Phony Targes</a></li>
+      <li><a href="#make-variables">Make Variables</a></li>
+      <li><a href="#automatic-dependency-management">Automatic Dependency Management</a></li>
+    </ul>
+  </li>
+  <li><a href="#preprocessor-guards">Preprocessor guards</a></li>
+  <li><a href="#final-remarks">Final Remarks</a></li>
+</ul>
+
+<hr />
+
+<h1 id="the-preprocessor">The Preprocessor</h1>
+
+<h3 id="the-preprocessor-1"><span style="color:#007bff">The Preprocessor</span></h3>
+
+<p>What is <code class="language-plaintext highlighter-rouge">#include</code>? Both C and C++ use a tool <span style="color:#108004">C preprocessor</span> which handling preprocessor directives. The preprocessor’s primary purpose is to control what code is included in your program.</p>
+
+<p>We can see what the preprocessor does by running it directly, withrout running the rest of the C++ compiler.</p>
+
+<pre><code class="language-C++">// Title world.cc
+#include "hello.h"
+WORLD
+</code></pre>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HELLO
+</code></pre></div></div>
+
+<p>To run only the preprocessor use <code class="language-plaintext highlighter-rouge">-E</code> flag to g++.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ <span class="nt">-std</span><span class="o">=</span>c++14 <span class="nt">-E</span> world.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 1 "world.cc"
+# 1 "&lt;built-in&gt;"
+# 1 "&lt;command-line&gt;"
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+# 1 "&lt;command-line&gt;" 2
+# 1 "world.cc"
+# 1 "hello.h" 1
+HELLO
+# 2 "world.cc" 2
+WORLD
+</code></pre></div></div>
+
+<p>Outputs labelled with a number are simply comments to indicate from where the text is included.</p>
+
+<p>We can see that <code class="language-plaintext highlighter-rouge">HELLO</code> and <code class="language-plaintext highlighter-rouge">WORLD</code> are both included in the preprocessed output.</p>
+
+<p>In C, we use <code class="language-plaintext highlighter-rouge">#include &lt;stdio.h&gt;</code> which is same as <code class="language-plaintext highlighter-rouge">#include &lt;cstdio&gt;</code> in C++.</p>
+
+<pre><code class="language-C++">#include &lt;cstdio&gt;
+
+int main() {
+    printf("Hello, C's stdio!\n");
+    return 0;
+}
+</code></pre>
+
+<p>From this course, we will use <code class="language-plaintext highlighter-rouge">iostream</code> instead of <code class="language-plaintext highlighter-rouge">cstdio</code>.</p>
+
+<h3 id="constant-definition"><span style="color:#007bff">Constant definition</span></h3>
+
+<p>We can also define its own constants.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>define.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+using namespace std;
+
+#define GEESE 15;
+
+int main() {
+    cout &lt;&lt; "I have " &lt;&lt; GEESE &lt;&lt; "geese!" &lt;&lt; endl;
+    return 0;
+}
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ define.cc <span class="nt">-o</span> define
+<span class="nv">$ </span>./define
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I have  15 geese!
+</code></pre></div></div>
+
+<p>This is unneeded in C++ and moder C, you should use <code class="language-plaintext highlighter-rouge">const</code> definitions insted since they are more type-safe.</p>
+
+<h3 id="conditional-compilation"><span style="color:#007bff">Conditional Compilation</span></h3>
+
+<p><code class="language-plaintext highlighter-rouge">#if</code> directive(ends with <code class="language-plaintext highlighter-rouge">#endif</code> directive) is simillar to C’s and C++’s if. However, since it happens in the preprocessor, it controls whether code is included at all. Use <code class="language-plaintext highlighter-rouge">#define</code> to add debugging!</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>debug.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+using namespace std;
+
+# define DEBUG_LEVEL 1
+
+int main() {
+#if DEBUG_LEVEL &gt;= 1
+    cout &lt;&lt; "main has started" &lt;&lt; endl;
+#endif
+    cout &lt;&lt; "Hello, World!" &lt;&lt; endl;
+
+#if DEBUG_LEVEL &gt;= 2
+    cout &lt;&lt; "About to end main" &lt;&lt; endl;
+#endif
+
+    return 0;
+}
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ <span class="nt">-std</span><span class="o">=</span>c++14 debug.cc <span class="nt">-o</span> debug
+<span class="nv">$ </span>./debug
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>main has started
+Hello, world!
+</code></pre></div></div>
+
+<p>We can change the amount that this code outputs just by editing the debug level.</p>
+
+<p>We can also make features (not just debugging!) optional. <code class="language-plaintext highlighter-rouge">#if</code> supports <code class="language-plaintext highlighter-rouge">#else</code> and <code class="language-plaintext highlighter-rouge">#elif</code> for other conditions.</p>
+
+<p>There also exists <code class="language-plaintext highlighter-rouge">#ifdef</code>, which simply check if a preprocessor variable is set all, rather than checking it exact value.</p>
+
+<pre><code class="language-C++">#ifdef DEBUG // opposite is #ifndef.
+    cout &lt;&lt; "Debugging activated! I don't care what level." &lt;&lt; endl;
+#endif
+</code></pre>
+
+<p>There is no <code class="language-plaintext highlighter-rouge">#elese</code> for <code class="language-plaintext highlighter-rouge">#ifdef</code>.</p>
+
+<h3 id="preprocessor-commenting"><span style="color:#007bff">Preprocessor Commenting</span></h3>
+
+<p><code class="language-plaintext highlighter-rouge">#if 0</code> is never true. It is always False</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>if0.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+#if 0
+    cout &lt;&lt; "This will never output." &lt;&lt; endl;
+#endif
+    cout &lt;&lt; "Hello, world!" &lt;&lt; endl;
+    return 0;
+}
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ <span class="nt">-std</span><span class="o">=</span>c++14 if0.cc <span class="nt">-o</span> if0
+<span class="nv">$ </span>./if0
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello, world!
+</code></pre></div></div>
+
+<p>This is useful for commenting out large segment of code.</p>
+
+<h3 id="preprocessor-definitions-in-the-command-line"><span style="color:#007bff">Preprocessor Definitions in the Command Line</span></h3>
+
+<p>We can also be given on the command line to <code class="language-plaintext highlighter-rouge">g++</code>. The argument is <code class="language-plaintext highlighter-rouge">-DVAR=VALUE</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>debug.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+using namespace std;
+
+#ifndef DEBUG_LEVEL
+#define DEBUG_LEVEL 0
+#endif
+
+int main() {
+#if DEBUG_LEVEL &gt;= 1
+    cout &lt;&lt; "main has started" &lt;&lt; endl;
+#endif
+    cout &lt;&lt; "Hello, world!" &lt;&lt; endl;
+#if DEBUG_LEVEL &gt;= 2
+    cout &lt;&lt; "About to end main" &lt;&lt; endl;
+#endif
+    return 0;
+}
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ <span class="nt">-std</span><span class="o">=</span>c++14 debug.cc <span class="nt">-o</span> debug
+<span class="nv">$ </span>./debug
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello, world!
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ <span class="nt">-std</span><span class="o">=</span>c++14 debug.cc <span class="nt">-DDEBUG_LEVEL</span><span class="o">=</span>2 <span class="nt">-o</span> debug
+<span class="nv">$ </span>./debug
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>main has started
+Hello, world!
+About to end main
+</code></pre></div></div>
+
+<h1 id="separate-compilation">Separate Compilation</h1>
+
+<h3 id="separate-compilation-1"><span style="color:#007bff">Separate Compilation</span></h3>
+
+<ul>
+  <li><span style="color:#108004">declaration</span>: Asserts that a function or variable exists (does not define content)</li>
+  <li><span style="color:#108004">definition</span>: Full details on a function or varaible. (define content and allocate space)</li>
+</ul>
+
+<p>Combination of declaration with preprocessor, allow us to make our code more modular. We will split our code in to two components:</p>
+
+<ul>
+  <li><span style="color:#108004">interface</span>: Declarations including function prototypes, with no actual code, as well as type definitions. Put in a separate file from the actual code, typically named with “.h” (header)</li>
+  <li><span style="color:#108004">implementation</span>: The full definition for every function, as well as space for any global variables. In this course, typically named “.cc” C file always named “.c”.</li>
+</ul>
+
+<p>Let’s look at a simple example with two implementation files an an interface file.</p>
+
+<pre><code class="language-C++">// main.cc
+#include "vec.h"
+
+int main() {
+    Vec v {1,2};
+    v = v + v;
+    return 0;
+}
+</code></pre>
+
+<pre><code class="language-C++">// vec.h
+struct Vec {
+    int x, y;
+};
+
+Vec operator+(const Vec &amp;v1, const Vec &amp;v2);
+</code></pre>
+
+<pre><code class="language-C++">// vec.cc
+#include "vec.h"
+
+Vec operator+(const Vec &amp;v1, const Vec &amp;v2) {
+    return {v1.x + v2.x, v1.y + v2.y};
+}
+</code></pre>
+
+<p><code class="language-plaintext highlighter-rouge">vec.h</code> contains no implementation. Only declares the <code class="language-plaintext highlighter-rouge">Vec</code> type and <code class="language-plaintext highlighter-rouge">operator+</code>.</p>
+
+<p>Since we include <code class="language-plaintext highlighter-rouge">#include &lt;vec.h&gt;</code>, both of <code class="language-plaintext highlighter-rouge">main.cc</code> and <code class="language-plaintext highlighter-rouge">vec.cc</code> include the <em>declaration</em> of <code class="language-plaintext highlighter-rouge">Vec</code> and <code class="language-plaintext highlighter-rouge">operator+</code>, without including the <em>definition</em>.</p>
+
+<p>This allow us to change our type or function in only one place, and have that change propagate everywhere else automatically.</p>
+
+<p>Then, let’s check how to compile <code class="language-plaintext highlighter-rouge">main.cc</code> and <code class="language-plaintext highlighter-rouge">vec.cc</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ main.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/tmp/ccMjBwIW.o: In function `main':
+main.cc:(.text+0x34): undefined reference to `operator+(Vec const&amp;, Vec const&amp;)'
+collect2: error: ld returned 1 exit status
+</code></pre></div></div>
+
+<p>It happens, since we did not put the definition!!! There only exists the declaration.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ vec.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o: In function `_start':
+(.text+0x20): undefined reference to `main'
+collect2: error: ld returned 1 exit status
+</code></pre></div></div>
+
+<p>It happens since there does not exist main function!!!</p>
+
+<p>Thus we will compile them together.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ main.c vec.cc <span class="nt">-o</span> vecs
+</code></pre></div></div>
+
+<p>It works however, when our program is large, it might take hours to compile. We will use <span style="color:#108004">separate compilation</span>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ <span class="nt">-c</span> main.cc
+<span class="nv">$ </span>g++ <span class="nt">-c</span> vec.cc
+<span class="nv">$ </span>g++ main.o vec.o <span class="nt">-o</span> vecs
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">-c</code> options requests that a <code class="language-plaintext highlighter-rouge">.cc</code> compiled into a <code class="language-plaintext highlighter-rouge">.o</code> file, or an <span style="color:#108004">object file</span>.</p>
+
+<p>An object file contains compiled code, but not enough for a full program. Combining multiple <code class="language-plaintext highlighter-rouge">.o</code> files to create a program is called <span style="color:#108004">linking</span>.</p>
+
+<blockquote>
+  <p>Linking is way faster than compiling.</p>
+</blockquote>
+
+<p>If we change <code class="language-plaintext highlighter-rouge">main.cc</code>, we only need to compile using <code class="language-plaintext highlighter-rouge">-c</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ <span class="nt">-c</span> main.cc
+<span class="nv">$ </span>g++ main.o vec.o <span class="nt">-o</span> vecs
+</code></pre></div></div>
+
+<blockquote>
+  <p>If we update <code class="language-plaintext highlighter-rouge">vec.h</code>, we need to recompile both.</p>
+</blockquote>
+
+<h3 id="-global-variables-"><span style="color:#007bff"> Global Variables </span></h3>
+
+<p>We are trying to set global variable <code class="language-plaintext highlighter-rouge">origin</code>.</p>
+
+<p>For global variable we use <code class="language-plaintext highlighter-rouge">extern</code>.</p>
+
+<pre><code class="language-C++">// main.cc
+#include "vec.h"
+
+int main() {
+    Vec v {1,2};
+    origin.x = 12;
+    v = addToOrigin(v);
+    return 0;
+}
+</code></pre>
+
+<pre><code class="language-C++">// vec.h
+struct Vec {
+    int x, y;
+};
+
+extern Vec origin;
+
+Vec operator+(const Vec &amp;v1, const Vec &amp;v2);
+Vec addToOrigin(const Vec &amp;v);
+</code></pre>
+
+<pre><code class="language-C++">// vec.cc
+#include "vec.h"
+
+Vec origin {0, 0};
+
+Vec operator+(const Vec &amp;v1, const Vec &amp;v2) {
+    return {v1.x + v2.x, v1.y + v2.y};
+}
+
+Vec addToOrigin(const Vec &amp;v) {
+    return v + origin;
+}
+</code></pre>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ <span class="nt">-c</span> main.cc
+<span class="nv">$ </span>g++ <span class="nt">-c</span> vec.cc
+<span class="nv">$ </span>g++ main.o vec.o <span class="nt">-o</span> vecs
+</code></pre></div></div>
+
+<h1 id="make-and-makefiles">Make and Makefiles</h1>
+
+<h3 id="make-and-makefiles-"><span style="color:#007bff">Make and Makefiles </span></h3>
+
+<p>In the previous example, our files created a system of dependencies.</p>
+
+<p><img src="/assets/img/cs246/make.png" /></p>
+
+<p>Our program(<code class="language-plaintext highlighter-rouge">vecs</code>) depends on <code class="language-plaintext highlighter-rouge">main.o</code> and <code class="language-plaintext highlighter-rouge">vec.o</code>. <code class="language-plaintext highlighter-rouge">main.o</code> depends on <code class="language-plaintext highlighter-rouge">main.cc</code>, and <code class="language-plaintext highlighter-rouge">vec.o</code> depends on <code class="language-plaintext highlighter-rouge">vec.cc</code>. Both <code class="language-plaintext highlighter-rouge">main.cc</code> and <code class="language-plaintext highlighter-rouge">vec.cc</code> depend on <code class="language-plaintext highlighter-rouge">vec.h</code>.</p>
+
+<p>Typing out each command to separately compile these parts, as well as remembering what depends on what so we know which command we need, can get tedious. Thus, we will use tool which automate this tedium</p>
+
+<p>This is the simple <code class="language-plaintext highlighter-rouge">Makefile</code> for our project above:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vecs: main.o vec.o
+    g++ main.o vec.o -o vecs
+
+main.o: main.cc vec.h
+    g++ -std=c++14 -c main.cc
+
+vec.o: vec.cc vec.h
+    g++ -std=c++14 -c vec.cc
+</code></pre></div></div>
+
+<p>This must be placed in a file name “Makefile”.</p>
+
+<h3 id="targets-and-recipes"><span style="color:#007bff">Targets and Recipes</span></h3>
+
+<p>Each file is a <span style="color:#108004">target</span>, that is, something this <code class="language-plaintext highlighter-rouge">Makefile</code> describes how to create. Since we don’t describe how to create <code class="language-plaintext highlighter-rouge">main.cc</code> or <code class="language-plaintext highlighter-rouge">vec.cc</code>, we include their dependencies along with <code class="language-plaintext highlighter-rouge">main.o</code> and <code class="language-plaintext highlighter-rouge">vec.o</code>.</p>
+
+<p>The target for this <code class="language-plaintext highlighter-rouge">Makefile</code> are <code class="language-plaintext highlighter-rouge">vecs</code>, <code class="language-plaintext highlighter-rouge">main.o</code>, <code class="language-plaintext highlighter-rouge">vec.o</code>.</p>
+
+<blockquote>
+  <p>The commands to create a target must be indented with tabs, even if you normally indent with spaces!</p>
+</blockquote>
+
+<p>The command to create any given target is called a <span style="color:#108004">recipe</span>. Thus, the lines that start with <code class="language-plaintext highlighter-rouge">g++</code> are the recipes in this example. The chell command <code class="language-plaintext highlighter-rouge">make</code> build each target.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ main.o vec.o -o vecs
+g++ -std=c++14 -c main.cc
+g++ -std=c++14 -c vec.cc
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">make</code> automatically discovered which command it needs to run in order to create <code class="language-plaintext highlighter-rouge">vecs</code>, including creating each of its dependencies.</p>
+
+<p>[… change main.cc …]</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ -std=c++14 -c main.cc
+g++ main.o vec.o -o vecs
+</code></pre></div></div>
+
+<p>[… change vec.h …]</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ -std=c++14 -c main.cc
+g++ -std=c++14 -c vec.cc
+g++ main.o vec.o -o vecs
+</code></pre></div></div>
+
+<p>[… change nothing …]</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make: 'vecs' is up to date.
+</code></pre></div></div>
+
+<p>We can also specifically ask for a given target.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make main.o
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make: 'main.o' is up to date.
+</code></pre></div></div>
+
+<p>[… change vec.h …]</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make main.o
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ -std=c++14 -c main.cc
+</code></pre></div></div>
+
+<h3 id="phony-targets"><span style="color:#007bff">Phony Targets</span></h3>
+
+<p>Building this, particularly with separate compilation, leaves detritus in our directories, and it’s nice to keep the commands to clean up after ourselves in <code class="language-plaintext highlighter-rouge">Makefile</code> as well. This is done through <span style="color:#108004">phony target</span>. The <code class="language-plaintext highlighter-rouge">clean</code> pony target is commonly used for cleanup commands.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat </span>Makefile
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vecs: main.o vec.o
+    g++ main.o vec.o -o vecs
+
+main.o: main.cc vec.h
+    g++ -std=c++14 -c main.cc
+
+vec.o: vec.cc vec.h
+    g++ -std=c++14 -c vec.cc
+
+.PHONY: clean
+
+clean:
+    rm *.o vecs
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make clean
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm *.o vecs
+</code></pre></div></div>
+
+<h3 id="make-variables"><span style="color:#007bff">Make Variables</span></h3>
+
+<p>Two of our recipes are identical. We can reduce the clutter, as well as making our <code class="language-plaintext highlighter-rouge">Makefile</code> more flexible, by using <span style="color:#108004">make variables</span>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>Makefile
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CXX=g++
+CXXFLAGS=-std=c++14
+OBJECTS=main.o vec.o
+EXEC=vecs
+
+${EXEC}: ${OBJECTS}
+    ${CXX} ${OBJECTS} -o ${EXEC}
+
+main.o: main.cc vec.h
+vec.o: vec.cc vec.h
+.PHONY: clean
+
+clean:
+    rm ${OBJECTS} ${EXEC}
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ -std=c++14   -c -o main.o main.cc
+g++ -std=c++14   -c -o vec.o vec.cc
+g++ main.o vec.o -o vecs
+</code></pre></div></div>
+
+<h3 id="automatic-dependency-management"><span style="color:#007bff">Automatic Dependency Management</span></h3>
+
+<p>We need to keep up to date the dependencies between <code class="language-plaintext highlighter-rouge">.cc</code> and <code class="language-plaintext highlighter-rouge">.h</code>. It is easy to forget to update the <code class="language-plaintext highlighter-rouge">Makefile</code> every time you add or remove.</p>
+
+<p>Luckily g++ is capable of generating this dependency information for us. The <code class="language-plaintext highlighter-rouge">-MMD</code> flag to g++ causes it to create <code class="language-plaintext highlighter-rouge">.d</code> files, which are <code class="language-plaintext highlighter-rouge">make</code> dependencies, whenever it compiles a <code class="language-plaintext highlighter-rouge">.cc</code> file.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>Makefile
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CXX=g++
+CXXFLAGS=-std=c++14 -MMD
+OBJECTS=main.o vec.o
+DEPENDS=${OBJECTS:.o=.d}
+EXEC=vecs
+
+${EXEC}: ${OBJECTS}
+        ${CXX} ${OBJECTS} -o ${EXEC}
+
+-include ${DEPENDS}
+
+.PHONY: clean
+
+clean:
+        rm ${OBJECTS} ${DPENDS}
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ -std=c++14 -MMD   -c -o main.o main.cc
+g++ -std=c++14 -MMD   -c -o vec.o vec.cc
+g++ main.o vec.o -o vecs
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>main.d
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>main.o: main.cc vec.h
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>vec.d
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec.o: vec.cc vec.h
+</code></pre></div></div>
+
+<p>[… edit vec.h …]</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ -std=c++14 -MMD   -c -o main.o main.cc
+g++ -std=c++14 -MMD   -c -o vec.o vec.cc
+g++ main.o vec.o -o vecs
+</code></pre></div></div>
+
+<h1 id="preprocessor-guards">Preprocessor Guards</h1>
+
+<h3 id="preprocessor-guards-1"><span style="color:#007bff">Preprocessor Guards</span></h3>
+
+<p>To reduce the amount of time, we use separate compilation and recompile files that have changer, or where the included header file has changes.</p>
+
+<p>From this, we will get some problem when we are using multi header files.</p>
+
+<p>For example, suppose we want to write a linear algebra module</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// linalg.h</span>
+<span class="cp">#include "vec.h"
+</span><span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+
+<span class="c1">// linalg.cc</span>
+<span class="cp">#include "linalg.h"
+#include "vec.h"
+</span><span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+
+<span class="c1">// main.cc</span>
+<span class="cp">#include "vec.h"
+#include "linalg.h"
+</span><span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+</code></pre></div></div>
+
+<p>By using separate compilation, <code class="language-plaintext highlighter-rouge">linalg.cc</code> and <code class="language-plaintext highlighter-rouge">vec.cc</code> should be compiled into the corresponding <code class="language-plaintext highlighter-rouge">linalg.o</code> and <code class="language-plaintext highlighter-rouge">vec.o</code>. However, when we try to compile <code class="language-plaintext highlighter-rouge">linalg.cc</code> or <code class="language-plaintext highlighter-rouge">main.cc</code>, since they include header files for both <code class="language-plaintext highlighter-rouge">linalg.h</code> and <code class="language-plaintext highlighter-rouge">vec.h</code>, the compilation fails since there are now two copies of the definitions in <code class="language-plaintext highlighter-rouge">vec.h</code>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ <span class="nt">-std</span><span class="o">=</span>c++14 <span class="nt">-c</span> <span class="nt">-o</span> linalg.o linalg.cc
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>In file included from linalg.h:1:0,
+                from linalg.cc:2:
+vec.h:1:8: error: redefinition of ‘struct Vec’
+struct Vec {
+        ^~~
+In file included from linalg.cc:1:0:
+vec.h:1:8: note: previous definition of ‘struct Vec’
+struct Vec {
+        ^~~
+</code></pre></div></div>
+
+<p>The proper way to correct situation is put <span style="color:#108004">Preprocessor Guards</span>, also called <span style="color:#108004">include guards</span>, into every header file.</p>
+
+<p>General Format of an include guard is as follow:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef SOME_UNIQUE_MACRO_NAME_H
+#define SOME_UNIQUE_MACRO_NAME_H
+</span><span class="p">...</span>
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<p>Let’s check it through our example!</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef _VECTOR_H
+#define _VECTOR_H
+</span>
+<span class="k">struct</span> <span class="nc">Vec</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">Vec</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">Vec</span> <span class="o">&amp;</span><span class="n">v1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vec</span> <span class="o">&amp;</span><span class="n">v2</span><span class="p">);</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<p>When we put same format to <code class="language-plaintext highlighter-rouge">linalg.h</code>, not it wars!!!</p>
+
+<h1 id="final-remarks">Final Remarks</h1>
+
+<h3 id="final-remarks-1"><span style="color:#007bff">Final Remarks</span></h3>
+
+<ol>
+  <li>Never write <code class="language-plaintext highlighter-rouge">using namespace std;</code> in a header(<code class="language-plaintext highlighter-rouge">.h</code>) file!</li>
+  <li>Never compile <code class="language-plaintext highlighter-rouge">.h</code> file! Header files are to be included only!</li>
+  <li>Never include <code class="language-plaintext highlighter-rouge">.cc</code> files! Implementation files are to be compiled only, never included!</li>
+</ol>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>
