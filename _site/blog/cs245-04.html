@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 245 Lecture by Professor Shai Ben-David. Since the post is summarized by Joonho Mark Lee, the contents may di..."
+  />
+  <meta
+    property="og:title"
+    content="04. Proof System of Propoitional Logic for CS245"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 245 Lecture by Professor Shai Ben-David. Since the post is summarized by Joonho Mark Lee, the contents may di..."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>
+    04. Proof System of Propoitional Logic for CS245
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"
+    async
+  ></script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>04. Proof System of Propoitional Logic for CS245</b></h1>
+
+<p class="post-metadata text-muted">
+  10 February 2021 -  
+  <b>7 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-245-logic-and-computaion">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 245 Logic and Computaion</span>
+    </a>
+    </p>
+
+<p>Source: University of Waterloo CS 245 by Professor <a href="https://www.youtube.com/channel/UCg9V0y9_RxG7hg5GjcyS2OA">Shai Ben-David</a></p>
+
+<h3 id="a-proof-system-for-propositional-logic">A Proof System for Propositional Logic</h3>
+
+<h5 id="desirable-properties-of-proof-systems">Desirable properties of proof systems</h5>
+
+<ol>
+  <li>It can only prove “correct”(tautology) statements.</li>
+  <li>There is a “method” to check if a given object is a valid proof.</li>
+  <li>Every “correct” statements has a proof.</li>
+</ol>
+
+<p>When “correct statement” stands for a propositional tautology,</p>
+
+<p>A proof of \(\alpha\) will be a truth table for \(\alpha\) that has only T’s in the right most column.</p>
+
+<hr />
+
+<p>Our proof system consists of two components: Axioms and Deduction Rules.</p>
+
+<h5 id="axioms">Axioms:</h5>
+
+<p>The set of axioms and WFFF of one of the following forms:</p>
+
+<ul>
+  <li>\((\alpha \to (\beta \to \alpha))\).</li>
+  <li>\(((\alpha \to (\beta \to \gamma)) \to ((\alpha \to \beta) \to (\alpha \to \gamma)))\).</li>
+  <li>\((((\neg \alpha)\to (\neg \beta))\to (\beta \to \alpha))\).</li>
+</ul>
+
+<h5 id="example">Example:</h5>
+
+<ul>
+  <li>
+    <p>\((((\neg p) \to q) \to (p \to ((\neg p)\to q)))\).</p>
+
+    <ul>
+      <li>Axioms! It follwos the \((\alpha \to (\beta \to \alpha))\).</li>
+    </ul>
+  </li>
+  <li>
+\[((p \to q) \to ((\neg q) \to (\neg p)))\]
+
+    <ul>
+      <li>Not an Axiom!</li>
+    </ul>
+  </li>
+</ul>
+
+<h5 id="example-1">Example:</h5>
+
+<ul>
+  <li>
+    <p>\(p \to p\) is not an axioms but tautology(correct).</p>
+
+    <ul>
+      <li>Just 5 symbols every axiom has more.</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h5 id="deduction-rule">Deduction Rule:</h5>
+
+<p>If \(\alpha\) and \(\alpha \to \beta\) is tautology then good to work on \(\beta\).</p>
+
+<ul>
+  <li>The set of provable WFF is \(I(Axioms, \{deduction\space rule\})\)</li>
+  <li>A formal proof is a construction sequence in this structure.</li>
+</ul>
+
+<p>Namely: \(\alpha_1, .., \alpha_n\) is a formal proof of some \(\beta\) if each \(\alpha_i\) is either an axiom or the result of applying deduction rule(MP) to some \(\alpha_j, \alpha_k\) for \(j, k &lt; i\).</p>
+
+<hr />
+
+<h3 id="example-2">Example</h3>
+
+<p>\(\alpha_1\) = \((\alpha \to ((\alpha \to \alpha)\to \alpha))\) Axiom 1</p>
+
+<p>\(\alpha_2\) = \(((\alpha \to ((\alpha \to \alpha)\to \alpha)) \to ((\alpha \to (\alpha \to \alpha))\to (\alpha \to \alpha)))\) Axiom 2</p>
+
+<p>Apply MP to \(\alpha_1, \alpha_2\) and get</p>
+
+<p>\(\alpha_3\) = \(((\alpha \to (\alpha \to \alpha))\to (\alpha \to \alpha))\)</p>
+
+<p>\(\alpha_4\) = \((\alpha \to (\alpha \to \alpha))\) Axiom 1</p>
+
+<p>Apply MP to \(\alpha_3, \alpha_4\), \(\alpha \to \alpha\).</p>
+
+<hr />
+
+<h3 id="notation">Notation</h3>
+
+<p>We will use \(\vdash\) to denote “formally proves”.</p>
+
+<p>\(\vdash \alpha\) “\(\alpha\) has a formal proof”.</p>
+
+<p>Example: For every \(\alpha\), \(\vdash ((\neg(\neg \alpha))\to \alpha)\)</p>
+
+<p>\((\neg\neg\neg\alpha\to (\neg \alpha \to \neg\neg\neg\alpha))\) Axiom 1</p>
+
+<p>\((\neg\neg\neg\alpha\to (\neg \alpha \to \neg\neg\neg\alpha))\to((\neg\neg\neg\alpha \to \neg\alpha)\to(\neg\neg\neg\alpha \to \neg\neg\neg\alpha))\) Axiom 2</p>
+
+<p>By MP, \(((\neg\neg\neg\alpha \to \neg\alpha)\to(\neg\neg\neg\alpha \to \neg\neg\neg\alpha))\).</p>
+
+<p>\(((\neg\neg\neg\alpha \to \neg\alpha)\to(\neg\neg\neg\alpha \to \neg\neg\neg\alpha))\to\) NEXT TIME!!!</p>
+
+<hr />
+
+<h3 id="theorem-soundness">Theorem: Soundness</h3>
+
+<blockquote>
+  <p>For every WFF \(\alpha\) if \(\vdash \alpha\) then \(\alpha\) is tautology.</p>
+</blockquote>
+
+<h3 id="proof-by-generalized-induction-on-iaxioms-mp">Proof: (By Generalized Induction on I(Axioms, MP)</h3>
+
+<p>Base Case: Check that every axiom is a tautology.</p>
+
+<p>Induction Step: Assume both \(\alpha\) and \(\alpha \to \beta\) are tautologies.</p>
+
+<p>Need to Show that \(\beta\) is tautology.</p>
+
+<p>By the way of contradiction, assume \(\beta\) not a tautology. Then for some truth assignment \(v\), \(\bar v(\beta)\) = F. \(\bar v(\alpha)\) = T, since \(\alpha\) is a tautology.</p>
+
+<p>\(\bar v(\alpha \to \beta)\) = F, contradicting the assumption \((\alpha \to \beta)\) is a tautology.</p>
+
+<h3 id="proof-from-assumption">Proof: from Assumption</h3>
+
+<p>Let \(\sum\) be a set of WFFs.</p>
+
+<p>The set of formal theorems under the assumptions \(\sum\) is \(T_h(\sum) = I(Axioms\) U \(\sum, {mp})\).</p>
+
+<p>\(\alpha_1, ..., \alpha_n\) is a formal proof under \(\sum\) if each \(\alpha_i\) is either an axiom or a member of \(\sum\) or follows from some \(\alpha_j, \alpha_k,\) where \(j, k &lt; i\) uing MP.</p>
+
+<hr />
+
+<h3 id="example-3">Example:</h3>
+
+<p>Let \(\sum =\{A, (A /to B)\}\).</p>
+
+<p>Claim: \(\{A, (A\to B)\} \vdash B\)</p>
+
+<p>\(A\) (member of \(\sum\))</p>
+
+<p>\((A\to B)\) (member of \(\sum\))</p>
+
+<p>\(B\) MP</p>
+
+<h3 id="example-4">Example:</h3>
+
+<p>For every \(\alpha, \beta\),</p>
+
+\[\{\alpha, (\neg\alpha)\} \vdash \beta\]
+
+<h5 id="formal-proof">Formal Proof:</h5>
+
+<p>\((\neg \alpha \to ((\neg \beta) \to (\neg alpha)))\) (Axiom 1)</p>
+
+<p>\((\neg alpha)\) (member of \(\sum\))</p>
+
+<p>\(((\neg \beta) \to (\neg alpha))\) MP</p>
+
+<p>\((((\neg \beta) \to (\neg alpha))\to (\alpha \to \beta))\) (Axiom 3)</p>
+
+<p>\((\alpha \to \beta)\) MP</p>
+
+<p>\(\alpha\) (member of \(\sum\))</p>
+
+<p>\(\beta\) MP</p>
+
+<hr />
+
+<h3 id="property-of-proofs-from-assumption">Property of Proofs from Assumption</h3>
+
+<h5 id="extended-soundness-theorem">Extended soundness theorem</h5>
+
+<p>For every \(\sum, \alpha\)</p>
+
+<p>if \(\sum \vdash \alpha\) then \(\sum \vDash \alpha\).</p>
+
+<p>(Substituting \(\sum = \varnothing\) yields the basic soundness theorem)</p>
+
+<h5 id="proof-notice-that-we-can-rephrase-this-theorem-as-for-any-alpha-in-iaxiomusum-mp-sum-vdash-alpha">Proof: (Notice that we can rephrase this theorem as: for any \(\alpha \in I(Axiom\)U\(\sum), \{MP\}) \sum \vDash \alpha\))</h5>
+
+<p>Assignment</p>
+
+<hr />
+
+<h3 id="monotonicitys">Monotonicitys:</h3>
+
+<p>For every \(\sum, \sum ', \alpha\)</p>
+
+<p>if \(\sum \vdash \alpha\) and \(\sum \subseteq \sum '\), then \(\sum ' \vdash \alpha\)</p>
+
+<p>In other words, \(\sum \subseteq \sum '\) then \(Th(\sum)\subseteq Th(\sum ')\)</p>
+
+<p>(Note that human reasoning does not enjoy this property)</p>
+
+<h5 id="proof">Proof:</h5>
+
+<p>Since \(\sum \vdash\alpha\), there is a construction sequence (formal proof) of \(\alpha\) based on \(\sum\) U $$ Axioms.</p>
+
+<p>\(\alpha_1, ..., \alpha_n\) = \(\alpha\). Each \(\alpha_i\) is either an axiom on \(\alpha_i\in\sum\), but, in that case, \(\alpha_i\in \sum '\).</p>
+
+<p>On \(\alpha_i\) is the outcome of MP on earlier \(\alpha_j, \alpha_k\), therefore \(\alpha_1, ..., \alpha_n\) is also a proof from \(\sum '\).</p>
+
+<hr />
+
+<h3 id="strong-monotonicity">Strong Monotonicity:</h3>
+
+<p>If for every \(\alpha \in \sum '\) \(\sum \vdash \alpha\) then \(Th(\sum ') \subseteq TH(\sum)\).</p>
+
+<h3 id="example-5">Example:</h3>
+
+<p>Let \(\sum = \{A, (A\to B)\}\) and \(\sum ' = \{B\}\)</p>
+
+<p>\(\sum \vdash \sum '\) “every \(\alpha \in \sum '\) does a proof under \(\sum\)”</p>
+
+<p>It implies \(Th(\sum ') \subseteq TH(\sum)\).</p>
+
+<hr />
+
+<h3 id="the-deduction-theorem">The Deduction Theorem</h3>
+
+<p>For every \(\sum, \alpha, \beta\),</p>
+
+<p>\(\sum\) U \(\{\alpha\} \vdash \beta\) if and only if \(\sum \vdash \alpha \to \beta\).</p>
+
+<p>(In particular \(\{\alpha\} \vdash \beta\) iff \(\vdash(\alpha \to \beta)\))</p>
+
+<hr />
+
+<h3 id="example-6">Example:</h3>
+
+<p>For every \(\alpha,\beta,\gamma\),</p>
+
+<p>\(\{(\alpha\to\beta),(\beta\to\alpha)\} \vdash(\alpha\to\gamma)\).</p>
+
+<h5 id="proof-1">Proof:</h5>
+
+<p>Applying deduction, if suffices to show \(\{(\alpha\to\beta),(\beta\to\alpha),\alpha\} \vdash(\gamma)\).</p>
+
+<p>\(\alpha\) (assumption)</p>
+
+<p>\((\alpha \to \beta)\) (assumption)</p>
+
+<p>\(\beta\) (MP)</p>
+
+<p>\((\beta \to \gamma)\) (assumption)</p>
+
+<p>\(\gamma\) (MP)</p>
+
+<hr />
+
+<h3 id="proof-of-the-deduction-theorem">Proof of the Deduction Theorem:</h3>
+
+<h5 id="easy-direction-">Easy Direction: (&lt;=)</h5>
+
+<p>Assume \(\sum \vdash  (\alpha \to \beta)\).</p>
+
+<p>by monotonicity, \(\sum\) U \(\{\alpha\}\vdash(\alpha \to \beta)\).</p>
+
+<p>by strong monotonicity, it suffices to show that</p>
+
+<p>\(\sum ' = \sum\) U \(\{\alpha\}\) U \(\{\alpha \to \beta\}\vdash \beta\)</p>
+
+<h5 id="harder-direction-">Harder Direction: (=&gt;)</h5>
+
+<p>Show that if \(\sum\) U \(\{\alpha\} \vdash \beta then\)\sum \vdash (\alpha \to \beta)$$.</p>
+
+<p>Rephrase this statement as, for all \(\beta \in Th(\sum\) U \(\{\alpha\})\), \(\sum \vdash (\alpha \to \beta)\).</p>
+
+<p>Now prove by generalized induction on \(Th(\sum\) U \(\{\alpha\})\) = \(I(Axiom\)U\(\sum\) U \(\{\alpha\}\), \(\{MP\})\).</p>
+
+<h5 id="base-case">Base Case:</h5>
+
+<p>\(\beta\) is in the core set.</p>
+
+<p><strong>Case 1</strong>: \(\beta\) is an axiom.</p>
+
+<p>\(\beta\) (axiom)</p>
+
+<p>\((\beta \to (\alpha \to \beta))\) (axiom 1)</p>
+
+<p>\((\alpha \to \beta)\) (mp)</p>
+
+<p><strong>Case 2</strong>: \(\beta\in \sum\)</p>
+
+<p>\(\beta\) (assumption)</p>
+
+<p>\((\beta \to (\alpha \to \beta))\) (axiom 1)</p>
+
+<p>\((\alpha \to \beta)\) (mp)</p>
+
+<p><strong>Case 3</strong>: \(\beta == \alpha\)</p>
+
+<p>So \(\sum \vdash (\alpha \to \beta)\) is, in fact,</p>
+
+<p>\(\sum \vdash (\alpha \to \alpha)\) we showed that</p>
+
+<p>\(\varnothing \vdash (\alpha\to\alpha)\) use monotonicity.</p>
+
+<h5 id="induction-step">Induction Step:</h5>
+
+<p>\(\gamma, (\gamma \to \delta)\) implites \(\delta\) (MP)</p>
+
+<p>Assume \(\sum \vdash (\alpha \to \gamma)\)</p>
+
+<p>and \(\sum \vdash (\alpha \to (\gamma \to \delta))\)</p>
+
+<p>need to show \(\sum \vdash (\alpha \to \delta)\)</p>
+
+<p>So our assumptions plut strong monotonicity imply that it suffices to show:</p>
+
+<p>\(\sum\) U \(\{(\alpha \to \gamma), (\alpha \to (\gamma \to \delta))\} \vdash (\alpha \to \delta)\).</p>
+
+<p>\((\alpha \to (\gamma \to \delta)) \to ((\alpha \to \gamma) \to (\alpha \to \delta))\) (Axiom 2)</p>
+
+<p>\((\alpha \to (\gamma \to \delta))\) (Assumption)</p>
+
+<p>\(((\alpha \to \gamma) \to (\alpha \to \delta))\) (MP)</p>
+
+<p>\((\alpha \to \gamma)\) (Assumption)</p>
+
+<p>\((\alpha \to \delta)\) (MP)</p>
+
+<hr />
+
+<h3 id="example-7">Example:</h3>
+
+<h5 id="claim">Claim:</h5>
+
+<p>For every \(\alpha\), \(\vdash (\neg(\neg alpha ) \to \alpha)\)</p>
+
+<h5 id="proof-2">Proof:</h5>
+
+<p>By the deduction theorem, it suffices to show:</p>
+
+<p>\(\{\neg\neg \alpha\} \vdash \alpha\).</p>
+
+<p>formal proof:</p>
+
+<p>\(((\neg\neg\alpha) \to (\neg\neg\neg\neg\alpha \to \neg\neg\alpha))\) (Axiom 1)</p>
+
+<p>\(\neg\neg \alpha\) (assumption)</p>
+
+<p>\((\neg\neg\neg\neg\alpha \to \neg\neg\alpha)\) (MP)</p>
+
+<p>\((\neg\neg\neg\neg\alpha \to \neg\neg\alpha)\to(\neg \alpha\to \neg\neg\neg \alpha)\) (Axiom 3)</p>
+
+<p>\((\neg \alpha\to \neg\neg\neg \alpha)\) (MP)</p>
+
+<p>\(((\neg \alpha\to \neg\neg\neg \alpha)\to(\neg\neg\alpha \to \alpha))\) (Axiom 3)</p>
+
+<p>\((\neg\neg\alpha \to \alpha)\) (MP)</p>
+
+<p>\(\neg\neg\alpha\) (assumption)</p>
+
+<p>\(\alpha\) (MP)</p>
+
+<hr />
+
+<h3 id="important-syntactic-notion-consistency">Important Syntactic Notion: Consistency</h3>
+
+<h3 id="definition-1">Definition 1:</h3>
+
+<p>\(\sum\) is consistent if</p>
+
+<p>For no \(\alpha\), \(\sum \vdash \alpha\) and \(\sum \vdash(\neg \alpha)\)</p>
+
+<h3 id="definition-2">Definition 2:</h3>
+
+<p>\(\sum\) is consistent if</p>
+
+<p>there exists some \(\alpha\) such that \(\sum \nvdash \alpha\)</p>
+
+<h3 id="claim-1">Claim:</h3>
+
+<p>The definitions are equivalent.</p>
+
+<p>To be continue</p>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

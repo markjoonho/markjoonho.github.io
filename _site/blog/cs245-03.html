@@ -114,7 +114,7 @@
 
 <p class="post-metadata text-muted">
   22 January 2021 -  
-  <b>24 mins read time</b>
+  <b>21 mins read time</b>
 
   <br>Tags: 
     
@@ -1300,125 +1300,6 @@
 <h5 id="second-type-of-implications-of-compactness">Second type of implications of compactness:</h5>
 
 <p>Example: If every finite subset of a graph G is 2-colorable, then so is G.</p>
-
-<hr />
-
-<h3 id="a-proof-system-for-propositional-logic">A Proof System for Propositional Logic</h3>
-
-<h5 id="desirable-properties-of-proof-systems">Desirable properties of proof systems</h5>
-
-<ol>
-  <li>It can only prove “correct”(tautology) statements.</li>
-  <li>There is a “method” to check if a given object is a valid proof.</li>
-  <li>Every “correct” statements has a proof.</li>
-</ol>
-
-<p>When “correct statement” stands for a propositional tautology,</p>
-
-<p>A proof of \(\alpha\) will be a truth table for \(\alpha\) that has only T’s in the right most column.</p>
-
-<hr />
-
-<p>Our proof system consists of two components: Axioms and Deduction Rules.</p>
-
-<p>Axioms: The set of axioms and WFFF of one of the following forms:</p>
-
-<ul>
-  <li>\((\alpha \to (\beta \to \alpha))\).</li>
-  <li>\(((\alpha \to (\beta \to \gamma)) \to ((\alpha \to \beta) \to (\alpha \to \gamma)))\).</li>
-  <li>\((((\neg \alpha)\to (\neg \beta))\to (\beta \to \alpha))\).</li>
-</ul>
-
-<p>Example:</p>
-
-<ol>
-  <li>\((((\neg p) \to q) \to (p \to ((\neg p)\to q)))\).</li>
-</ol>
-
-<ul>
-  <li>Axioms! It follwos the \((\alpha \to (\beta \to \alpha))\).</li>
-</ul>
-
-<ol>
-  <li>((p \to q) \to ((\neg q) \to (\neg p)))</li>
-</ol>
-
-<ul>
-  <li>Not an Axiom!</li>
-</ul>
-
-<p>Example:</p>
-
-<ol>
-  <li>\(p \to p\) is not an axioms but tautology(correct).</li>
-</ol>
-
-<ul>
-  <li>Just 5 symbols every axiom has more.</li>
-</ul>
-
-<p>Deduction Rule: If \(\alpha\) and \(\alpha \to \beta\) is tautology then good to work on \(\beta\).</p>
-
-<ul>
-  <li>The set of provable WFF is \(I(Axioms, \{deduction\space rule\})\)</li>
-  <li>A formal proof is a construction sequence in this structure.</li>
-</ul>
-
-<p>Namely: \(\alpha_1, .., \alpha_n\) is a formal proof of some \(\beta\) if each \(\alpha_i\) is either an axiom or the result of applying deduction rule(MP) to some \(\alpha_j, \alpha_k\) for \(j, k &lt; i\).</p>
-
-<hr />
-
-<h3 id="example-8">Example</h3>
-
-<p>\(\alpha_1\) = \((\alpha \to ((\alpha \to \alpha)\to \alpha))\) Axiom 1</p>
-
-<p>\(\alpha_2\) = \(((\alpha \to ((\alpha \to \alpha)\to \alpha)) \to ((\alpha \to (\alpha \to \alpha))\to (\alpha \to \alpha)))\) Axiom 2</p>
-
-<p>Apply MP to \(\alpha_1, \alpha_2\) and get</p>
-
-<p>\(\alpha_3\) = \(((\alpha \to (\alpha \to \alpha))\to (\alpha \to \alpha))\)</p>
-
-<p>\(\alpha_4\) = \((\alpha \to (\alpha \to \alpha))\) Axiom 1</p>
-
-<p>Apply MP to \(\alpha_3, \alpha_4\), \(\alpha \to \alpha\).</p>
-
-<hr />
-
-<h3 id="notation-1">Notation</h3>
-
-<p>We will use \(\vdash\) to denote “formally proves”.</p>
-
-<p>\(\vdash \alpha\) “\(\alpha\) has a formal proof”.</p>
-
-<p>Example: For every \(\alpha\), \(\vdash ((\neg(\neg \alpha))\to \alpha)\)</p>
-
-<p>\((\neg\neg\neg\alpha\to (\neg \alpha \to \neg\neg\neg\alpha))\) Axiom 1</p>
-
-<p>\((\neg\neg\neg\alpha\to (\neg \alpha \to \neg\neg\neg\alpha))\to((\neg\neg\neg\alpha \to \neg\alpha)\to(\neg\neg\neg\alpha \to \neg\neg\neg\alpha))\) Axiom 2</p>
-
-<p>By MP, \(((\neg\neg\neg\alpha \to \neg\alpha)\to(\neg\neg\neg\alpha \to \neg\neg\neg\alpha))\).</p>
-
-<p>\(((\neg\neg\neg\alpha \to \neg\alpha)\to(\neg\neg\neg\alpha \to \neg\neg\neg\alpha))\to\) NEXT TIME!!!</p>
-
-<hr />
-
-<h3 id="theorem-soundness">Theorem: Soundness</h3>
-
-<blockquote>
-  <p>For every WFF \(\alpha\) if \(\vdash \alpha\) then \(\alpha\) is tautology.</p>
-</blockquote>
-
-<h3 id="proof-by-generalized-induction-on-iaxioms-mp">Proof: (By Generalized Induction on I(Axioms, MP)</h3>
-
-<p>Base Case: Check that every axiom is a tautology.</p>
-
-<p>Induction Step: Assume both \(\alpha\) and \(\alpha \to \beta\) are tautologies.</p>
-
-<p>Need to Show that \(\beta\) is tautology.</p>
-
-<p>By the way of contradiction, assume \(\beta\) not a tautology. Then for some truth assignment \(v\), \(\bar v(\beta)\) = F. \(\bar v(\alpha)\) = T, since \(\alpha\) is a tautology.</p>
-
-<p>\(\bar v(\alpha \to \beta)\) = F, contradicting the assumption \((\alpha \to \beta)\) is a tautology.</p>
 
 
 
