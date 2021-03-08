@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta
+    property="og:title"
+    content="05-01. Invariants and Encapsulation for CS246"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>
+    05-01. Invariants and Encapsulation for CS246
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"
+    async
+  ></script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>05-01. Invariants and Encapsulation for CS246</b></h1>
+
+<p class="post-metadata text-muted">
+  21 February 2021 -  
+  <b>8 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-246-object-oriented-software-development">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 246 Object-Oriented Software Development</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
+
+<hr />
+
+<p>Contents:</p>
+
+<ul>
+  <li><a href="#invariants-and-encapsulation">Invariants and Encapsulation</a>
+    <ul>
+      <li><a href="#invariants">Invariants</a></li>
+      <li><a href="#encapsulation">Encapsulation</a></li>
+    </ul>
+  </li>
+  <li><a href="#the-class-keyword">The class Keyword</a></li>
+  <li><a href="#accessor-and-mutator-methods">Accessor and Mutator Methods</a></li>
+  <li><a href="#fixing-the-linked-list-with-encapsulation">Fixing the Linked List with Encapsulation</a></li>
+  <li><a href="#friend-classes-and-functions">Friend Classes and Functions</a></li>
+</ul>
+
+<hr />
+
+<h1 id="invariants-and-encapsulation">Invariants and Encapsulation</h1>
+
+<h3 id="invariants">Invariants</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Invariants(A rule that needs to be true so the class works)</span>
+<span class="c1">// - next must be a heap-allocated Node</span>
+<span class="c1">// - each Node is responsible for deleting the next one</span>
+
+<span class="k">struct</span> <span class="nc">Node</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+    <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+    <span class="n">Node</span> <span class="p">(</span><span class="kt">int</span> <span class="n">data</span><span class="p">,</span> <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">)</span><span class="o">:</span> <span class="n">data</span><span class="p">{</span><span class="n">data</span><span class="p">},</span> <span class="n">next</span><span class="p">{</span><span class="n">next</span><span class="p">}</span> <span class="p">{}</span>
+    <span class="c1">//. . .</span>
+    <span class="o">~</span><span class="n">Node</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="n">next</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Node</span> <span class="n">n1</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="k">new</span> <span class="n">Node</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">}};</span>
+    <span class="n">Node</span> <span class="n">n2</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">};</span>
+    <span class="n">Node</span> <span class="n">n3</span> <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n2</span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>What happen when these objects go out of scope?</p>
+
+<p>Since all three are stack-allocated, so all three have their destructors run.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">n1</code> destructor runs -&gt; reclaims the rest of the list.</li>
+  <li><code class="language-plaintext highlighter-rouge">n3</code> destructor runs -&gt; try to delete <code class="language-plaintext highlighter-rouge">n2</code>, which is on stack, not the heap! (undefined behaviour!!!, Crash!!!)</li>
+</ul>
+
+<p>Class <code class="language-plaintext highlighter-rouge">Node</code> relies on an assumption for its proper operation: that <code class="language-plaintext highlighter-rouge">next</code> is either <code class="language-plaintext highlighter-rouge">nullptr</code> or is valid pointer to the heap.</p>
+
+<p>Therefore, we need a way to enforce invariants and avoid logical errors in our programs.</p>
+
+<p>In OOP, we can do this with <code class="language-plaintext highlighter-rouge">encapsulation</code>.</p>
+
+<h3 id="encapsulation">Encapsulation</h3>
+
+<p>Encapsulation</p>
+<ul>
+  <li>Treating a class as a black box</li>
+  <li>Hiding the internal implementation details from the clients</li>
+  <li>Exposing only a public interface</li>
+</ul>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In a C++ struct, members are PUBLIC by default</span>
+<span class="c1">// In a C++ class, members are PRIVATE by default</span>
+
+<span class="k">struct</span> <span class="nc">Node</span> <span class="p">{</span>
+  <span class="nl">private:</span> <span class="c1">// these can only be accessed from inside Node objects</span>
+    <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+    <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+  <span class="nl">public:</span> <span class="c1">// these can be accessed by anyone</span>
+    <span class="n">Node</span> <span class="p">(</span><span class="kt">int</span> <span class="n">data</span><span class="p">,</span> <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">)</span><span class="o">:</span> <span class="n">data</span><span class="p">{</span><span class="n">data</span><span class="p">},</span> <span class="n">next</span><span class="p">{</span><span class="n">next</span><span class="p">}</span> <span class="p">{}</span>
+    <span class="c1">//. . .</span>
+    <span class="o">~</span><span class="n">Node</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="n">next</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Node</span> <span class="n">n1</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="k">new</span> <span class="n">Node</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">}};</span>
+    <span class="n">Node</span> <span class="n">n2</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">};</span>
+    <span class="n">Node</span> <span class="n">n3</span> <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n2</span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="the-class-keyword">The class Keyword</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In a C++ struct, members are PUBLIC by default</span>
+<span class="c1">// In a C++ class, members are PRIVATE by default</span>
+
+<span class="k">class</span> <span class="nc">Node</span> <span class="p">{</span>
+  <span class="nl">private:</span> <span class="c1">// these can only be accessed from inside Node objects</span>
+    <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+    <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+  <span class="nl">public:</span> <span class="c1">// these can be accessed by anyone</span>
+    <span class="n">Node</span> <span class="p">(</span><span class="kt">int</span> <span class="n">data</span><span class="p">,</span> <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">)</span><span class="o">:</span> <span class="n">data</span><span class="p">{</span><span class="n">data</span><span class="p">},</span> <span class="n">next</span><span class="p">{</span><span class="n">next</span><span class="p">}</span> <span class="p">{}</span>
+    <span class="c1">//. . .</span>
+    <span class="o">~</span><span class="n">Node</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="n">next</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Node</span> <span class="n">n1</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="k">new</span> <span class="n">Node</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">}};</span>
+    <span class="n">Node</span> <span class="n">n2</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">};</span>
+    <span class="n">Node</span> <span class="n">n3</span> <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n2</span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Almost same! But members are PRIVATE by default.</p>
+
+<p>The best practice is to make members private by default and only make public those methods that need to be called from outside of the object.</p>
+
+<h3 id="accessor-and-mutator-methods">Accessor and Mutator Methods</h3>
+
+<p>From encapsulation, the clients cannot read or modify the the values of the object’s field(private).</p>
+
+<ul>
+  <li>Accessor: used to read attributes</li>
+  <li>Mutator: used to write/modify attributes</li>
+</ul>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Node</span> <span class="p">{</span>
+  <span class="nl">private:</span> <span class="c1">// these can only be accessed from inside Node objects</span>
+    <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+    <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+  <span class="nl">public:</span> <span class="c1">// these can be accessed by anyone</span>
+    <span class="n">Node</span> <span class="p">(</span><span class="kt">int</span> <span class="n">data</span><span class="p">,</span> <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">)</span><span class="o">:</span> <span class="n">data</span><span class="p">{</span><span class="n">data</span><span class="p">},</span> <span class="n">next</span><span class="p">{</span><span class="n">next</span><span class="p">}</span> <span class="p">{}</span>
+    <span class="c1">//. . .</span>
+    <span class="o">~</span><span class="n">Node</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="n">next</span><span class="p">;</span> <span class="p">}</span>
+    
+    <span class="c1">// Accessor method(getter method) for data</span>
+    <span class="kt">int</span> <span class="n">getData</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">Node</span> <span class="o">*</span><span class="n">getNext</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="n">next</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Mutator method(setter method) for data</span>
+    <span class="kt">void</span> <span class="n">setData</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Node</span> <span class="n">n1</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="k">new</span> <span class="n">Node</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">}};</span>
+    <span class="n">Node</span> <span class="n">n2</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">};</span>
+    <span class="n">Node</span> <span class="n">n3</span> <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n2</span><span class="p">};</span>
+    
+    <span class="n">n1</span><span class="p">.</span><span class="n">getData</span><span class="p">();</span>
+    <span class="n">n1</span><span class="p">.</span><span class="n">setData</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+    <span class="n">n2</span><span class="p">.</span><span class="n">setData</span><span class="p">(</span><span class="n">n3</span><span class="p">.</span><span class="n">getData</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This codes still does not work! (Free twice for n2!).</p>
+
+<p>We will fixing the linked list with encapsulation from next! (after good example)</p>
+
+<h5 id="good-practice">Good Practice</h5>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Invariant: all grades are between 0 and 100</span>
+<span class="k">class</span> <span class="nc">Student</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">assns</span><span class="p">,</span> <span class="n">mt</span><span class="p">,</span> <span class="k">final</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">enforceGradeValue</span><span class="p">(</span><span class="kt">int</span> <span class="n">g</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="c1">// private method because it doesn't need to be called by clients</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">g</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> 
+            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">g</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span> 
+            <span class="k">return</span> <span class="mi">100</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">g</span><span class="p">;</span>
+    <span class="p">}</span>
+
+  <span class="nl">public:</span>
+    <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+    <span class="kt">int</span> <span class="n">getAssns</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">assns</span><span class="p">;</span> <span class="p">}</span>                 <span class="c1">// accessor</span>
+    <span class="kt">void</span> <span class="n">setAssns</span><span class="p">(</span><span class="kt">int</span> <span class="n">g</span><span class="p">)</span> <span class="p">{</span> <span class="n">assns</span> <span class="o">=</span> <span class="n">enforceGradeValue</span><span class="p">(</span><span class="n">g</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// mutator</span>
+    <span class="kt">int</span> <span class="n">getMt</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">mt</span><span class="p">;</span> <span class="p">}</span>                       <span class="c1">// accessor</span>
+    <span class="kt">void</span> <span class="n">setMt</span><span class="p">(</span><span class="kt">int</span> <span class="n">g</span><span class="p">)</span> <span class="p">{</span> <span class="n">mt</span> <span class="o">=</span> <span class="n">enforceGradeValue</span><span class="p">(</span><span class="n">g</span><span class="p">);</span> <span class="p">}</span>       <span class="c1">// mutator </span>
+    <span class="kt">int</span> <span class="n">getFinal</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="k">final</span><span class="p">;</span> <span class="p">}</span>                 <span class="c1">// accessor</span>
+    <span class="kt">void</span> <span class="n">setFinal</span><span class="p">(</span><span class="kt">int</span> <span class="n">g</span><span class="p">)</span> <span class="p">{</span> <span class="k">final</span> <span class="o">=</span> <span class="n">enforceGradeValue</span><span class="p">(</span><span class="n">g</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// mutator </span>
+    <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="fixing-the-linked-list-with-encapsulation">Fixing the Linked List with Encapsulation</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// list.h</span>
+<span class="k">class</span> <span class="nc">List</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="nc">Node</span><span class="p">;</span>             <span class="c1">// Private nested class; only accessible inside List</span>
+    <span class="n">Node</span> <span class="o">*</span><span class="n">theList</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span> <span class="c1">// Must be nullptr or pointer to heap-allocated object</span>
+  <span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">addToFront</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span>  <span class="c1">// Adds an element to the front of the list</span>
+    <span class="kt">int</span> <span class="n">ith</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">);</span>          <span class="c1">// Retrieves the element in the ith position of the list</span>
+    <span class="o">~</span><span class="n">List</span><span class="p">();</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">List</span><span class="o">::</span><span class="n">Node</span> <span class="p">{</span> <span class="c1">// Nested class</span>
+    <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+    <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+    <span class="n">Node</span> <span class="p">(</span><span class="kt">int</span> <span class="n">data</span><span class="p">,</span> <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">)</span><span class="o">:</span> <span class="n">data</span><span class="p">{</span><span class="n">data</span><span class="p">},</span> <span class="n">next</span><span class="p">{</span><span class="n">next</span><span class="p">}</span> <span class="p">{}</span>
+    <span class="o">~</span><span class="n">Node</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="n">next</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">List</span><span class="o">::~</span><span class="n">List</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="n">theList</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">List</span><span class="o">::</span><span class="n">addToFront</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="n">theList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">theList</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">List</span><span class="o">::</span><span class="n">ith</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Node</span> <span class="o">*</span><span class="n">cur</span> <span class="o">=</span> <span class="n">theList</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">i</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">,</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

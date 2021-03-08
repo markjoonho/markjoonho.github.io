@@ -114,7 +114,7 @@
 
 <p class="post-metadata text-muted">
   10 February 2021 -  
-  <b>7 mins read time</b>
+  <b>16 mins read time</b>
 
   <br>Tags: 
     
@@ -497,7 +497,7 @@
 
 <h3 id="definition-2">Definition 2:</h3>
 
-<p>\(\sum\) is consistent if</p>
+<p>\(\sum\) is consistent if and only if</p>
 
 <p>there exists some \(\alpha\) such that \(\sum \nvdash \alpha\)</p>
 
@@ -505,7 +505,451 @@
 
 <p>The definitions are equivalent.</p>
 
-<p>To be continue</p>
+<h3 id="proof-3">Proof</h3>
+
+<p>Assume that for no \(\aslpha\) does \(\sum \vdash \alpha\) and \(\sum \vdash \neg \alpha\)$.</p>
+
+<p>Pick any \(\alpha\) say \(\alpha = p\), etiher \(\sum \nvdash \alpha\) or, it does, then \(\sum \nvdash \neg\alpha\).</p>
+
+<p>In any case we found \(\beta\) such that \(\sum \vdash \beta\).</p>
+
+<p>Assume that for some \(\beta\) \(\sum \vdash \beta\).</p>
+
+<p>If the first definition is violated then, for some \(\alpha\), \(\sum \vdash \alpha\) and \(\sum \vdash \neg \alpha\).</p>
+
+<p>Therefore \(\sum \vdash \sum\) U \(\{\alpha ,\neg\alpha\} \vdash \{\alpha ,\neg\alpha\}\).</p>
+
+<p>\(\{\alpha ,\neg\alpha\} \vdash \beta\) for every \(\alpha , \beta\).</p>
+
+<p>So \(\sum \vdash \beta\) for every \(\beta\). Contradicting our assumption!</p>
+
+<hr />
+
+<p>Let \(\sum \subseteq \sum '\) if \(\sum '\) is consistent then so is \(\sum\).</p>
+
+<h3 id="corollary">Corollary</h3>
+
+<p>If any set of WFF’s is consistent then, in particular \(\emptyset\) is consistent.</p>
+
+<p>Is \(\emptyset\) consistent?</p>
+
+<h3 id="the-soundness-theorem">The soundness theorem</h3>
+
+<p>If \(\vdash \alpha\) then \(\alpha\) is a tautology.</p>
+
+<p>In particular \(\nvdash\) p, since p is not a tautology.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>syntax</th>
+      <th>sementics</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>definition of WFF</td>
+      <td>truth assignments</td>
+    </tr>
+    <tr>
+      <td>Proof system</td>
+      <td>\(\alpha\) satisfiable</td>
+    </tr>
+    <tr>
+      <td>\(\sum\) consistent &lt;=</td>
+      <td>\(\sum\) satisfiable</td>
+    </tr>
+    <tr>
+      <td>\(\vdash \alpha\) =&gt;</td>
+      <td>\(\alpha\) tautology</td>
+    </tr>
+    <tr>
+      <td>\(\sum\vdash\alpha\) =&gt;</td>
+      <td>\(\alpha\vDash\beta\)</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>\(\sum\vDash\alpah\)</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>Compactness theorem</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="theorem">Theorem</h3>
+
+<p>Every satisfiable \(\sum\) is consistent.</p>
+
+<h3 id="proof-4">Proof</h3>
+
+<p>By way of contradiction, assume \(\sum\) is inconsistent.</p>
+
+<p>So for some \(\alpha\), both \(\sum \vdash \alpha\) and \(\sum \vdash \neg \alpha\).</p>
+
+<p>If \(\sum\) is satisfiable then for some truth assignment \(V\), \(V\) satisfies all WFFs in \(\sum\)</p>
+
+<p>By soundness, \(\sum \vDahs \alpha\) and \(\sum \vDahs \neg\alpha\).</p>
+
+<p>So for that assignment \(V\), we get \(V(\alpha)\) = T and $V(\neg\alpha)\(=T. It violates the truth table of\)\neg$$. Contradiction!!!</p>
+
+<hr />
+
+<p>Is \(\sum = \{(P_i\to P_j) : i,j\in \mathbb{N}\}\) consistent?</p>
+
+<p>By our previous theorem, it suffices to show that \(\sum\) is satisfiable.</p>
+
+<p>For example, that all-True v satisfies every member of \(\sum\).</p>
+
+<hr />
+
+<h1 id="definition">Definition:</h1>
+
+<p>We say that \(\sum\) is maximally consistent</p>
+
+<p>if \(\sum\) is consistent but, for every \(\alpha\) either \(\sum \vdash \alpha\) or \(\sum\) U \(\{\alpha\}\) is inconsistent.</p>
+
+<p>(Note that whenever \(\sum \vdash \alpha\), \(\sum\) U \(\{\alpha\}\) is no stronger than \(\sum\). Namely, for every \(\beta\), if \(\sum\) U \(\{\alpha\} \vdash \beta\) then \(\sum \vdash \beta\).</p>
+
+<h3 id="example-8">Example</h3>
+
+<p>Let \(\sum = \{P_1\}\) (over the variables \(P_1, P_2,\) …)</p>
+
+<h5 id="claim-1">Claim 1</h5>
+
+<p>\(\{P_1\}\) is consistent. Since it is satisfiable.</p>
+
+<h5 id="claim-2">Claim 2</h5>
+
+<p>\(\{P_1\}\) is not maximally consistent.</p>
+
+<p>Let \(\alpha = P_3\), \(\sum \nvdash P_3\) by soundness, it suffices to show that \(P_1 \nvDash P_3\). Consider any truth assignment V such that V(\(P_1\)) = T and V(\(P_3\)) = F.</p>
+
+<p>Then V satisfies \(P_1\) but not \(P_3\)</p>
+
+<p>Finally, note that \(\{P_1, P_3\}\) is consistent. (since it is satisfiable)</p>
+
+<hr />
+
+<h3 id="claim-2">Claim</h3>
+
+<p>\(\sum = \{P_i: i\in \mathbb{N}\}\) is maximally consistent.</p>
+
+<p>(Over \(P_1, P_2,\) …)</p>
+
+<h3 id="proof-5">Proof</h3>
+
+<p>Why is my \(\sum\) consistent?</p>
+
+<ul>
+  <li>It is satisfiable by \(V_T\).</li>
+</ul>
+
+<p>Why is it maximally consistent?</p>
+
+<blockquote>
+  <p>Need to show that for every \(\alpha\) if \(\sum \nvdash \alpha\) then \(\sum\)U\(\{\alpha\}\) is not consistent.</p>
+</blockquote>
+
+<p>We can already show that if \(\sum \nvDash \alpha\) then \(\sum\)U\(\{\alpha\}\) is not satisfiable. (since \(\sum\) is maximally satisfiable)</p>
+
+<hr />
+
+<p>\(\sum\) consistent ~ A set of vectors A is linearly independent.</p>
+
+<p>\(\sum\) max consistent ~ A is maximally linear independent (A is a basis)</p>
+
+<hr />
+
+<h3 id="lemma">Lemma</h3>
+
+<p>For every consistent \(\sum\) there exists a maximally consistent \(\sum '\) where \(\sum \subseteq \sum '\).</p>
+
+<h3 id="proof-6">Proof</h3>
+
+<p>Let \(\alpha_1,..\alpha_n, ...\) a list of all WFF’s over \(\{p_1, p_2, ...\}\).</p>
+
+<p>Let \(\sum_0\) be \(\sum\), and construct a sequence of sets of WFFs \(\sum_0 \subseteq \sum_1 ... \subseteq \sum_n ...\).</p>
+
+<p>Such that</p>
+
+<ol>
+  <li>\(\sum_0\) = \(\sum\).</li>
+  <li>Each \(\sum_i\) is consistent.</li>
+  <li>For every i, either \(\sum_i \vdash \alpha_i\) or \(\sum_i \vdash \neg\alpha_i\).</li>
+</ol>
+
+<p>The construction of the \(\sum_i\) is by induction on i,</p>
+
+<p>\(\sum_0 = \sum\) clearly satisfies our requirements 1 and 2.</p>
+
+<p>Given \(\sum_i\), if \(\sum_i\vdash \neg\alpha_i\) let \(\sum_{i+1} = \sum_i\).</p>
+
+<p>(Then if \(\sum_i\) satisfies 1,2 then so will \(\sum_{i+1}\))</p>
+
+<p>If on the other hand, \(\sum_i \nvdash \neg\alpha_{i+1}\) then let \(\sum_{i+1} = \sum_i\) U \(\{\alpha_{i+1}\}\).</p>
+
+<p>Claim: If \(\sum_i\) satisfies 1 and 2 then so does \(\sum_i\)</p>
+
+<p>Proof of claim: Requirement 2 follows by the definition of \(\sum_{i+1}. But why is\)\sum_{i+1}$$ consistent?</p>
+
+<p>By way of contradiction,</p>
+
+<p>Otherwise \(\sum_{i+1} \vdash \neg\alpha_{i+1}\)</p>
+
+<p>(inconsistent \(\sum\) proves everything)</p>
+
+<p>Claim: If \(\sum\) U \(\{\alpha\} \vdash \neg\alpha\) then \(\sum \vdash \neg\alpha\). (For every \(\sum\) and \(\alpha\))</p>
+
+<p>By the claim, if \(\sum_{i+1}\) is inconsistent then \(\sum_{i+1} \vdash \neg \alpha_{i+1}\) but \(\sum_{i+1} = \sum_i\) U \(\{\alpha_{i+1}\}\) so \(\sum_i \vdash \neg\alpha_{i+1}\). Contradiction!!!</p>
+
+<p>We assumed \(\sum_i \nvdash \neg \alpha_{i+1}\) and defined \(\sum_{i+1} = \sum_i\) U \(\{\alpha_i\}\).</p>
+
+<p>Finally, defined \(\sum ' = U_{i\in \mathbb{N}}\sum_i\) is maximally consistent.</p>
+
+<p>Side claim: For every \(\sum\), \(\alpha\),</p>
+
+<p>If \(\sum\) U \(\{\alpha\} \vdash \neg \alpha\) then \(\sum \vdash \neg\alpha\).</p>
+
+<p>Prove the subclaim, it suffices to show that \(\vdash(\alpha \to \neg\alpha)\to \neg\alpha\).</p>
+
+<p>Why does it suffice? Assume \(\sum\) U \(\{\alpha\}\vdash \neg\alpha\).</p>
+
+<p>Then by deduction theorem, \(\sum \vdash(\alpha \to \neg\alpha)\).</p>
+
+<h3 id="corollary-1">Corollary</h3>
+
+<p>Our construction of \(\sum_i\) is can be carried out while respecting requirements 0,1,2.</p>
+
+\[sum_{consistent} \subseteq \sum_{maxcons}'\]
+
+<p>Given \(\sum\) we constructed \(\sum \subseteq \sum_1 ... \subseteq \sum_i ...\). Now define \(\sum\)’ = \(U_{i=1}^\infty \sum_i\).</p>
+
+<h3 id="claim-3">Claim</h3>
+
+<p>The \(\sum\)’ we constructed is maximally consistent.</p>
+
+<h5 id="proof-7">Proof:</h5>
+
+<p>Maximality: For every \(\alpha\), \(\alpha = \alpha_i\) for some \(i \in \mathbb{N}\). Therefore, by requirement 1, \(\sum_i \vdash \alpha_i\) or \(\sum_i \vdash \neg\alpha_i\), in other words, \(\sum_i \vdash \alpha\) or \(\sum_i \vdash \neg\alpha\).</p>
+
+<p>Each \(\sum_i\) is a subset of \(\sum\)’. Therefore by monotonicity, \(\sum\)’\(\vdash \alpha\) or \(\sum\)’\(\vdahs \neg \alpha\).</p>
+
+<hr />
+
+<p>\(\sum\)’ is also consistent: Assume by way of contradiction, it is not.</p>
+
+<p>In that case, for some \(\alpha\), \(\sum\)’ \(\vdash \alpha\) and \(\sum\)’ \(\vdash \neg \alpha\).</p>
+
+<p>Let \(\beta_1 ... \beta_k\) be a formal proof of \(\alpha\) from \(\sum\)’ and let \(\gamma_1 ... \gamma_k\) a formal proof of \(\neg\alpha\) from \(\sum\)’.</p>
+
+<p>\(\sum \subseteq \sum_1 ... \subseteq \sum_i ...\) each \(\beta_i\) that is an assumption from \(\sum\)’ belongs some \(\sum_{m_i}\).</p>
+
+<p>Similarly each \(\gamma_i\) that is an assumption belongs to some \(\sum_{m_j}\). Since both formal proofs are finite, there is some \(i^{th}\) bigger than all of these \(m_i\)’s and \(m_j\)’s.</p>
+
+<p>Threfore for each \(\beta_i\) or \(\gamma_j\) that are used as assumptions \(\beta_i,\gamma_j\in \sum_i\). Bow \(\sum_i\vdash \alpha\) and \(\sum_i\vdash \neg\alpha\).</p>
+
+<p>So \(\sum_i\) is inconsitent. Contradicting requirement 1 in our construction.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Syntax</th>
+      <th>Semantics</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>\(\sum\) Consistent</td>
+      <td>&lt;=&gt;\(\sum\) Satisfiable</td>
+    </tr>
+    <tr>
+      <td>\(\sum\) Max Consistent</td>
+      <td>&lt;=&gt;\(\sum\) Max Satisfiable</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="theorem-1">Theorem</h3>
+
+<p>Every consistent \(\sum\) is satisfiable.</p>
+
+<h5 id="proof-8">Proof</h5>
+
+<p>Let \(\sum\)’ be a maximal consistent set of WFFs such that \(\sum \subseteq \sum\)’.</p>
+
+<p>Define truth assignmnet \(V_{\)\sum\('}\) a follows.</p>
+
+<p>\(V_{\sum}(P_i) = T\) if \(\sum\)’ \(\vdash P_i\).</p>
+
+<p>\(V_{\sum}(P_i) = F\) Otherwise.</p>
+
+<h4 id="claim-4">Claim</h4>
+
+<p>For every formula \(\alpha\)</p>
+
+<p>\(V_{\sum\)’}(\(\alpha\)) = T if and only if \(\sum\)’\(\vdash \alpha\).</p>
+
+<h3 id="theorem-2">Theorem</h3>
+
+<p>For every consistent \(\sum\) there exists a maximally consistent \(\sum '\) where \(\sum \subseteq \sum '\).</p>
+
+<hr />
+
+<h3 id="the-completness-theorem">The completness theorem</h3>
+
+<p>Every consistent \(\sum\) is satisfiable</p>
+
+<h5 id="proof-9">Proof</h5>
+
+<p>First step, pick \(\sum\)’ where \(\sum \subseteq \sum\)’ which is maximally consistent.</p>
+
+<p>Second step, define truth assignment \(V_{\sum '}\) as follows</p>
+
+<p>For any propositional variable P</p>
+
+<ul>
+  <li>\(V_{\sum '}(P)\) = T if \(\sum\)’\(\vdash\) P</li>
+  <li>\(V_{\sum '}(P)\) = F otherwise</li>
+</ul>
+
+<h5 id="claim-5">Claim</h5>
+
+<p>For every formula \(\alpha\), \(\sum\)’\(\vdash \alpha\) iff \(V_{\sum '}(\alpha)\) = T.</p>
+
+<h5 id="proof-of-the-claim-by-generalize-induction-on-the-set-of-all-wffs">Proof of the claim by generalize induction on the set of all WFFs</h5>
+
+<p>I(propositional variables, \(\{\to,\neg\}\))</p>
+
+<h5 id="base">Base:</h5>
+
+<p>\(\alpha = p\) for some propositional variable p.</p>
+
+<p>If \(\sum\)’\(\vdahs p\) then, by the definition of \(V_{\sum'}\), \(V_{\sum'}(p)\) = T.</p>
+
+<p>If \(\sum\)’\(\nvdahs p\) then, by the definition of \(V_{\sum'}\), \(V_{\sum'}(p)\) = F.</p>
+
+<h5 id="induction-step-1">Induction Step:</h5>
+
+<p>Assume the claim holds for \(\alpha\) and \(\beta\), need to show it for \((\neg\alpha)\) and for \((\alpha\to\beta)\).</p>
+
+<p>Fist Case: \((\neg\alpha)\)</p>
+
+<p>If \(\sum' \vdash (\neg\alpha)\) by the consistency of \(\sum'\), \(sum' \nvdash \alpha\).</p>
+
+<p>By the induction hypothesis, \(V_{\sum'}(\alpha)\) = F.</p>
+
+<p>So by the truth table of \(\neg\), \(V_{\sum'}(\neg\alpha)\) = T.</p>
+
+<p>If If \(\sum' \nvdash (\neg\alpha)\) by its maximality of \(\sum'\), \(sum' \vdash \alpha\).</p>
+
+<p>By the induction hypothesis, \(V_{\sum'}(\alpha)\) = T.</p>
+
+<p>So by the truth table of \(\neg\), \(V_{\sum'}(\neg\alpha)\) = F.</p>
+
+<p>Second Case: \((\alpha \to \beta)\), if \(\sum'\vdash(\alpha\to\beta)\)</p>
+
+<p>Either \(\sum'\vdash \alpha\), in which case \(\sum'\vdash \beta\).</p>
+
+<p>Using the inductin hypothesis we get \(V_{\sum'}(\alpha)\) = T, and \(V_{\sum'}(\beta)\) = T so by the truth table of \(\to\), \(V_{\sum'}(\alpha\to \beta)\) = T.</p>
+
+<p>If \(\sum'\ndash \alpha\) so by induction hypothesis, \(V_{\sum'}(\alpha)\) = F so by truth table \(V_{\sum'}(\alpha\to\beta)\) = T.</p>
+
+<p>Finally assume \(\sum'\ndash (\alpha\to\beta)\).</p>
+
+<p>Then \(\sum'\nvdash\beta\), it it does we can use the axiom \(\beta\to(\alpha\to\beta)\) and MP to et \(\sum'\vdash(\alpha\to\beta)\) contradiction.</p>
+
+<p>So by induction hypothesis \(V_{\sum'}(\beta)\) = F.</p>
+
+<p>We need to show \(V_{\sum'}(\alpha\to\beta)\) = F.</p>
+
+<p>Since we know already that \(V_{\sum'}(\beta)\) = F.</p>
+
+<p>Our claim hold unless \(V_{\sum'}(\alpha)\) = F</p>
+
+<p>Now by induction hypothesis this implies \(\sum'\ndash \alpha\).</p>
+
+<p>So by maximality, \(\sum'\vdash \neg\alpha\).</p>
+
+<p>Then \(\sum'\vdash(\alpha\to \beta)\) contradiction.</p>
+
+<p>SubClaim: If \(\sum'\vdash \neg\alpha\) then \(\sum \vdash (\alpha\to\beta)\).</p>
+
+<p>Use deduction, suffices to show \(\sum'\)U\(\{alpha\} \vdash \beta\) iff \(\sum\)U\(\{\alpha\}\)U\(\{\neg\alpha\} \vdash \beta\).</p>
+
+\[\{\alpha,\neg\alpah\}\vdash \beta\]
+
+<table>
+  <thead>
+    <tr>
+      <th>Syntax</th>
+      <th>Semantics</th>
+      <th>explain</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>\(\vdash\alpha\)</td>
+      <td>\(\alpha\) i tautolog</td>
+      <td>=&gt; soundness</td>
+    </tr>
+    <tr>
+      <td>\(\vdash\alpha\)</td>
+      <td>\(\alpha\) i tautolog</td>
+      <td>&lt;=</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="completness-theorem">Completness Theorem</h3>
+
+<p>For all \(\alpha\) and any set of WFFs \(\sum\) if \(\sum \vDash \alpha then\)\sum \vdash \alpha$$</p>
+
+<h5 id="proof-10">Proof</h5>
+
+<p>Othersixe, \(\sum \nvdash \alpha\), then \(\sum\) U \(\{\neg\alpha\}\) is consistent.</p>
+
+<p>So by our last result, \(\sum\) U \(\{\neg\alpha\}\) is satisfiable, so \(\sum \nvDash \alpha\).</p>
+
+<h5 id="claim-6">Claim:</h5>
+
+<p>If \(\sum\) is max consistent then it is max satisfiable</p>
+
+<h5 id="proof-11">Proof</h5>
+
+<p>\(\sum\) consitent =&gt; \(\sum\) satisfiable</p>
+
+<p>Since for every \(\alpah\), \(\sum\vdash\alpha\) or \(\sum\vdash\neg\alpha\) we get by soundness \(\sum \vDash \alpha\) or \(\sum\vDash\neg\alpha\).</p>
+
+<p>If \(\sum\) is maximally satisfiable,</p>
+
+<p>satisfiable =&gt; consistent.</p>
+
+<p>Since for every \(\alpha\), \(\sum \vDash \alpha\) or \(\sum \vDash \neg\alpha\) we get by completeness, \(\sum \vdash \alpha\) or \(\sum \vdash \neg\alpha\), so \(\sum\) is max-consistent.</p>
+
+<h5 id="recall-compactness-theorem">Recall Compactness theorem</h5>
+
+<p>\(\sum\) satisfiable iff every finite A\(\subseteq \sum\) is satisfiable.</p>
+
+<p>\(\sum\) satisfiable iff \(\sum\) is consistent (soundness, completeness)</p>
+
+<p>\(\sum\) is consistent iff Every finite A\(\subseteq \sum\) is consistent (by finiteness of proofs)</p>
+
+<p>Every finite A\(\subseteq \sum\) is consistent iff Every finite A \(\subseteq \sum\) satisfiable. (soundness, completeness)</p>
+
+<h3 id="one-big-open-question">One big open Question</h3>
+
+<p>Is there a poly time algorithm to figure out if a given \(\alpha\) is satisfiable P vs NP.</p>
+
+<h3 id="lengths-of-proofs">Lengths of proofs</h3>
+
+<p>Is there a polynomial P(n) such that for every tautology \(\alpha\), there is a formula proof of \(\geq P(\|\alpha\|)\) length?</p>
+
+<p>Does there exist any sound and complete propositional proof system with this property?</p>
+
+<p>\(\alpha\) not satisfiable iff \(\neg\alpha\) is a tautology.</p>
+
 
 
 

@@ -114,7 +114,7 @@
 
 <p class="post-metadata text-muted">
   12 February 2021 -  
-  <b>less than 1 min read time</b>
+  <b>5 mins read time</b>
 
   <br>Tags: 
     
@@ -211,6 +211,138 @@
 </blockquote>
 
 <h1 id="classes">Classes</h1>
+
+<p>We can keep related pieces of information together in C/C++ by putting them into a structure, using <code class="language-plaintext highlighter-rouge">struct</code> keyword.</p>
+
+<p>It improves cohesion! There is another way that C++; we can also put functions inside of a structure. This let us keep related data and functions in the same data structure, which is called a <span style="color:red">class</span>.</p>
+
+<p>A class is a type. An intance of a class is called an object.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// student.h</span>
+<span class="cp">#ifndef _STUDENT_H_
+#define _STUDENT_H_
+</span>
+<span class="k">struct</span> <span class="nc">Student</span> <span class="p">{</span>
+   <span class="kt">int</span> <span class="n">assns</span><span class="p">,</span> <span class="n">mt</span><span class="p">,</span> <span class="k">final</span><span class="p">;</span>
+
+   <span class="kt">float</span> <span class="n">grade</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<p>From this, there exists three data fields:</p>
+
+<ul>
+  <li>assns</li>
+  <li>mt</li>
+  <li>final</li>
+</ul>
+
+<p>It has a single method, <code class="language-plaintext highlighter-rouge">grade</code>, that takes no parameters and returns the final grade in the course.</p>
+
+<p>We only provide <code class="language-plaintext highlighter-rouge">.h</code> and <code class="language-plaintext highlighter-rouge">.o</code> files to our client. They’d never need to know how the final course grade was actually calculated!</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// student.cc</span>
+<span class="cp">#include "student.h"
+</span>
+<span class="kt">float</span> <span class="n">Student</span><span class="o">::</span><span class="n">grade</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">assns</span> <span class="o">*</span> <span class="mf">0.4</span> <span class="o">+</span> <span class="n">mt</span> <span class="o">*</span> <span class="mf">0.2</span> <span class="o">+</span> <span class="k">final</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In the implementation file for the <code class="language-plaintext highlighter-rouge">Student</code>, we have to use <span style="color:red">scope resolution operator</span> ::, prefixed by the class name, to specify that the <code class="language-plaintext highlighter-rouge">grade</code> function is a method of the <code class="language-plaintext highlighter-rouge">Student</code> clas.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include "student.h"
+#include &lt;iostream&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">Student</span> <span class="n">s</span><span class="p">{</span><span class="mi">60</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">80</span><span class="p">};</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">grade</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If we want to use another student as below, let’s use <code class="language-plaintext highlighter-rouge">this</code>.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Student</span> <span class="n">mark</span><span class="p">{</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">}</span>
+<span class="n">mark</span><span class="p">.</span><span class="n">grade</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">float</span> <span class="n">Student</span><span class="o">::</span><span class="n">grade</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">assns</span> <span class="o">*</span> <span class="mf">0.4</span> <span class="o">+</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">mt</span> <span class="o">*</span> <span class="mf">0.2</span> <span class="o">+</span> <span class="k">this</span><span class="o">-&gt;</span><span class="k">final</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="initializing-objects">Initializing Objects</h1>
+
+<p>Our previous example used an <span style="colr:red">initializing list</span> to copy the data values into the object’s data fields.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Student</span> <span class="n">s</span><span class="p">{</span><span class="mi">60</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">80</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is limited in functionality, since it only copies the gieven data. Also we cannot guaranteeding that the grade are in the range 0 to 100.</p>
+
+<p>Now we will use better method, called a <span style="color:red">contructor</span>. Following is the format of the constructor:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Name</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">Class</span><span class="o">-</span><span class="n">Type</span><span class="p">(</span> <span class="n">parameter</span><span class="o">-</span><span class="n">list</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// necessary code</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>No return type, since building the actual object.</li>
+  <li>Method name is the type name.</li>
+  <li>Parameter list may be empty.</li>
+  <li>Constructors can be overloaded.</li>
+  <li>Method body may be empty, but must be present.</li>
+</ul>
+
+<p>This is an example.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// student.h</span>
+<span class="cp">#ifndef _STUDENT_H_
+#define _STUDENT_H_
+</span>
+<span class="k">struct</span> <span class="nc">Student</span> <span class="p">{</span>
+   <span class="kt">int</span> <span class="n">assns</span><span class="p">,</span> <span class="n">mt</span><span class="p">,</span> <span class="k">final</span><span class="p">;</span>
+
+   <span class="n">Student</span><span class="p">(</span> <span class="kt">int</span> <span class="n">assns</span><span class="p">,</span> <span class="kt">int</span> <span class="n">mt</span><span class="p">,</span> <span class="kt">int</span> <span class="k">final</span> <span class="p">);</span>
+   <span class="kt">float</span> <span class="n">grade</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// student.cc</span>
+<span class="cp">#include "student.h"
+</span>
+<span class="kt">int</span> <span class="nf">capGrade</span><span class="p">(</span><span class="kt">int</span> <span class="n">grade</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">grade</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">grade</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span> <span class="k">return</span> <span class="mi">100</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">grade</span>
+<span class="p">}</span>
+
+<span class="n">Student</span><span class="o">::</span><span class="n">Student</span><span class="p">(</span><span class="kt">int</span> <span class="n">assns</span><span class="p">,</span> <span class="kt">int</span> <span class="n">mt</span><span class="p">,</span> <span class="kt">int</span> <span class="k">final</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">assns</span> <span class="o">=</span> <span class="n">capGrade</span><span class="p">(</span><span class="n">assns</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">mt</span> <span class="o">=</span> <span class="n">capGrade</span><span class="p">(</span><span class="n">mt</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="k">final</span> <span class="o">=</span> <span class="n">capGrade</span><span class="p">(</span><span class="k">final</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">Student</span><span class="o">::</span><span class="n">grade</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">assns</span> <span class="o">*</span> <span class="mf">0.4</span> <span class="o">+</span> <span class="n">mt</span> <span class="o">*</span> <span class="mf">0.2</span> <span class="o">+</span> <span class="k">final</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Constructor Advantages</p>
+</blockquote>
+
+<ol>
+  <li>Allow default parameters.</li>
+  <li>Allows overloading.</li>
+  <li>Allows sanity checks.</li>
+  <li>Allows code other than simple field initialization.</li>
+</ol>
 
 
 

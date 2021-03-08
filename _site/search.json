@@ -1,6 +1,46 @@
 [
   
     {
+      "title"    : "04. Proof System of Propoitional Logic for CS245",
+      "category" : "",
+      "tags"     : "CS 245 Logic and Computaion",
+      "url"      : "/blog/cs245-05",
+      "date"     : "2021-03-08 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "05-02. Design Patterns and Iterators for CS246",
+      "category" : "",
+      "tags"     : "CS 246 Object-Oriented Software Development",
+      "url"      : "/blog/cs246-09",
+      "date"     : "2021-03-02 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "05-01. Invariants and Encapsulation for CS246",
+      "category" : "",
+      "tags"     : "CS 246 Object-Oriented Software Development",
+      "url"      : "/blog/cs246-08",
+      "date"     : "2021-02-21 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "04-03. Advanced object uses for CS246",
+      "category" : "",
+      "tags"     : "CS 246 Object-Oriented Software Development",
+      "url"      : "/blog/cs246-07",
+      "date"     : "2021-02-20 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "04-02. Special class members for CS246",
+      "category" : "",
+      "tags"     : "CS 246 Object-Oriented Software Development",
+      "url"      : "/blog/cs246-06",
+      "date"     : "2021-02-18 00:00:00 -0500"
+    } ,
+  
+    {
       "title"    : "04-01. Introduction Object-Oriented Programming for CS246",
       "category" : "",
       "tags"     : "CS 246 Object-Oriented Software Development",

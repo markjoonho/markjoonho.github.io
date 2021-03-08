@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta
+    property="og:title"
+    content="05-02. Design Patterns and Iterators for CS246"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>
+    05-02. Design Patterns and Iterators for CS246
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"
+    async
+  ></script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>05-02. Design Patterns and Iterators for CS246</b></h1>
+
+<p class="post-metadata text-muted">
+  02 March 2021 -  
+  <b>10 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-246-object-oriented-software-development">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 246 Object-Oriented Software Development</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
+
+<hr />
+
+<p>Contents:</p>
+<ul>
+  <li><a href="#intro-to-design-patterns">Intro to Design Patterns</a></li>
+  <li><a href="#iterator">Iterator</a></li>
+</ul>
+
+<hr />
+
+<h3 id="intro-to-design-patterns">Intro to Design Patterns</h3>
+
+<p>Current Problem - Encapsulation of the Node struct in our List class has broken the users’ ability to iterate efficient(O(n)) through the list.</p>
+
+<p>Now, the <code class="language-plaintext highlighter-rouge">ith</code> function we’ve provided them is itself O(n) so a full iteration looking at each element i will take O(n^2).</p>
+
+<blockquote>
+  <p>This is a common problem!</p>
+</blockquote>
+
+<p>To solve Common Problem, c++ use design pattern.</p>
+
+<p>Design pattern is hey, we have a common problem so we’ve identified a POTENTIAL solution to that problem. So if you encounter a problem similar to this, code like this may help you solve it.</p>
+
+<h5 id="soltuion-to-our-program-iterator-pattern">Soltuion to our program: Iterator Pattern</h5>
+
+<p>We write a class to manage the access to elements of our collection(nodes of our linked list for example). The iterator class is basically just an abstraction of a pointer - so we can allow the client to use a pointer like object without actually exposing the internal of our object!</p>
+
+<h3 id="iterator-pattern">Iterator Pattern</h3>
+
+<p>Allow the client to write code like this:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="n">thing</span> <span class="o">=</span> <span class="n">first_collection</span><span class="p">;</span> <span class="n">thing</span> <span class="o">&lt;</span> <span class="n">end_of_collect</span><span class="p">;</span> <span class="o">++</span><span class="n">thing</span><span class="p">)</span> <span class="p">{</span>
+  <span class="o">*</span><span class="n">thing</span> <span class="o">=</span> <span class="o">*</span><span class="n">thing</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">// whatever!</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>What are some functions we need to provide?</p>
+<ul>
+  <li>Function to get “pointer” to first thing in collection (initialization)</li>
+  <li>Function to get “past last thing” of our collection (loop end condition)</li>
+  <li>Increment(++) the “pointer” to update to the next thing in collection</li>
+  <li>Someway to dereference the “pointer”</li>
+  <li>Need to be able to check for inequality</li>
+</ul>
+
+<p>Replace “pointer” with iterator in each of these sentences</p>
+
+<h5 id="general-format">General Format</h5>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MyClassIterator</span> <span class="p">{</span>
+    <span class="c1">// some private field to keep track of where the iterator is currently pointing to</span>
+    <span class="k">explicit</span> <span class="n">MyClassIterator</span><span class="p">(</span><span class="cm">/* a parameter to initialize it */</span><span class="p">)</span>  <span class="c1">// private constructor</span>
+  <span class="nl">public:</span>
+    <span class="n">MyClass</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">*</span><span class="p">();</span> <span class="c1">// accesses the item the iterator is currently pointing to (the return type can be different if needed)</span>
+    <span class="n">MyClassIterator</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">++</span><span class="p">();</span> <span class="c1">// advances the iterator to the next item and returns the iterator</span>
+    <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">MyClassIterator</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// returns true if both Iterators are equal (point to the same item)</span>
+    <span class="kt">bool</span> <span class="k">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="n">MyClassIterator</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// returns true if both Iterators are different (do not point to the same item)</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span> <span class="p">{</span>
+    <span class="c1">// other private members</span>
+  <span class="nl">public:</span>
+    <span class="c1">// other public members</span>
+    <span class="n">MyClassIterator</span> <span class="n">begin</span><span class="p">();</span> <span class="c1">// returns an Iterator pointing to the first element</span>
+    <span class="n">MyClassIterator</span> <span class="n">end</span><span class="p">();</span>   <span class="c1">// returns an Iterator pointint past the last element (not to the last element itself, but after it)</span>
+<span class="p">};</span>
+
+</code></pre></div></div>
+
+<h5 id="example-linked">Example: linked</h5>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// listiter.h</span>
+<span class="cp">#ifndef _LIST_H_
+#define _LIST_H_
+</span>
+<span class="k">class</span> <span class="nc">List</span> <span class="p">{</span>
+  <span class="k">class</span> <span class="nc">Node</span><span class="p">;</span>
+  <span class="n">Node</span> <span class="o">*</span><span class="n">theList</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+
+ <span class="nl">public:</span>
+  <span class="k">class</span> <span class="nc">Iterator</span> <span class="p">{</span>
+    <span class="n">Node</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+    <span class="k">explicit</span> <span class="n">Iterator</span><span class="p">(</span><span class="n">Node</span> <span class="o">*</span><span class="n">p</span><span class="p">);</span>
+   <span class="nl">public:</span>
+    <span class="kt">int</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="n">Iterator</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">++</span><span class="p">();</span>
+    <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">Iterator</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="k">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="n">Iterator</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">friend</span> <span class="k">class</span> <span class="nc">List</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="n">Iterator</span> <span class="n">begin</span><span class="p">();</span>
+  <span class="n">Iterator</span> <span class="n">end</span><span class="p">();</span>
+
+  <span class="kt">void</span> <span class="n">addToFront</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="n">ith</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">);</span>
+  <span class="o">~</span><span class="n">List</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span>
+<span class="c1">// listiter.cc</span>
+<span class="cp">#include "listiter.h"
+</span>
+<span class="k">struct</span> <span class="nc">List</span><span class="o">::</span><span class="n">Node</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+  <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+
+  <span class="n">Node</span> <span class="p">(</span><span class="kt">int</span> <span class="n">data</span><span class="p">,</span> <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">)</span><span class="o">:</span> <span class="n">data</span><span class="p">{</span><span class="n">data</span><span class="p">},</span> <span class="n">next</span><span class="p">{</span><span class="n">next</span><span class="p">}</span> <span class="p">{}</span>
+  <span class="o">~</span><span class="n">Node</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="n">next</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">List</span><span class="o">::</span><span class="n">Iterator</span><span class="o">::</span><span class="n">Iterator</span><span class="p">(</span><span class="n">Node</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="o">:</span> <span class="n">p</span><span class="p">{</span><span class="n">p</span><span class="p">}</span> <span class="p">{}</span>
+<span class="kt">int</span> <span class="o">&amp;</span><span class="n">List</span><span class="o">::</span><span class="n">Iterator</span><span class="o">::</span><span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span> <span class="p">}</span>
+<span class="n">List</span><span class="o">::</span><span class="n">Iterator</span> <span class="o">&amp;</span><span class="n">List</span><span class="o">::</span><span class="n">Iterator</span><span class="o">::</span><span class="k">operator</span><span class="o">++</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-&gt;</span> <span class="n">next</span><span class="p">;</span>
+  <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">bool</span> <span class="n">List</span><span class="o">::</span><span class="n">Iterator</span><span class="o">::</span><span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">Iterator</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">p</span> <span class="o">==</span> <span class="n">other</span><span class="p">.</span><span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">bool</span> <span class="n">List</span><span class="o">::</span><span class="n">Iterator</span><span class="o">::</span><span class="k">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="n">Iterator</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="k">this</span> <span class="o">==</span> <span class="n">other</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">List</span><span class="o">::</span><span class="n">Iterator</span> <span class="n">List</span><span class="o">::</span><span class="n">begin</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">Iterator</span><span class="p">(</span><span class="n">theList</span><span class="p">);</span> <span class="p">}</span>
+<span class="n">List</span><span class="o">::</span><span class="n">Iterator</span> <span class="n">List</span><span class="o">::</span><span class="n">end</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">Iterator</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="n">List</span><span class="o">::~</span><span class="n">List</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="n">theList</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">List</span><span class="o">::</span><span class="n">addToFront</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="n">theList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">theList</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">List</span><span class="o">::</span><span class="n">ith</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Node</span> <span class="o">*</span><span class="n">cur</span> <span class="o">=</span> <span class="n">theList</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="o">&amp;&amp;</span> <span class="n">cur</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">,</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span> <span class="o">-&gt;</span> <span class="n">next</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>What we’ve seen is our standard form for the iterator design pattern.</p>
+
+<p>You’re producing the iterator design pattern when you have a claim X that is a collection you’d like to iterate over and there exists claim Y such that all the following hold:</p>
+
+<p>(in our example X was List and Y was List::Iterator)</p>
+
+<ul>
+  <li>Must exist a method X::begin that produces a Y</li>
+  <li>Must exist a method X::end that produces a Y</li>
+  <li>Must exist prefix operator++ for class Y</li>
+  <li>Must exist inequality operator between Y objects</li>
+  <li>Must exist dereference operator for class Y</li>
+</ul>
+
+<p>Class X is the collection and class Y is the iterator.</p>
+
+<blockquote>
+  <p>There is a built-in function for for loop!</p>
+</blockquote>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="n">List</span><span class="o">::</span><span class="n">Iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">L</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">L</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>From this, we can use <code class="language-plaintext highlighter-rouge">auto</code> instead of List::Iterator.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">L</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">L</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>There is another built-in support(range-based for loops)</p>
+</blockquote>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">n</span><span class="o">:</span><span class="n">lst</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// n is automatically dereferenced.</span>
+  <span class="c1">// n refers to "each item in the list"</span>
+  <span class="c1">// The loop can be read as "for n in lst"</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Range based for loops as above are avialable for any class X as defined above(5 rules).</p>
+
+<blockquote>
+  <p>Be cautious!!!</p>
+</blockquote>
+
+<p>```c++ for (auto n: lst) {
+  n = n*5;
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Does not change the `lst`! n is a local copy of the returned data from dereferncing the iterator. If you want to write a range based for loop that can have effects you must write:
+
+```c++
+for (auto &amp;n:lst) {
+  ++n;
+  cout &lt;&lt; n &lt;&lt; endl;
+}
+</code></pre></div></div>
+
+<p>Iterator is great! but still we have a mistake!</p>
+
+<p>The client can still make iterators themselves, they should only be able to with our begin and end methods.</p>
+
+<p>Solution? Make the iterator constructor private!</p>
+
+<p>BAD! New, Problem, List can no longer produce iterators in its begin and end functions.</p>
+
+<p>Soltution to that! Make a list a friend of class iterator…</p>
+
+<h3 id="friend">Friend</h3>
+
+<p>A friend class in C++ is a class that has privileged access to the class declaring it as a friend. That is, a friend class can access the private components of the class that has declared it as a friend.</p>
+
+<h5 id="how-to-declare-a-friend">How to declare a friend?</h5>
+
+<p>Same way to declare a class period but put friend in front of it!</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// listiter.h</span>
+<span class="cp">#ifndef _LIST_H_
+#define _LIST_H_
+</span>
+<span class="k">class</span> <span class="nc">List</span> <span class="p">{</span>
+  <span class="k">class</span> <span class="nc">Node</span><span class="p">;</span>
+  <span class="n">Node</span> <span class="o">*</span><span class="n">theList</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+
+ <span class="nl">public:</span>
+  <span class="k">class</span> <span class="nc">Iterator</span> <span class="p">{</span>
+    <span class="n">Node</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+    <span class="k">explicit</span> <span class="n">Iterator</span><span class="p">(</span><span class="n">Node</span> <span class="o">*</span><span class="n">p</span><span class="p">);</span>
+   <span class="nl">public:</span>
+    <span class="kt">int</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="n">Iterator</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">++</span><span class="p">();</span>
+    <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">Iterator</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="k">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="n">Iterator</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">friend</span> <span class="k">class</span> <span class="nc">List</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="n">Iterator</span> <span class="n">begin</span><span class="p">();</span>
+  <span class="n">Iterator</span> <span class="n">end</span><span class="p">();</span>
+
+  <span class="kt">void</span> <span class="n">addToFront</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="n">ith</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">);</span>
+  <span class="o">~</span><span class="n">List</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<p>NOW List can call the private constructor, but no one else.</p>
+
+<p>Have as FEW friends as possible. Friends weaken encapsulation.</p>
+
+<p>Just because iterator declares List to be its friend does not mean iterat is List’s friend.</p>
+<ul>
+  <li>List can now access Iterators private components</li>
+  <li>Iterator cannot access List’s private components</li>
+</ul>
+
+<p>Another way to allow clients or other objects to access your private data - getters/setters (accessor/mutator).</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Vec</span><span class="p">{</span>
+  <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="p">...</span>
+  <span class="kt">int</span> <span class="n">getX</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">x</span><span class="p">;}</span> <span class="c1">// accessor</span>
+  <span class="kt">void</span> <span class="n">setY</span><span class="p">(</span><span class="kt">int</span> <span class="n">val</span><span class="p">){</span><span class="n">y</span> <span class="o">=</span> <span class="n">val</span><span class="p">;}</span> <span class="c1">// mutator</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>But…. what about <code class="language-plaintext highlighter-rouge">operator&lt;&lt;</code>, needs to access to x and y but it can’t be a member function.</p>
+
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

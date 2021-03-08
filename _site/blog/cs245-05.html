@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 245 Lecture by Professor Shai Ben-David. Since the post is summarized by Joonho Mark Lee, the contents may di..."
+  />
+  <meta
+    property="og:title"
+    content="04. Proof System of Propoitional Logic for CS245"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 245 Lecture by Professor Shai Ben-David. Since the post is summarized by Joonho Mark Lee, the contents may di..."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>
+    04. Proof System of Propoitional Logic for CS245
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"
+    async
+  ></script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>04. Proof System of Propoitional Logic for CS245</b></h1>
+
+<p class="post-metadata text-muted">
+  08 March 2021 -  
+  <b>2 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-245-logic-and-computaion">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 245 Logic and Computaion</span>
+    </a>
+    </p>
+
+<p>Source: University of Waterloo CS 245 by Professor <a href="https://www.youtube.com/channel/UCg9V0y9_RxG7hg5GjcyS2OA">Shai Ben-David</a></p>
+
+<hr />
+
+<h3 id="example">Example</h3>
+
+<p>p: Every man is mortal (assumption)</p>
+
+<p>q: Socrates is a man (assumption)</p>
+
+<p>s: Thus socrates is mortal (conclusion)</p>
+
+\[\{p, q\} \vDash s\]
+
+<hr />
+
+<h3 id="first-order-logic-predicate-calculus">First order Logic (Predicate Calculus)</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Objects</th>
+      <th>Properties</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>man</td>
+      <td>mortal</td>
+    </tr>
+    <tr>
+      <td>socrates</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Actually we shall discuss a large <strong>family</strong> of languages.</p>
+
+<h3 id="common-to-all-logical-symbols">Common to all: Logical symbols</h3>
+
+<p>Propositional connectives: \(\to, \and, \or, \neg\)</p>
+
+<p>Quantifies: \(\forall, \some\)</p>
+
+<p>Equality: =</p>
+
+<h3 id="language-specific-symbols">Language specific symbols</h3>
+
+<p>constant symbols</p>
+
+<p>relation symbols</p>
+
+<p>function symbols</p>
+
+<h3 id="informal-example-of-specific-languages">Informal Example of specific languages</h3>
+
+<ol>
+  <li>A language for number theory</li>
+</ol>
+
+<p>constant symbols 0, 1 (a, b)</p>
+
+<p>function symbols +, * (f, q)</p>
+
+<p>relation symbols \(\leq\) (R)</p>
+
+<p>\(f(x) = \forall y \forall z(g(y,z)=x \to y=x \or z=x)\) “X is a prime number”</p>
+
+<ol>
+  <li>A language for set theory</li>
+</ol>
+
+<p>relation symbol \(\in\) (R)</p>
+
+<p>R(x,y) means x$\in$$ y</p>
+
+<p>What can we say in the minimal language?</p>
+
+<p>No constant symbol, no function symbols, no relation symbols</p>
+
+\[\forall x \forall y (x=y)\]
+
+<hr />
+
+<h3 id="fix-a-language">FIX a Language</h3>
+
+<p>Constant symbols: \(a_1, a_2, ...\)</p>
+
+<p>Function symbols: \(f_1, f_2, ...\)</p>
+
+<p>Relation symbols: \(R_1, R_2, ...\)</p>
+
+<h3 id="step1">Step1:</h3>
+
+<blockquote>
+  <p>Define the collection of “Words” that denote objects - terms</p>
+</blockquote>
+
+<h5 id="the-set-of-terms-is-define-as-iap">The set of Terms is define as I(A,P)</h5>
+
+<ul>
+  <li>where A: all constant symbols and all variable symbols</li>
+  <li>where P: all function symbol (f)</li>
+</ul>
+
+<h5 id="example-of-terms">Example of Terms:</h5>
+
+<ol>
+  <li>Language for number theory</li>
+</ol>
+
+<p>a, b, \(x_1\), …</p>
+
+<p>f(a, b), g(f(a, b), y) …</p>
+
+<ol>
+  <li>The terms of the language of set theory</li>
+</ol>
+
+<p>No function symbols, therefore P is empty</p>
+
+<p>I(A,P) = A</p>
+
+<ol>
+  <li>The terms in the empty language</li>
+</ol>
+
+<p>just variable symbols</p>
+
+<h3 id="step-2">Step 2:</h3>
+
+<blockquote>
+  <p>Defining our WFFs again as I(A,P)</p>
+</blockquote>
+
+<h3 id="step-15">Step 1.5</h3>
+
+<blockquote>
+  <p>Defining the set of atomic formulas</p>
+</blockquote>
+
+<p>\(\{R(t_1, ..., t_k):\) R is a k-ary relation symbol and \(t_1,..t_k\)}</p>
+
+<h5 id="examples">Examples</h5>
+
+<ol>
+  <li>Language of number theory</li>
+</ol>
+
+<p>R(a, b)</p>
+
+<p>R(f(a,x), g(f(b,b), y))</p>
+
+<p>The set of WFF in a given Lnaguage L(given constants, functions, relations) I(atomic formulas, \(\{\and, \or, \to, \forall, \exist\}\))</p>
+
+<hr />
+
+<h3 id="important-syntactic-notion-free-variable">Important syntactic notion: Free variable</h3>
+
+<p>We define by inuction the construction of the set of WFFs, F(\(\phi\)): The et of free variables of \(\phi\).</p>
+
+<p>If \(\phi\) is atomic : F(\(\phi\)) = all variables occuring in \(\phi\)</p>
+
+<p>\(F(f(b,b) = g(x, f(b, y)))\) = \(\{x,y\}\)</p>
+
+<p>\(F(\phi_1 \and \phi_2) = F(\phi_1 \or \phi_2) = F(\phi_1 \to \phi_2) = F(\phi_1)\) U \(F(\phi_2)\)</p>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>
