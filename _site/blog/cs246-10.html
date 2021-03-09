@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta
+    property="og:title"
+    content="06-01. UML and Relationships for CS246"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>
+    06-01. UML and Relationships for CS246
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"
+    async
+  ></script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>06-01. UML and Relationships for CS246</b></h1>
+
+<p class="post-metadata text-muted">
+  08 March 2021 -  
+  <b>7 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-246-object-oriented-software-development">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 246 Object-Oriented Software Development</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
+
+<hr />
+
+<p>Contents:</p>
+
+<ul>
+  <li><a href="#unified-modeling-language">Unified Modeling Language</a></li>
+  <li><a href="#class-model-notation">Class model notation</a></li>
+  <li><a href="#class-relationships">Class relationships</a></li>
+</ul>
+
+<hr />
+
+<h1 id="unified-modeling-language">Unified Modeling Language</h1>
+
+<p>UML is a visual modeling language that lets people deign and document a software system.</p>
+
+<p>It is a popular standard, and the notation isn’t based on any particular programming language.</p>
+
+<p>We will only looking for class models.</p>
+
+<h3 id="class-models">Class models</h3>
+
+<p>It represents a group of classes, and the relationships between them.</p>
+
+<hr />
+
+<h1 id="class-model-notation">Class model notation</h1>
+
+<h3 id="classes">Classes</h3>
+
+<p><img src="/assets/img/cs246/01-classModel.jpg" /></p>
+
+<p>Figure 1, surrounded by a green box, shows the basic structure for a class. It divides by three boxes:</p>
+
+<ol>
+  <li>Class Name
+    <ul>
+      <li>Must be unique among all the classes in that particular scope.</li>
+      <li>Must be Capitalized, Centered, or Left-justified, and in Bold.</li>
+      <li>In general, Class name is not pluralized.</li>
+      <li>May qualified by an optional stereotype keyword, Centerend, Regular typeface, Place above class name, and within guillemets(not « », it is “≪≫” single character Unicode 226A and 226B)</li>
+    </ul>
+  </li>
+</ol>
+
+<p><img src="/assets/img/cs246/02-stereotypedClassName.jpg" /></p>
+
+<ol>
+  <li>Class attributes (optional)</li>
+  <li>Class operations (optional)</li>
+</ol>
+
+<h3 id="comments">Comments</h3>
+
+<p>A comment can be added to the class diagram by joining a rectangle with a ben upper-right corner to the item being annotated by a dash line.</p>
+
+<p><img src="/assets/img/cs246/03-comment.jpg" /></p>
+
+<h3 id="attributes">Attributes</h3>
+
+<blockquote>
+  <p>Left-justified and written in the regular typeface.</p>
+</blockquote>
+
+<p>They describe the information hely by an instance of the class, and may be replaced by association ends.</p>
+
+<p>The general syntax is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>≪stereotype≫ visibility / name : type multiplicity initial-value {property}
+</code></pre></div></div>
+
+<p>where every argument except the <code class="language-plaintext highlighter-rouge">name</code> is optional. The <code class="language-plaintext highlighter-rouge">name</code> generally starts with a lower-case letter.</p>
+
+<h5 id="visibility"><code class="language-plaintext highlighter-rouge">visibility</code></h5>
+
+<p>Descirbe the visibility of the attribute as a punctuation mark.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">+</code> public</li>
+  <li><code class="language-plaintext highlighter-rouge">-</code> private</li>
+  <li><code class="language-plaintext highlighter-rouge">#</code> protected</li>
+  <li><code class="language-plaintext highlighter-rouge">~</code> package</li>
+</ul>
+
+<h5 id="type"><code class="language-plaintext highlighter-rouge">type</code></h5>
+
+<p>Desribe the attributes’ type. Usually written to be as language-independent as possible e.g. Boolean rather than the C++<code class="language-plaintext highlighter-rouge">bool</code>.</p>
+
+<blockquote>
+  <p>Though in this course we may sometimes use C++ specific syntax since we’re not using the UML formally.</p>
+</blockquote>
+
+<p>If the type is omitted, so is the preceding colon.</p>
+
+<h5><code class="language-plaintext highlighter-rouge">/</code></h5>
+
+<p>Indicate that this attributed is derived from a parent class.</p>
+
+<h5 id="multiplicity"><code class="language-plaintext highlighter-rouge">multiplicity</code></h5>
+
+<p>Describes the multiplicty constraints on the attribute i.e. how many of these values will be held. It is enclosed in <code class="language-plaintext highlighter-rouge">[]</code>.</p>
+
+<p>It is usually omitted if the value is exactly 1 since that’s the commones case.</p>
+
+<p>It will consist of either a string specifying the exact number(<code class="language-plaintext highlighter-rouge">[3]</code>), a string specifying a precise rnage(<code class="language-plaintext highlighter-rouge">[3..10]</code> or <code class="language-plaintext highlighter-rouge">[0..1]</code>), an unknown number (<code class="language-plaintext highlighter-rouge">[*]</code>), or a range with specified lower bound but no known upper bound(<code class="language-plaintext highlighter-rouge">[2..*]</code>).</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">[0..1]</code> implicitly represents a pointer in C/C++</p>
+</blockquote>
+
+<h5 id="initial-value"><code class="language-plaintext highlighter-rouge">initial-value</code></h5>
+
+<p>Specify the default initial valuse as an equal sign e.g.<code class="language-plaintext highlighter-rouge">= 0</code>.</p>
+
+<h5 id="property"><code class="language-plaintext highlighter-rouge">property</code></h5>
+
+<p>List of comma-separated strings surrounded by <code class="language-plaintext highlighter-rouge">{}</code>. Defaults to <code class="language-plaintext highlighter-rouge">{changeable}</code>, but can be specified as <code class="language-plaintext highlighter-rouge">{readOnly}</code> to indicate that it’s constant.</p>
+
+<p>Can be used to annotate multiplicity:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ordered</code>: elements in collection follow an order</li>
+  <li><code class="language-plaintext highlighter-rouge">unordered</code>: items in collection are not in order</li>
+  <li><code class="language-plaintext highlighter-rouge">bag</code>: collection of elements that may have multiple copies of elements</li>
+  <li><code class="language-plaintext highlighter-rouge">seq</code>: elements of the set form an ordered sequence</li>
+  <li><code class="language-plaintext highlighter-rouge">set</code>: collection of unique elements</li>
+  <li><code class="language-plaintext highlighter-rouge">list</code>: ordered variable-length collection i.e. orderd bag.</li>
+</ul>
+
+<h5 id="example-of-attribute-declaration">Example of Attribute declaration</h5>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- colours: Saturation [3]
+# points : Point [2..*] {ordered,set} 
+size : Area = (100, 100)
++ name : String [0..1]
++ name : String {readOnly}
+</code></pre></div></div>
+
+<h3 id="operations">Operations</h3>
+
+<blockquote>
+  <p>Left-justified and written in the regular typeface.</p>
+</blockquote>
+
+<p>General syntax is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>≪stereotype≫ visibility name ( parameter-list ) : return-type multiplicity initial-value property
+</code></pre></div></div>
+
+<h5 id="visibility-1"><code class="language-plaintext highlighter-rouge">visibility</code></h5>
+
+<p>Same as for the attribute</p>
+
+<h5 id="return-type"><code class="language-plaintext highlighter-rouge">return-type</code></h5>
+
+<p>A string containing a comma-separated list of names that describes the operation’s return type. (some allows multi return values)</p>
+
+<p>If the return type is omitted, so is the preceding colon and the return type is equivalent to <code class="language-plaintext highlighter-rouge">void</code> in C/C++.</p>
+
+<h5 id="parameter-list"><code class="language-plaintext highlighter-rouge">parameter-list</code></h5>
+
+<p>Comma-separated lit of parameters, enclosed in <code class="language-plaintext highlighter-rouge">()</code>.</p>
+
+<p>Each parameter is of the form:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>direction name : type multiplicity = default-value
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">direction</code>: specifies direction of information flow and is optional
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">in</code>: input, passed by value(default)</li>
+      <li><code class="language-plaintext highlighter-rouge">out</code>: output with no input; final value is available to caller</li>
+      <li><code class="language-plaintext highlighter-rouge">inout</code>: input that may be modified and whose final value is available to the caller</li>
+      <li><code class="language-plaintext highlighter-rouge">return</code>: return value of a call</li>
+    </ul>
+  </li>
+  <li>If the <code class="language-plaintext highlighter-rouge">default-value</code> is omitted, so is the preceeding equal sign.</li>
+</ul>
+
+<h5 id="property-1"><code class="language-plaintext highlighter-rouge">property</code></h5>
+
+<p>Comma-separated strings surrounded by <code class="language-plaintext highlighter-rouge">{}</code>. Rarely use this element.</p>
+
+<p>Ability to specify <code class="language-plaintext highlighter-rouge">abstract</code>, <code class="language-plaintext highlighter-rouge">virtual</code> and <code class="language-plaintext highlighter-rouge">static</code> if your UML drawing software doesn’t let you italicize or underline.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">exception</code>: A list of raised exception may be shown by specifying a comma-separated list of them after <code class="language-plaintext highlighter-rouge">exception</code></li>
+  <li><code class="language-plaintext highlighter-rouge">abstract</code>: Instead of italicizing an abstract operation</li>
+  <li><code class="language-plaintext highlighter-rouge">static</code>: Instead of underlining a static operation</li>
+  <li><code class="language-plaintext highlighter-rouge">isQuery=false</code>: Indicates that this operation does not change the state of the object (default). <code class="language-plaintext highlighter-rouge">true</code> does not guarantee that the state changes, only that it may change.</li>
+  <li><code class="language-plaintext highlighter-rouge">isPolymorphic=true</code>: Indicates that the overation is overridable and is the default value.</li>
+</ul>
+
+<h5 id="examples-of-operation-declarations">Examples of Operation Declarations</h5>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- display () : Location
++ hide ()
+≪constructor≫ + create ()
+- attachXWindow( xwin : XWindow* )
+# Matrix::transform (in distance: Vector, in angle: Real = 0) : Matrix
+</code></pre></div></div>
+
+<h3 id="dependencies">Dependencies</h3>
+
+<p>If a class A has a dependency upon another class B, it doesn’t actually contain an instance of B but it receives an instance of B as a parameter, or returns an instance of B, or has some sort of ther temporary relationship.</p>
+
+<h4 id="example">Example</h4>
+
+<p><img src="/assets/img/cs246/05-dependency.jpg" /></p>
+
+<h3 id="static">Static</h3>
+
+<p>Static attributes or operations are underlined in the UML class model; otherwie you might need to tag them with the {<code class="language-plaintext highlighter-rouge">abstract</code>} property if your drawing software doesn’t easily let you underline text.</p>
+
+<h5 id="example-1">Example</h5>
+
+<p><img src="/assets/img/cs246/06-static.jpg" /></p>
+
+<hr />
+
+<h1 id="class-relationships">Class Relationships</h1>
+
+<p>There are four main types of class relationships: association, aggregation, composition, and generalization.</p>
+
+<h3 id="association">Association</h3>
+
+<p>Simplest form of a relationship between two classes is that of an association. Drawn as a solid line between the two classes in the UML diagram. Association lines may cross each other, but an optional “line hop” may be used to help avoid ambiguity.</p>
+
+<p>The association itself may have a name(optional). The name may be decorated with a solid triangle to help indicate in which direction the naming relationship is to be read.</p>
+
+<h5 id="association-ends">Association ends</h5>
+
+<p>Each end of the association may have:</p>
+
+<ul>
+  <li>name: equivalent to declaring an attribute in the class</li>
+  <li>navigation arrow: indicate that it is the holder of the information</li>
+  <li>associated multiplicitly</li>
+  <li>constraints such as order</li>
+</ul>
+
+<p><img src="/assets/img/cs246/04-association.jpg" /></p>
+
+<h3 id="aggregation">Aggregation</h3>
+
+<p>Form of association that describes a “whole-part” relationship where one is made up of the constituent part class. The end of the association with the aggregate is marked with a special symbol, open/hollow/white diamond.</p>
+
+<p>Only one end of the association may be marked as an aggregate. It is possible to decorate either end of the association with a navigation arrow, or multiplicites, or constraints.</p>
+
+<p>It is possible that the aggregation is shared i.e. Between one or more aggregates</p>
+
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>
