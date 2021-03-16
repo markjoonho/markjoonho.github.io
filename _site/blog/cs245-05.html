@@ -114,7 +114,7 @@
 
 <p class="post-metadata text-muted">
   08 March 2021 -  
-  <b>2 mins read time</b>
+  <b>6 mins read time</b>
 
   <br>Tags: 
     
@@ -164,9 +164,9 @@
 
 <h3 id="common-to-all-logical-symbols">Common to all: Logical symbols</h3>
 
-<p>Propositional connectives: \(\to, \and, \or, \neg\)</p>
+<p>Propositional connectives: \(\to, \land, \lor, \neg\)</p>
 
-<p>Quantifies: \(\forall, \some\)</p>
+<p>Quantifies: \(\forall, \exists\)</p>
 
 <p>Equality: =</p>
 
@@ -190,7 +190,7 @@
 
 <p>relation symbols \(\leq\) (R)</p>
 
-<p>\(f(x) = \forall y \forall z(g(y,z)=x \to y=x \or z=x)\) “X is a prime number”</p>
+<p>\(f(x) = \forall y \forall z(g(y,z)=x \to y=x \lor z=x)\) “X is a prime number”</p>
 
 <ol>
   <li>A language for set theory</li>
@@ -277,19 +277,275 @@
 
 <p>R(f(a,x), g(f(b,b), y))</p>
 
-<p>The set of WFF in a given Lnaguage L(given constants, functions, relations) I(atomic formulas, \(\{\and, \or, \to, \forall, \exist\}\))</p>
+<p>The set of WFF in a given Lnaguage L(given constants, functions, relations) I(atomic formulas, \(\{\land, \lor, \to, \forall, \exists\}\))</p>
 
 <hr />
 
 <h3 id="important-syntactic-notion-free-variable">Important syntactic notion: Free variable</h3>
 
-<p>We define by inuction the construction of the set of WFFs, F(\(\phi\)): The et of free variables of \(\phi\).</p>
+<p>We define by induction the construction of the set of WFFs, F(\(\phi\)): The et of free variables of \(\phi\).</p>
 
 <p>If \(\phi\) is atomic : F(\(\phi\)) = all variables occuring in \(\phi\)</p>
 
 <p>\(F(f(b,b) = g(x, f(b, y)))\) = \(\{x,y\}\)</p>
 
-<p>\(F(\phi_1 \and \phi_2) = F(\phi_1 \or \phi_2) = F(\phi_1 \to \phi_2) = F(\phi_1)\) U \(F(\phi_2)\)</p>
+<p>\(F(\phi_1 \land \phi_2) = F(\phi_1 \lor \phi_2) = F(\phi_1 \to \phi_2) = F(\phi_1)\) U \(F(\phi_2)\)</p>
+
+<hr />
+
+<h1 id="recall">Recall</h1>
+
+<ul>
+  <li>Logical symbols
+    <ul>
+      <li>brackets</li>
+      <li>connectives</li>
+      <li>quantifiers</li>
+      <li>equals</li>
+      <li>variables</li>
+    </ul>
+  </li>
+  <li>Language-dependent
+    <ul>
+      <li>constants</li>
+      <li>functions</li>
+      <li>relations</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="definition-terms">Definition: Terms</h3>
+
+<h5 id="iap">I(A,P)</h5>
+<ul>
+  <li>where A: all constant symbols and all variable symbols</li>
+  <li>where P: all function symbol (f)</li>
+</ul>
+
+<h3 id="definition-atomic-formulas">Definition: Atomic Formulas</h3>
+
+<p>\(\{R_i(t_1, ...t_k): R_i\) is a  k-arry relation, \(t_j\) are terms \((1\leq j \leq k) \}\)</p>
+
+<h3 id="well-formed-formulas">Well Formed Formulas</h3>
+
+<p>I(Atomic Formulas, Connectives and Quantifiers)</p>
+
+<hr />
+
+<h3 id="definition-sentence">Definition: Sentence</h3>
+
+<p>If \(\phi\) has no free variables \(\phi\) is “sentence”.</p>
+
+<p>Example: \(\forall x \forall y R(x,y)\)</p>
+
+<h3 id="definition">Definition</h3>
+
+<p>Given some (syntactical language), a “structure” consists of:</p>
+
+<ul>
+  <li>A universe \(U\) (domain), non-empty!</li>
+  <li>Give an element in \(U\) to each constant \(c\).</li>
+  <li>a mapping for each function (\(f_i\)): \(U^k \to U\) (\(f_i\) is k-array).</li>
+  <li>a mapping for each relation (\(R_i\)): \(U^k \to \{T,F\}\) (\(R_i\) is k-array).</li>
+</ul>
+
+<h5 id="example-number-theory-language">Example: Number theory language</h5>
+
+<h6 id="syntax">Syntax:</h6>
+<ul>
+  <li>constnat : a,b</li>
+  <li>function: f, g</li>
+  <li>relation: R</li>
+</ul>
+
+<h6 id="structure">Structure:</h6>
+<ul>
+  <li>\(U\) = \(mathbb_{N}\)</li>
+  <li>a = 0, b = 1</li>
+  <li>f(x, y) = x+y, g(x,y) = x*y</li>
+  <li>R(x,y) = T iff x \(\leq\) y</li>
+</ul>
+
+<hr />
+
+<h3 id="definition-assignment-function">Definition: Assignment Function</h3>
+
+<p>s: V \(\to\) \(U\)</p>
+
+<ul>
+  <li>V : variables ($$x_1, …, x_n, ..)</li>
+  <li>\(U\): domain</li>
+</ul>
+
+<p>Extend s to s’: T(terms) \(\to\) \(U\)</p>
+
+<h5 id="base-case">Base Case</h5>
+
+<p>We have t\(\in\) , either t is a constant, s’(t) = t or t is a variable, s’(t) = s(t).</p>
+
+<h5 id="inductive-step">Inductive Step</h5>
+
+<p>Let t = \(f_i(t_1, ..., t_k)\)</p>
+
+<p>then s’(t) = \(f(s'(t_1), .., s'(t_k))\)</p>
+
+<p>Extend s’ again to handle atomic formulas.</p>
+
+<p>\(\phi\) = \(R_i(t_1, ..., t_n)\)</p>
+
+<p>s’(\(\phi\)) = \(R_i(s'(t_1), .., s'(t_n))\)</p>
+
+<p>Extend s’ one last time to handle every WFF.</p>
+
+<ol>
+  <li>\(\phi\) = \((\neg\alpha)\)</li>
+</ol>
+
+<p>s’(\(\neg \alpha)\) = T iff s’(\(\alpha\)) = F.</p>
+
+<ol>
+  <li>
+    <p>\(\phi\) = \((\alpha \to \beta)\) (use truth table for every connectivities)</p>
+  </li>
+  <li>
+    <p>consider \(\phi = \forall x_i(\alpha)\)</p>
+  </li>
+</ol>
+
+<p>define \(s_i^d\)‘(x) = s’(x) if \(x_i \neq x\)</p>
+
+<p>\(s_i^d\)‘(x) = d if \(x_i = x\) where \(d\in U\)</p>
+
+<p>\(s'(\phi) = T\) iff for all \(d\in U\) we have \(s_i^d'(\alpha) = T\)</p>
+
+<hr />
+
+<h3 id="theorem">Theorem</h3>
+
+<p>Any WFF has a unique decomposition</p>
+
+<h3 id="corollary">Corollary</h3>
+
+<p>s’ is well defined</p>
+
+<hr />
+
+<p>Define a language for graph theory</p>
+
+<ul>
+  <li>syntax
+    <ul>
+      <li>constants be our vertices</li>
+      <li>no functions</li>
+      <li>R, P relations</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Structure</p>
+
+<p><img src="/assets/img/cs245/cs245-01.jpeg" /></p>
+
+<hr />
+
+<h3 id="semantics-for-fisrst-order-logic">Semantics for fisrst order logic</h3>
+
+<p>Given a Language L = &lt;\(R_1,...R_k, F_1, ..., F_l, a,.., a_p\)&gt; (relation, function, constant)</p>
+
+<p>Semantics for the first order logic over L is the rule that assigns T or F to every WFF.</p>
+
+<p>Need to fix:</p>
+
+<ul>
+  <li>A structure for L: a universe set and interpretations for the symbols of L</li>
+</ul>
+
+<h3 id="example-1">Example:</h3>
+
+<p>L = &lt;R, F(,), G(,), a, b&gt;</p>
+
+<p>\(M_1\) = &lt;N, \(\leq\), +, *, 0, 1&gt;</p>
+
+<p>\(\forall x \exists y (\neg (x = y)\land R(y,x))\) False in \(M_1\)</p>
+
+<p>R(x, y) cannot define!!!! THUS!!!</p>
+
+<ul>
+  <li>An assignmnet of variables to elements of the structure’s universe</li>
+</ul>
+
+<p>s: x = 7, y = 9 then \(M_1 \vDash R(x,y)\)</p>
+
+<p>x: x= 10, y = 1 then \(M_1 \nvDash R(x,y)\)</p>
+
+<hr />
+
+<h3 id="lemma">Lemma</h3>
+
+<p>Let \(\phi\) be a WFF in some language L and M a structure for L, then for every assignments \(s_1, s_2\) (to the universe of M) if, for every variable x that occurs free in \(\phi\), \(s_1(x) = s_w(x)\). Then \(M(s_1)\vDash \phi\) iff \(M(s_2)\vDash \phi\).</p>
+
+<h3 id="corollary-1">Corollary</h3>
+
+<p>If \(\phi\) is a sentence (namely no free variables) then for any \(s_1, s_2\), then \(M(s_1)\vDash \phi\) iff \(M(s_2)\vDash \phi\).</p>
+
+<p>Therefore, when we discuss truth values of sentences, we do not specify any assignments.</p>
+
+<h5 id="proof-of-the-lemma-by-generalized-induction-on-the-structure-of-phi">Proof of the Lemma: By generalized induction on the structure of \(\phi\)</h5>
+
+<p>Base Case: Atomic Formulas</p>
+
+<p>\(\phi = (t_1 = t_2)\) or \(\phi = R(x,y,a)\)</p>
+
+<p>(Note that for every term t, if \(s_1,s_2\) agree on the variables in t, then \(s_1\)‘(t) = \(s_2\)‘(t))</p>
+
+<p><img src="/assets/img/cs245/cs245.jpeg" /></p>
+
+<p>\(M(s) \vDash R(t_1, t_2)\) iff s’(\(t_1\)), s’(\(t_2\)) \(\in R^M\).</p>
+
+<p>Induction Step:</p>
+
+<p>\(\phi\) = \(\phi_1 \to \phi_2\) (other connectives)
+\(\phhi\) = \(\forall x \phi\)’</p>
+
+<hr />
+
+<h3 id="semantic-notions">Semantic Notions</h3>
+
+<ol>
+  <li>\(\phi\) is a logical truth if for every structure for the language of \(\phi\), and every assignmnet s that structure \(M(s) \vDash \phi\).</li>
+</ol>
+
+<h5 id="examples-1">Examples:</h5>
+
+<p>\(\phi\) = \(\forall x Q(x)\to Q(y)\)</p>
+
+<p>(where Q is a one place relation symbol)</p>
+
+<h5 id="proof">Proof:</h5>
+
+<p>Assume that for a given M, s, \(M(s)\nvdash \phi\).</p>
+
+<p>Then by truth table of \(\to\), it must be the case that \(M(s)\vDash Q(y)\), s’(Q(y)) = F (s’(y) does not satisfy \(Q^M\)).</p>
+
+<p>Check \(M(s) \vDash \forall x Q(x)\). NO!</p>
+
+<p>M(s) \(\vDash \forall x Q(x)\) iff for every d \(\in U\).</p>
+
+<p>Contradiction!</p>
+
+<ol>
+  <li>\(\sum\) logically implies \(\phi\) if for every M, s, that make every member of \(\sum\) get T, M(s) \(\vDash \phi\).</li>
+</ol>
+
+<h5 id="lemma-1">lemma:</h5>
+
+<p>For every \(\sum, \alpha, \beta\), \(\sum\) U \(\{\alpha\} \vDash \beta\) iff \(\sum \vDash (\alpha \to \beta)\).</p>
+
+<h5 id="corollary-2">Corollary:</h5>
+
+<p>\(\{\exists y \forall x R(x,y)\} \vDash \forall x \exists y R(x,y)\).</p>
+
+<p>\(M(s) \vDash \phi\) stands for s’(\(\phi\)) = T in M.</p>
 
 
 

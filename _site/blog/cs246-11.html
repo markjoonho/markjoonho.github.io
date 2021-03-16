@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta
+    property="og:title"
+    content="06-02. Inheritance and Polymorphism for CS246"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>
+    06-02. Inheritance and Polymorphism for CS246
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"
+    async
+  ></script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>06-02. Inheritance and Polymorphism for CS246</b></h1>
+
+<p class="post-metadata text-muted">
+  09 March 2021 -  
+  <b>26 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-246-object-oriented-software-development">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 246 Object-Oriented Software Development</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
+
+<hr />
+
+<p>Contents:</p>
+
+<ul>
+  <li><a href="#inheritance-example">Inheritance example</a></li>
+  <li><a href="#arrays-of-polymorphic-objects">Arrays of polymorphic objects</a></li>
+  <li><a href="#polymorphism-and-destructors">Polymorphism and destructors</a></li>
+  <li><a href="#abstract-classes">Abstract classes</a></li>
+  <li><a href="#inheritance-and-copy-move-operations">Inheritance and copy move operations</a></li>
+</ul>
+
+<hr />
+
+<h1 id="inheritance-example">Inheritance Example</h1>
+
+<p>We’d like to track our book collection. We have developed a collection of classes for this purpose. Here is the UML class model:</p>
+
+<p><img src="/assets/img/cs246/01-Book-Text-Comic-V1.jpg" /></p>
+
+<p>The respective class header files look like the following (assume the appropriate header guards and inclusion of the <code class="language-plaintext highlighter-rouge">&lt;string&gt;</code> library):</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Book</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">title</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">author</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">length</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">Book</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">title</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">author</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getTitle</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getAuthor</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">getLength</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">isHeavy</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Text</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">title</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">author</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">length</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">topic</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">Text</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">title</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">author</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">topic</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getAuthor</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">getLength</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">isHeavy</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getTopic</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Comic</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">title</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">author</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">length</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">hero</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">Comic</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">title</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">author</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hero</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getAuthor</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">getLength</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">isHeavy</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getHero</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>The problem then becomes “how do we store our actual books, texts, and comics”?</p>
+
+<p>Ideally, we’d like to keep them all in a single array (or other collection type) so that we can iterate/traverse the entire collection in one loop, without having to worry about the underlying types. There exists three techniques:</p>
+
+<ol>
+  <li>C unions</li>
+  <li>C void pointers</li>
+  <li>C++ inheritance</li>
+</ol>
+
+<h3 id="c-unions">C unions</h3>
+
+<p>C provides a <code class="language-plaintext highlighter-rouge">union</code> type declaration that is also understood by C++ for backwards compatibility reasons.</p>
+
+<p>It can contain multiple data fields of potentially different sizes; however, only one data field will be available at any given moment.</p>
+
+<p><code class="language-plaintext highlighter-rouge">union</code> is allocated the number of bytes required by the largest data field in the <code class="language-plaintext highlighter-rouge">union</code>. Example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="k">union</span> <span class="n">ExampleUnion</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+  <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+  <span class="kt">float</span> <span class="n">f</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">union</span> <span class="n">ExampleUnion</span> <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">,</span> <span class="n">e3</span><span class="p">;</span>
+  <span class="n">e1</span><span class="p">.</span><span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">e2</span><span class="p">.</span><span class="n">c</span> <span class="o">=</span> <span class="sc">'x'</span><span class="p">;</span>
+    <span class="n">e3</span><span class="p">.</span><span class="n">f</span> <span class="o">=</span> <span class="mf">3.14159</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"sizeof(e1) = "</span> <span class="o">&lt;&lt;</span><span class="k">sizeof</span><span class="p">(</span><span class="n">e1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">"; e1.i = "</span> <span class="o">&lt;&lt;</span> <span class="n">e1</span><span class="p">.</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">"sizeof(e2) = "</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">e2</span><span class="p">)</span> <span class="o">&lt;&lt;</span><span class="s">"; e2.c = "</span> <span class="o">&lt;&lt;</span> <span class="n">e2</span><span class="p">.</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">"sizeof(e3) = "</span> <span class="o">&lt;&lt;</span><span class="k">sizeof</span><span class="p">(</span><span class="n">e3</span><span class="p">)</span> <span class="o">&lt;&lt;</span><span class="s">"; e3.f = "</span> <span class="o">&lt;&lt;</span><span class="n">e3</span><span class="p">.</span><span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"e1.c = "</span> <span class="o">&lt;&lt;</span> <span class="n">e1</span><span class="p">.</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="s">" ; e1.f = "</span><span class="o">&lt;&lt;</span> <span class="n">e1</span><span class="p">.</span><span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">"e2.i = "</span> <span class="o">&lt;&lt;</span> <span class="n">e2</span><span class="p">.</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">"; e2.f = "</span> <span class="o">&lt;&lt;</span> <span class="n">e2</span><span class="p">.</span><span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">"e3.i = "</span> <span class="o">&lt;&lt;</span> <span class="mf">3.</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">"; e3.c = "</span> <span class="o">&lt;&lt;</span> <span class="n">e3</span><span class="p">.</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This program compiles and runs. Each of <code class="language-plaintext highlighter-rouge">e1</code>, <code class="language-plaintext highlighter-rouge">e2</code>, and <code class="language-plaintext highlighter-rouge">e3</code> is exactly 4 bytes long, and we can access the value stored in each respective variable.</p>
+
+<blockquote>
+  <p>We can also reinterpret the stored values by accessing them the other fields.(not always successful)</p>
+</blockquote>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sizeof(e1) = 4; e1.i = -1
+sizeof(e2) = 4; e2.c = x
+sizeof(e3) = 4; e3.f = 3.14159
+e1.c = ÿ ; e1.f = -nan
+e2.i = 120; e2.f = 1.68156e-43
+e3.i = 1078530000; e3.c = Ð
+</code></pre></div></div>
+
+<p>This means that if we want to use <code class="language-plaintext highlighter-rouge">union</code>, we have to either maintain a parallel data structure that keeps track of which field was used for our corresponding <code class="language-plaintext highlighter-rouge">union</code> variable, or we have to wrap the <code class="language-plaintext highlighter-rouge">union</code> in a <code class="language-plaintext highlighter-rouge">struct</code>(or <code class="language-plaintext highlighter-rouge">class</code>) that uses a data field to remember which field of the <code class="language-plaintext highlighter-rouge">union</code> was used for that particular instance.</p>
+
+<h3 id="c-void-pointers">C void pointers</h3>
+
+<p>Array of pointers to the type void (<code class="language-plaintext highlighter-rouge">void*</code>). Every element that we would want to store could then have its address converted from a pointer of the apporpriate type to a (`void*).</p>
+
+<blockquote>
+  <p>Once again, we would need a parallel data structure or a wrapper to remember the original value’s type information.</p>
+</blockquote>
+
+<p>Example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="k">struct</span> <span class="nc">Element</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="o">*</span> <span class="n">data</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">dataType</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Element</span> <span class="n">elems</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+    <span class="kt">int</span> <span class="o">*</span> <span class="n">iptr</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span> <span class="n">cptr</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="o">*</span> <span class="n">fptr</span><span class="p">;</span>
+
+    <span class="n">elems</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="k">new</span> <span class="kt">int</span><span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span>
+    <span class="n">elems</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">dataType</span> <span class="o">=</span> <span class="sc">'i'</span><span class="p">;</span>
+    <span class="n">elems</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="k">new</span> <span class="kt">char</span><span class="p">{</span><span class="sc">'x'</span><span class="p">};</span>
+    <span class="n">elems</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">dataType</span> <span class="o">=</span> <span class="sc">'c'</span><span class="p">;</span>
+    <span class="n">elems</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="k">new</span> <span class="kt">float</span><span class="p">{</span><span class="mf">3.14159</span><span class="p">};</span>
+    <span class="n">elems</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">dataType</span> <span class="o">=</span> <span class="sc">'f'</span><span class="p">;</span>
+    
+    <span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">switch</span><span class="p">(</span> <span class="n">elems</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">dataType</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="sc">'i'</span><span class="p">:</span>
+                <span class="n">iptr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">elems</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">;</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">iptr</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="sc">'f'</span> <span class="p">:</span>
+                <span class="n">fptr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span> <span class="n">elems</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">;</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">fptr</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="sc">'c'</span><span class="p">:</span>
+                <span class="n">cptr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">elems</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">;</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">cptr</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span> <span class="c1">// switch</span>
+    <span class="p">}</span> <span class="c1">// for</span>
+<span class="p">}</span> <span class="c1">// main</span>
+</code></pre></div></div>
+
+<p>This example relies upon the old C method of casting types. This is <strong>not</strong> the right way of casting types in C++, and should be avoided!!!</p>
+
+<p>We will see the C++ casting techniques later.</p>
+
+<h3 id="c-inheritance">C++ inheritance</h3>
+
+<h5 id="version-1">Version 1</h5>
+
+<p>We are going to rely upon the C++ notion of inheritance and recognize that a <code class="language-plaintext highlighter-rouge">Text</code> is a <code class="language-plaintext highlighter-rouge">Book</code>, of sorts, as is the <code class="language-plaintext highlighter-rouge">Comic</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Book</code> then become our base class(parent or superclass). <code class="language-plaintext highlighter-rouge">Text</code> and <code class="language-plaintext highlighter-rouge">Comic</code> becomes our derived class(child or subclass).</p>
+
+<p>Inheritance let us use the information and methods defined in the class from which we inheit, which lets us remove duplicate code and data.</p>
+
+<p>It reduces the number of places we have to change if we change implementations.</p>
+
+<p>The respective class header files are then changed the looke like the following:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Book</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">title</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">author</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">length</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">Book</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">title</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">author</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getTitle</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getAuthor</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">getLength</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">isHeavy</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Text</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Book</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">topic</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">Text</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">title</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">author</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">topic</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getTopic</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Comic</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Book</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">hero</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">Comic</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">title</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">author</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hero</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getHero</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>The keywords <code class="language-plaintext highlighter-rouge">: public Book</code> after the class name tell us that the class is inherit publicly from <code class="language-plaintext highlighter-rouge">Book</code>.</p>
+
+<blockquote>
+  <p>We can also inherit using private and protected, but we don’t cover this topic in CS246.</p>
+</blockquote>
+
+<p><img src="/assets/img/cs246/02-Book-Text-Comic-V2.jpg" /></p>
+
+<p>The next problem to overcome is how to initialize a <code class="language-plaintext highlighter-rouge">Text</code> or <code class="language-plaintext highlighter-rouge">Comic</code> object. One temptation is to just use the MIL as normal:</p>
+
+<p>``c++
+Text::Text(const std::string &amp;title, const std::string &amp;author, int length, const std::string &amp;topic)
+    : title{title}, author{author}, length{length}, topic{topic} {}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+This won't compile for two reasons:
+
+1. The data fields `author`, `title`, and `length` are `private` to the `Book` class by default and thus not directly accessible to a `Text` or `Comic` object.
+2. We're not invoking the `Book` constructor to initialize its fields, and it doesn't have a default constructor.
+
+Thus, our steps for object creation now consist of:
+
+1. allocate space for the object
+2. invoke the superclass constructor to build the superclass portion of the object (NEW ADDED!)
+3. construct the fields
+4. run the constructor body
+
+Thus, our correct version is:
+
+```c++
+Text::Text(const std::string &amp;title, const std::string &amp;author, int length, const std::string &amp;topic)
+    : Book{title, author, length}, topic{topic} {}
+</code></pre></div></div>
+
+<p>Notice that right now, all of the subclasses are using the inherited <code class="language-plaintext highlighter-rouge">isHeavy</code> method from <code class="language-plaintext highlighter-rouge">Book</code>. We will change that next since our definition of what constitutes heaviness changes based upon the class!</p>
+
+<h5 id="version-2">Version 2</h5>
+
+<p>There are good reasons to keep superclass fields inaccessible to subclass; but, if you want to give only the derived classes acces, you can declare the data fields and/or methods as <code class="language-plaintext highlighter-rouge">protected</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Book</code> declaration:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Book</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">title</span><span class="p">,</span> <span class="n">author</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">length</span><span class="p">;</span>
+ <span class="nl">protected:</span>
+    <span class="kt">int</span> <span class="n">getLength</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+ <span class="nl">public:</span>
+    <span class="n">Book</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">title</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">author</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getTitle</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getAuthor</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">isHeavy</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>In this version, we’ve made the <code class="language-plaintext highlighter-rouge">getLength</code> method <code class="language-plaintext highlighter-rouge">protected</code> since it will only be called by the <code class="language-plaintext highlighter-rouge">isHeavy</code> method. This way, only the base class and the derived classes can call it.</p>
+
+<p>We generally don’t want to make the data fields <code class="language-plaintext highlighter-rouge">protected</code>, since then we have no control over how the information can be changed by the subclasses. Instead, we provide <code class="language-plaintext highlighter-rouge">protected</code> methods to control how the derived classes can manipulate the <code class="language-plaintext highlighter-rouge">private</code> information.</p>
+
+<p>Our end goal is to find a way to write <code class="language-plaintext highlighter-rouge">isHeavy</code> so that we can correctly determine if the item is heavy without needing to know what the underlying type of the object is.</p>
+
+<p>What is heavy from our example?</p>
+
+<ul>
+  <li>a book over 200 pages</li>
+  <li>a text over 400 pages</li>
+  <li>a comic over 30 pages</li>
+</ul>
+
+<p>Implementation for the various classes:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="n">Book</span><span class="o">::</span><span class="n">isHeavy</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">length</span> <span class="o">&gt;</span> <span class="mi">200</span><span class="p">;</span> <span class="p">}</span>
+<span class="kt">bool</span> <span class="n">Text</span><span class="o">::</span><span class="n">isHeavy</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">getLength</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">400</span><span class="p">;</span> <span class="p">}</span>
+<span class="kt">bool</span> <span class="n">Comic</span><span class="o">::</span><span class="n">isHeavy</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">getLength</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">;</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>It works fine! However there exists some problem from below code!</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Comic</span> <span class="n">c</span><span class="p">{</span><span class="s">"Robin Rescues Batman Twice"</span><span class="p">,</span> <span class="s">"Robin"</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="s">"Robin"</span><span class="p">};</span>
+
+<span class="n">Book</span> <span class="n">b</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"The comic book: "</span> <span class="o">&lt;&lt;</span> <span class="n">c</span><span class="p">.</span><span class="n">getTitle</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"; "</span> <span class="o">&lt;&lt;</span> <span class="n">c</span><span class="p">.</span><span class="n">getAuthor</span><span class="p">()</span>
+     <span class="o">&lt;&lt;</span> <span class="s">"; "</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">isHeavy</span><span class="p">()</span> <span class="o">?</span> <span class="s">"heavy"</span> <span class="o">:</span> <span class="s">"not heavy"</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"The book: "</span> <span class="o">&lt;&lt;</span> <span class="n">b</span><span class="p">.</span><span class="n">getTitle</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"; "</span> <span class="o">&lt;&lt;</span> <span class="n">b</span><span class="p">.</span><span class="n">getAuthor</span><span class="p">()</span>
+     <span class="o">&lt;&lt;</span> <span class="s">"; "</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">isHeavy</span><span class="p">()</span> <span class="o">?</span> <span class="s">"heavy"</span> <span class="o">:</span> <span class="s">"not heavy"</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The comic book: Robin Rescues Batman Twice; Robin; heavy
+The book: Robin Rescues Batman Twice; Robin; not heavy
+</code></pre></div></div>
+
+<p>The first line is correct, since <code class="language-plaintext highlighter-rouge">c</code> is heavy for a <code class="language-plaintext highlighter-rouge">Comic</code>; however, the second line treated <code class="language-plaintext highlighter-rouge">b</code> as not being heavy since it ran <code class="language-plaintext highlighter-rouge">Book::isHeavy</code>.</p>
+
+<p>When we initialized the object <code class="language-plaintext highlighter-rouge">b</code> by copying in the contents of <code class="language-plaintext highlighter-rouge">c</code>, we’ve performed an action called object slicing. It might help us understand the problem to think of the <code class="language-plaintext highlighter-rouge">Comic</code> object <code class="language-plaintext highlighter-rouge">c</code> as having an innter <code class="language-plaintext highlighter-rouge">Book</code> core, with an outer layer of whatever makes it a <code class="language-plaintext highlighter-rouge">Comic</code>.</p>
+
+<p><img src="/assets/img/cs246/03-object-slicing.jpg" /></p>
+
+<p>When we copy(whether by assignment or constructor), we’re effectively trying to squeeze a larger object into a smaller amount of memory. We lose the information that makes <code class="language-plaintext highlighter-rouge">c</code> a <code class="language-plaintext highlighter-rouge">Comic</code>, and <code class="language-plaintext highlighter-rouge">b</code> only sees the <code class="language-plaintext highlighter-rouge">Book</code> portion. So we can’t successfully store objects of our subclass types into variables of the superclass type.</p>
+
+<p>What happens if we use pointers instead?</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Comic</span> <span class="o">*</span><span class="n">pc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Comic</span><span class="p">{</span><span class="s">"Spiderman Unabridged"</span><span class="p">,</span> <span class="s">"Peter Parker"</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s">"Spiderman"</span><span class="p">};</span>
+<span class="n">Book</span> <span class="o">*</span><span class="n">pb</span> <span class="o">=</span> <span class="n">pc</span><span class="p">;</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"The comic book ptr: "</span> <span class="o">&lt;&lt;</span> <span class="n">pc</span><span class="o">-&gt;</span><span class="n">getTitle</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"; "</span> <span class="o">&lt;&lt;</span> <span class="n">pc</span><span class="o">-&gt;</span><span class="n">getAuthor</span><span class="p">()</span>
+     <span class="o">&lt;&lt;</span> <span class="s">"; "</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">pc</span><span class="o">-&gt;</span><span class="n">isHeavy</span><span class="p">()</span> <span class="o">?</span> <span class="s">"heavy"</span> <span class="o">:</span> <span class="s">"not heavy"</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"The book ptr: "</span> <span class="o">&lt;&lt;</span> <span class="n">pb</span><span class="o">-&gt;</span><span class="n">getTitle</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"; "</span> <span class="o">&lt;&lt;</span> <span class="n">pb</span><span class="o">-&gt;</span><span class="n">getAuthor</span><span class="p">()</span>
+     <span class="o">&lt;&lt;</span> <span class="s">"; "</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">pb</span><span class="o">-&gt;</span><span class="n">isHeavy</span><span class="p">()</span> <span class="o">?</span> <span class="s">"heavy"</span> <span class="o">:</span> <span class="s">"not heavy"</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>It prevents the object slicing, but still calculate it as a book! Not as a Comic Book!</p>
+
+<p>We should fix it!</p>
+
+<h5 id="version-3">Version 3</h5>
+
+<p>In C++ lets us force the program to dynamically examine the actual type of the pointed to object rather than rely upon the declared type of pointer consists of declaring the <code class="language-plaintext highlighter-rouge">isHeavy</code> method to be virtual in the parent class.</p>
+
+<blockquote>
+  <p>Even if we do not repeat the keyword <code class="language-plaintext highlighter-rouge">virtual</code> on the method signature in the subclass, it is still considered to be <code class="language-plaintext highlighter-rouge">virtual</code></p>
+</blockquote>
+
+<p>When we have <code class="language-plaintext highlighter-rouge">virtual</code> method in the parent class, we say that the method is overridden.</p>
+
+<p><img src="/assets/img/cs246/04-Book-Text-Comic-V3.jpg" /></p>
+
+<p>The respective class header files are then changed to look like the following:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Book</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">author</span><span class="p">,</span> <span class="n">title</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">length</span><span class="p">;</span>
+  <span class="nl">protected:</span>
+    <span class="kt">int</span> <span class="n">getLength</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+ <span class="nl">public:</span>
+    <span class="n">Book</span><span class="p">(</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">author</span><span class="p">,</span> 
+      <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">title</span><span class="p">,</span> 
+      <span class="kt">int</span> <span class="n">length</span> <span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getTitle</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getAuthor</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>    
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">isHeavy</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Text</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Book</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">topic</span><span class="p">;</span>
+  <span class="nl">public:</span>
+    <span class="n">Text</span><span class="p">(</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">author</span><span class="p">,</span> 
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">title</span><span class="p">,</span> 
+        <span class="kt">int</span> <span class="n">length</span><span class="p">,</span> 
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">topic</span> <span class="p">);</span>
+    <span class="kt">bool</span> <span class="n">isHeavy</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getTopic</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Comic</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Book</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">hero</span><span class="p">;</span>
+  <span class="nl">public:</span>
+    <span class="n">Comic</span><span class="p">(</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">author</span><span class="p">,</span> 
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">title</span><span class="p">,</span> 
+        <span class="kt">int</span> <span class="n">length</span><span class="p">,</span> 
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hero</span> <span class="p">);</span>
+    <span class="kt">bool</span> <span class="n">isHeavy</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getHero</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>It would be perfectly ine to have instead declared <code class="language-plaintext highlighter-rouge">isHeavy</code> in the child class as:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">virtual</span> <span class="kt">bool</span> <span class="n">isHeavy</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>We leave the keywords <code class="language-plaintext highlighter-rouge">virtual</code> and <code class="language-plaintext highlighter-rouge">override</code> off the implementations.</p>
+
+<p>When we compile and run using the same pointer example from the previous version we end up with the correct output for both versions:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The comic book ptr: Spiderman Unabridged; Peter Parker; heavy
+The book ptr: Spiderman Unabridged; Peter Parker; heavy
+</code></pre></div></div>
+
+<h5 id="version-4">Version 4</h5>
+
+<p>Using pointers or references let us hold objects of either the parent or child types wihout slicing them, and uses that to build our container of books that can be either instances of <code class="language-plaintext highlighter-rouge">Book</code>, <code class="language-plaintext highlighter-rouge">Comic</code>. or <code class="language-plaintext highlighter-rouge">Text</code>.</p>
+
+<p>The ability to accommodate multiple types under one abstraction is called polymorphism. It is one of the chief benefits to inheritance.</p>
+
+<p>This is also why a function <code class="language-plaintext highlighter-rouge">void f(istream &amp; in);</code> can be passed an <code class="language-plaintext highlighter-rouge">ifstream</code> by reference instead of in <code class="language-plaintext highlighter-rouge">istream</code> (<code class="language-plaintext highlighter-rouge">ifstream</code> is a subclass of <code class="language-plaintext highlighter-rouge">istream</code>).</p>
+
+<p>Now let’s add new method!</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// My favourite books are short books.</span>
+<span class="kt">bool</span> <span class="n">Book</span><span class="o">::</span><span class="n">favourite</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="c1">// My favourite comics are Superman comics.</span>
+<span class="kt">bool</span> <span class="n">Comic</span><span class="o">::</span><span class="n">favourite</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hero</span> <span class="o">==</span> <span class="s">"Superman"</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="c1">// My favourite textbooks are C++ books</span>
+<span class="kt">bool</span> <span class="n">Text</span><span class="o">::</span><span class="n">favourite</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">topic</span> <span class="o">==</span> <span class="s">"C++"</span><span class="p">;</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now, our <code class="language-plaintext highlighter-rouge">main</code> routine creates an array of <code class="language-plaintext highlighter-rouge">Book*</code>, initialized various books, texts, and comics.</p>
+
+<p>Then calls the <code class="language-plaintext highlighter-rouge">printMyFavourites</code> function, that iterates over the array and calls <code class="language-plaintext highlighter-rouge">favourite</code> on each object.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Polymorphism in action.</span>
+<span class="kt">void</span> <span class="nf">printMyFavourites</span><span class="p">(</span><span class="n">Book</span> <span class="o">*</span><span class="n">myBooks</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">numBooks</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numBooks</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">myBooks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">favourite</span><span class="p">())</span> <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">myBooks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">getTitle</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">Book</span><span class="o">*</span> <span class="n">collection</span><span class="p">[]</span> <span class="p">{</span>                            <span class="c1">// polymorphism</span>
+   <span class="k">new</span> <span class="n">Book</span><span class="p">{</span><span class="s">"War and Peace"</span><span class="p">,</span> <span class="s">"Tolstoy"</span><span class="p">,</span> <span class="mi">5000</span><span class="p">},</span>
+   <span class="k">new</span> <span class="n">Book</span><span class="p">{</span><span class="s">"Peter Rabbit"</span><span class="p">,</span> <span class="s">"Potter"</span><span class="p">,</span> <span class="mi">50</span><span class="p">},</span>
+   <span class="k">new</span> <span class="n">Text</span><span class="p">{</span><span class="s">"Programming for Beginners"</span><span class="p">,</span> <span class="s">"??"</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="s">"BASIC"</span><span class="p">},</span>
+   <span class="k">new</span> <span class="n">Text</span><span class="p">{</span><span class="s">"Programming for Big Kids"</span><span class="p">,</span> <span class="s">"??"</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="s">"C++"</span><span class="p">},</span>
+   <span class="k">new</span> <span class="n">Comic</span><span class="p">{</span><span class="s">"Aquaman Swims Again"</span><span class="p">,</span> <span class="s">"??"</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s">"Aquaman"</span><span class="p">},</span>
+   <span class="k">new</span> <span class="n">Comic</span><span class="p">{</span><span class="s">"Clark Kent Loses His Glasses"</span><span class="p">,</span> <span class="s">"??"</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s">"Superman"</span><span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="n">printMyFavourites</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="mi">6</span><span class="p">);</span>               <span class="c1">// print</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">delete</span> <span class="n">collection</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="c1">// free</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="arrays-of-polymorphic-objects">Arrays of Polymorphic Objects</h1>
+
+<p>If you want to use polymorphism in combination with arrays (or any other container type), it turns out that this will only work correctly if your array holds pointers.</p>
+
+<p>Following is small example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="k">class</span> <span class="nc">One</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+  <span class="nl">public:</span>
+    <span class="n">One</span><span class="p">(</span> <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">)</span> <span class="o">:</span> <span class="n">x</span><span class="p">{</span><span class="n">x</span><span class="p">},</span> <span class="n">y</span><span class="p">{</span><span class="n">y</span><span class="p">}</span> <span class="p">{}</span>
+    <span class="kt">int</span> <span class="n">getX</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>  
+    <span class="kt">int</span> <span class="n">getY</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">y</span><span class="p">;</span> <span class="p">}</span>  
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Two</span> <span class="o">:</span> <span class="k">public</span> <span class="n">One</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">z</span><span class="p">;</span>
+  <span class="nl">public:</span>
+    <span class="n">Two</span><span class="p">(</span> <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">)</span> <span class="o">:</span> <span class="n">One</span><span class="p">{</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">},</span> <span class="n">z</span><span class="p">{</span><span class="n">z</span><span class="p">}</span> <span class="p">{}</span>
+    <span class="kt">int</span> <span class="n">getZ</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">z</span><span class="p">;</span> <span class="p">}</span> 
+<span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">out</span><span class="p">,</span> <span class="k">const</span> <span class="n">Two</span> <span class="o">&amp;</span> <span class="n">obj</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">"("</span> <span class="o">&lt;&lt;</span> <span class="n">obj</span><span class="p">.</span><span class="n">getX</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">","</span> <span class="o">&lt;&lt;</span> <span class="n">obj</span><span class="p">.</span><span class="n">getY</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">","</span> <span class="o">&lt;&lt;</span> <span class="n">obj</span><span class="p">.</span><span class="n">getZ</span><span class="p">()</span>  <span class="o">&lt;&lt;</span> <span class="s">")"</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">f</span><span class="p">(</span> <span class="n">One</span> <span class="o">*</span> <span class="n">a</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">One</span><span class="p">{</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">};</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">One</span><span class="p">{</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">};</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Two</span> <span class="n">myarray</span><span class="p">[</span><span class="mi">2</span><span class="p">]{</span> <span class="n">Two</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span> <span class="n">Two</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">}</span> <span class="p">};</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span><span class="n">myarray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">f</span><span class="p">(</span> <span class="n">myarray</span> <span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">myarray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>When we compile and run this, output is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(0,1,2)
+(3,4,5)
+(6,7,8)
+(9,4,5)
+</code></pre></div></div>
+
+<p>The procedure <code class="language-plaintext highlighter-rouge">f</code> received the array as being an array of <code class="language-plaintext highlighter-rouge">One</code> objects. When it overwrote the contents of what it thought were two objects of type <code class="language-plaintext highlighter-rouge">One</code>, it over-writes only part of the second object. Our data is misaligned!</p>
+
+<blockquote>
+  <p>Never use an array of objects Polymorphically!</p>
+</blockquote>
+
+<blockquote>
+  <p>If you want a polymorphic array, use an array of pointers.</p>
+</blockquote>
+
+<h1 id="polymorphism-and-destructors">Polymorphism and Destructors</h1>
+
+<p>Using Polymorphism in combination with dynamic memory allocation poses a special problem.</p>
+
+<p>let’s consider a small example to illustrate the problem.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Memory Leak Exists!!!</span>
+<span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="k">class</span> <span class="nc">X</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="o">*</span><span class="n">x</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">X</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span><span class="o">:</span> <span class="n">x</span><span class="p">{</span><span class="k">new</span> <span class="kt">int</span> <span class="p">[</span><span class="n">n</span><span class="p">]}</span> <span class="p">{}</span>
+  <span class="o">~</span><span class="n">X</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="p">[]</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Y</span><span class="o">:</span> <span class="k">public</span> <span class="n">X</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="o">*</span><span class="n">y</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">Y</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">m</span><span class="p">)</span><span class="o">:</span> <span class="n">X</span><span class="p">{</span><span class="n">n</span><span class="p">},</span> <span class="n">y</span><span class="p">{</span><span class="k">new</span> <span class="kt">int</span> <span class="p">[</span><span class="n">m</span><span class="p">]}</span> <span class="p">{}</span>
+  <span class="o">~</span><span class="n">Y</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="p">[]</span> <span class="n">y</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Run with valgrind</span>
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="n">X</span> <span class="n">x</span><span class="p">{</span><span class="mi">5</span><span class="p">};</span>
+  <span class="n">Y</span> <span class="n">y</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">};</span>
+
+  <span class="n">X</span> <span class="o">*</span><span class="n">xp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Y</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">};</span>
+
+  <span class="k">delete</span> <span class="n">xp</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Each class in the inheritance hierarchy dynamically allocates an array and has defined a destructor to free the array. However, it creates memory-leak!</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Now it works!</span>
+<span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="k">class</span> <span class="nc">X</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="o">*</span><span class="n">x</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">X</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span><span class="o">:</span> <span class="n">x</span><span class="p">{</span><span class="k">new</span> <span class="kt">int</span> <span class="p">[</span><span class="n">n</span><span class="p">]}</span> <span class="p">{}</span>
+  <span class="k">virtual</span> <span class="o">~</span><span class="n">X</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="p">[]</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Y</span><span class="o">:</span> <span class="k">public</span> <span class="n">X</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="o">*</span><span class="n">y</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">Y</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">m</span><span class="p">)</span><span class="o">:</span> <span class="n">X</span><span class="p">{</span><span class="n">n</span><span class="p">},</span> <span class="n">y</span><span class="p">{</span><span class="k">new</span> <span class="kt">int</span> <span class="p">[</span><span class="n">m</span><span class="p">]}</span> <span class="p">{}</span>
+  <span class="k">virtual</span> <span class="o">~</span><span class="n">Y</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="p">[]</span> <span class="n">y</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Run with valgrind</span>
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="n">X</span> <span class="n">x</span><span class="p">{</span><span class="mi">5</span><span class="p">};</span>
+  <span class="n">Y</span> <span class="n">y</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">};</span>
+
+  <span class="n">X</span> <span class="o">*</span><span class="n">xp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Y</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">};</span>
+
+  <span class="k">delete</span> <span class="n">xp</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Always make your destructor <code class="language-plaintext highlighter-rouge">virtual</code>, even if they do nothing!</p>
+</blockquote>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

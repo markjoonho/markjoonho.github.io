@@ -114,7 +114,7 @@
 
 <p class="post-metadata text-muted">
   08 March 2021 -  
-  <b>7 mins read time</b>
+  <b>9 mins read time</b>
 
   <br>Tags: 
     
@@ -377,8 +377,82 @@ size : Area = (100, 100)
 
 <p>Only one end of the association may be marked as an aggregate. It is possible to decorate either end of the association with a navigation arrow, or multiplicites, or constraints.</p>
 
-<p>It is possible that the aggregation is shared i.e. Between one or more aggregates</p>
+<p>It is possible that the aggregation is shared i.e. Between one or more aggregates. Aggregate may or may not be responsible for destroying the parts.</p>
 
+<p>“Has-A” relationship, where if A has a B, typically:</p>
+
+<ul>
+  <li>B exists indpendently outside of A</li>
+  <li>If A is destroyed, B lives on</li>
+  <li>If A is copied, B is not deep copied i.e. perform a shallow copy and B is shared</li>
+</ul>
+
+<p>For example, student may belong to zero or more clubs and exists independently of the clubs. A club recognized by the UW Federation of Students needs at least four students to be a part of it, one each to take the roles of president, vice president, secretary, and treasurer.</p>
+
+<p><img src="/assets/img/cs246/07-aggregation.jpg" /></p>
+
+<p>This is usually implemented via pointers or reference fields.</p>
+
+<h3 id="composition">Composition</h3>
+
+<p>Composition is a stricter form of aggregation. Once a “part” is joined to a “whole”, it may not be shared with any other object.</p>
+
+<p>The whole is also responsible for destroying all of its component part when it is destroyed.</p>
+
+<p>This is described as an “Owns-A” relationship, where A owns a B:</p>
+
+<ul>
+  <li>B has no identity or independent existence outside of A</li>
+  <li>If A is destroyed, B is destroyed</li>
+  <li>If A is copied, then B is copied i.e. perform a deep copy</li>
+</ul>
+
+<p>Owner has a implicit multiplicity of 1.</p>
+
+<blockquote>
+  <p>owner end of the association is marked with a solid, black diamond.</p>
+</blockquote>
+
+<p>An example of composition relationship is that of a Point to a Polygon or a Circle. An individual Point object may be part of an object of either type, but not part of both simulatneously.</p>
+
+<p><img src="/assets/img/cs246/08-composition.jpg" /></p>
+
+<p>Thi is usually implemented by a composition of classes. For example, class <code class="language-plaintext highlighter-rouge">Basis</code> is composed of two <code class="language-plaintext highlighter-rouge">Vec</code> objects:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Vec</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">Vec</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="n">getX</span><span class="p">();</span>
+  <span class="kt">int</span> <span class="n">getY</span><span class="p">();</span>
+  <span class="p">...</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Basis</span> <span class="p">{</span>
+  <span class="n">Vec</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">Basis</span><span class="p">(</span><span class="n">Vec</span> <span class="n">v1</span><span class="p">,</span> <span class="n">Vec</span> <span class="n">v2</span><span class="p">);</span>
+  <span class="p">...</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="generalizationspecialization">Generalization/Specialization</h3>
+
+<p>Association between the parent/superclass and the child/subclass is indicated by putting a triangular arrowhead on the association end that joins the parent.</p>
+
+<p>By definition, there is no multiplicty or navigation arrowhead, though constraints may be added.</p>
+
+<p>Following is the structure:</p>
+
+<p><img src="/assets/img/cs246/09-generalization.jpg" /></p>
+
+<p>In classic UML notation, the name of an abstract base class is italicized, and we italicize only the pure virtual methods.</p>
+
+<p>In this class we will italicize both of it!</p>
+
+<p><img src="/assets/img/cs246/10-abstract.jpg" /></p>
+
+<p>This is often described as an “Is-A” relationship, where A is a B.</p>
 
 
 
