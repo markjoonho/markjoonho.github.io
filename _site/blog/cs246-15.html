@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta
+    property="og:title"
+    content="09. Design Pattern, Observer and Decorator for CS246"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>
+    09. Design Pattern, Observer and Decorator for CS246
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"
+    async
+  ></script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>09. Design Pattern, Observer and Decorator for CS246</b></h1>
+
+<p class="post-metadata text-muted">
+  18 March 2021 -  
+  <b>15 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-246-object-oriented-software-development">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 246 Object-Oriented Software Development</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
+
+<hr />
+
+<p>Contents:</p>
+
+<ul>
+  <li><a href="#observer">Observer</a></li>
+  <li><a href="#decorator">Decorator</a></li>
+</ul>
+
+<hr />
+
+<h1 id="observer">Observer</h1>
+
+<p>The Observer design pattern is also known as Dependents or Publish-Subscribe.</p>
+
+<blockquote>
+  <p>It is intended to create a one-to-many dependency between objects such that all observers are notified when the state of the subject object being observed changes.</p>
+</blockquote>
+
+<h3 id="example-of-use">Example of use</h3>
+
+<p>Common examples of use are:</p>
+
+<ul>
+  <li>views of an underlying data model: spreadsheet that displays the information in rows/columns, a pie chart, and a bar chart; whenever the data is updated, all of the views are updated.</li>
+</ul>
+
+<p><img src="/assets/img/cs246/04-observer-ex1.jpeg" /></p>
+
+<p><img src="/assets/img/cs246/04-observer-ex2.jpeg" /></p>
+
+<h3 id="general-uml-class-model">General UML class model</h3>
+
+<p>The general form of the Observer design pattern’s UML class model diagram looks like:</p>
+
+<p><img src="/assets/img/cs246/05-Observer-UML.jpeg" /></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Subject</code> and <code class="language-plaintext highlighter-rouge">Observer</code> classes are abstract base classes.</li>
+  <li><code class="language-plaintext highlighter-rouge">Subject</code> contains the code common to all subclasses that they inheit. Since the code will be the same for all subclasses, there is no reason to make the <code class="language-plaintext highlighter-rouge">attach</code> and <code class="language-plaintext highlighter-rouge">detach</code> methods <code class="language-plaintext highlighter-rouge">virtual</code> (No need to duplicate the information in the concrete subclasse).</li>
+  <li><code class="language-plaintext highlighter-rouge">Subject::notifyObservers</code> is usually declared protected, since it should only be called by the concrete subject objects. (In certain cases, it may be made public!)</li>
+  <li>The <code class="language-plaintext highlighter-rouge">Subject</code> has aggregate relationship to the <code class="language-plaintext highlighter-rouge">Observer</code> class. Therefore, it is not responsible for destroying them when its destructor is run.</li>
+  <li>Concrete observers may dynamically attach or detach themselves from a concrete subject during the program run-time.</li>
+  <li>Every time the concre subject changes state, all of the concrete observers are notified by calling <code class="language-plaintext highlighter-rouge">Subject::notifyObservers</code>, which calls their virtual <code class="language-plaintext highlighter-rouge">notify</code> method. (<code class="language-plaintext highlighter-rouge">Observer::notify</code> is pure virtual)</li>
+  <li>Subject and observer classes are loosely coupled since they interact and only need to know that the classes follow the specified interface. Now observer types only need to inherit from the <code class="language-plaintext highlighter-rouge">Observer</code> class.</li>
+</ul>
+
+<p>The usual sequence of calls for the pattern consists of:</p>
+
+<ol>
+  <li>Concrete subject’s state changes.</li>
+  <li>Concrete subject calls <code class="language-plaintext highlighter-rouge">notifyObservers</code>, which calls the <code class="language-plaintext highlighter-rouge">notify</code> method for each concrete observer currently subscribed/attached. If we are using the push model for data exchange, then all of the information an observer might need will be passed by the <code class="language-plaintext highlighter-rouge">notify</code> method; otherwise, <code class="language-plaintext highlighter-rouge">notify</code> passes no data.</li>
+  <li>If we are using the pull model for data exchange, then each concrete observer calls the concrete subject’s <code class="language-plaintext highlighter-rouge">getState</code> method to query the state of the subject; otherwise, it does nothing.</li>
+</ol>
+
+<h3 id="code-example">Code Example</h3>
+
+<p>Our example is going to use a set of horse races for context.</p>
+
+<p>Idea is that people who are betting on the races want to be notified of the outcome of each race upon which they have bet so that they know whether or not to collect their winnings.</p>
+
+<p>Thus, we wil map our concrete observers to the bettors and the concrete subjects to the races. Since one of the key ideas behind the design patterns is code encapsulation and reusability, we will define our abstract bae classes a <code class="language-plaintext highlighter-rouge">Subect</code> and <code class="language-plaintext highlighter-rouge">Observer</code> to make the code more easily reusable later.</p>
+
+<h3 id="subjecth">subject.h</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef _SUBJECT_H_
+#define _SUBJECT_H_
+#include &lt;vector&gt;
+#include "observer.h"
+</span>
+<span class="k">class</span> <span class="nc">Subject</span> <span class="p">{</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Observer</span><span class="o">*&gt;</span> <span class="n">observers</span><span class="p">;</span>
+
+ <span class="nl">public:</span>
+   <span class="n">Subject</span><span class="p">();</span>
+   <span class="kt">void</span> <span class="n">attach</span><span class="p">(</span> <span class="n">Observer</span> <span class="o">*</span><span class="n">o</span> <span class="p">);</span>
+   <span class="kt">void</span> <span class="n">detach</span><span class="p">(</span> <span class="n">Observer</span> <span class="o">*</span><span class="n">o</span> <span class="p">);</span>
+   <span class="kt">void</span> <span class="n">notifyObservers</span><span class="p">();</span>
+   <span class="k">virtual</span> <span class="o">~</span><span class="n">Subject</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<h3 id="subjectcc">subject.cc</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include "subject.h"
+</span>
+<span class="n">Subject</span><span class="o">::</span><span class="n">Subject</span><span class="p">()</span> <span class="p">{}</span>
+<span class="n">Subject</span><span class="o">::~</span><span class="n">Subject</span><span class="p">()</span> <span class="p">{}</span>
+
+<span class="kt">void</span> <span class="n">Subject</span><span class="o">::</span><span class="n">attach</span><span class="p">(</span> <span class="n">Observer</span> <span class="o">*</span><span class="n">o</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="n">observers</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">o</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Subject</span><span class="o">::</span><span class="n">detach</span><span class="p">(</span> <span class="n">Observer</span> <span class="o">*</span><span class="n">o</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span> <span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">observers</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">observers</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="o">*</span><span class="n">it</span> <span class="o">==</span> <span class="n">o</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="n">observers</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Subject</span><span class="o">::</span><span class="n">notifyObservers</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">ob</span> <span class="o">:</span> <span class="n">observers</span><span class="p">)</span> <span class="n">ob</span><span class="o">-&gt;</span><span class="n">notify</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="observerh">observer.h</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef _OBSERVER_H_
+#define _OBSERVER_H_
+</span>
+<span class="k">class</span> <span class="nc">Observer</span> <span class="p">{</span>
+ <span class="nl">public:</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">notify</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="o">~</span><span class="n">Observer</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<h3 id="observercc">observer.cc</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include "observer.h"
+</span><span class="n">Observer</span><span class="o">::~</span><span class="n">Observer</span><span class="p">()</span> <span class="p">{}</span>
+</code></pre></div></div>
+
+<h3 id="bettorh">bettor.h</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef __BETTOR_H__
+#define __BETTOR_H__
+#include "observer.h"
+#include "horserace.h"
+</span>
+<span class="k">class</span> <span class="nc">Bettor</span><span class="o">:</span> <span class="k">public</span> <span class="n">Observer</span> <span class="p">{</span>
+  <span class="n">HorseRace</span> <span class="o">*</span><span class="n">subject</span><span class="p">;</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">myHorse</span><span class="p">;</span>
+
+ <span class="nl">public:</span>
+  <span class="n">Bettor</span><span class="p">(</span> <span class="n">HorseRace</span> <span class="o">*</span><span class="n">hr</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">horse</span> <span class="p">);</span>
+  <span class="kt">void</span> <span class="n">notify</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+  <span class="o">~</span><span class="n">Bettor</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<h3 id="bettorcc">bettor.cc</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include "bettor.h"
+</span>
+<span class="n">Bettor</span><span class="o">::</span><span class="n">Bettor</span><span class="p">(</span> <span class="n">HorseRace</span> <span class="o">*</span><span class="n">hr</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">horse</span> <span class="p">)</span>
+    <span class="o">:</span> <span class="n">subject</span><span class="p">{</span><span class="n">hr</span><span class="p">},</span> <span class="n">name</span><span class="p">{</span><span class="n">name</span><span class="p">},</span> <span class="n">myHorse</span><span class="p">{</span><span class="n">horse</span><span class="p">}</span> 
+<span class="p">{</span>
+  <span class="n">subject</span><span class="o">-&gt;</span><span class="n">attach</span><span class="p">(</span> <span class="k">this</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">Bettor</span><span class="o">::~</span><span class="n">Bettor</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">subject</span><span class="o">-&gt;</span><span class="n">detach</span><span class="p">(</span> <span class="k">this</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Bettor</span><span class="o">::</span><span class="n">notify</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">name</span> 
+    <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">subject</span><span class="o">-&gt;</span><span class="n">getState</span><span class="p">()</span> <span class="o">==</span> <span class="n">myHorse</span> <span class="o">?</span> <span class="s">" wins! Off to collect."</span> <span class="o">:</span> <span class="s">" loses."</span><span class="p">)</span> 
+    <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="horseraceh">horserace.h</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef __HORSERACE_H__
+#define __HORSERACE_H__
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+#include "subject.h"
+</span>
+<span class="k">class</span> <span class="nc">HorseRace</span><span class="o">:</span> <span class="k">public</span> <span class="n">Subject</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">fstream</span> <span class="n">in</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">lastWinner</span><span class="p">;</span>
+
+ <span class="nl">public:</span>
+  <span class="n">HorseRace</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">source</span> <span class="p">);</span>
+  <span class="o">~</span><span class="n">HorseRace</span><span class="p">();</span>
+
+  <span class="kt">bool</span> <span class="n">runRace</span><span class="p">();</span> <span class="c1">// Returns true if a race was successfully run.</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getState</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<h3 id="horseracecc">horserace.cc</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include "horserace.h"
+</span>
+<span class="n">HorseRace</span><span class="o">::</span><span class="n">HorseRace</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">source</span><span class="p">)</span><span class="o">:</span> <span class="n">in</span><span class="p">{</span><span class="n">source</span><span class="p">}</span> <span class="p">{}</span>
+
+<span class="n">HorseRace</span><span class="o">::~</span><span class="n">HorseRace</span><span class="p">()</span> <span class="p">{}</span>
+
+<span class="kt">bool</span> <span class="n">HorseRace</span><span class="o">::</span><span class="n">runRace</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">bool</span> <span class="n">result</span> <span class="p">{</span><span class="n">in</span> <span class="o">&gt;&gt;</span> <span class="n">lastWinner</span><span class="p">};</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> 
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Winner: "</span> <span class="o">&lt;&lt;</span> <span class="n">lastWinner</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">HorseRace</span><span class="o">::</span><span class="n">getState</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">lastWinner</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="maincc">main.cc</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">Explanation</span>
+<span class="cp">#include &lt;iostream&gt;
+#include "bettor.h" // already includes horserace.h
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">raceData</span> <span class="o">=</span> <span class="s">"race.txt"</span><span class="p">;</span> <span class="c1">// race information is by default contained in the file race.txt</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="p">)</span> <span class="n">raceData</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+
+  <span class="n">HorseRace</span> <span class="n">hr</span><span class="p">{</span><span class="n">raceData</span><span class="p">};</span> <span class="c1">// concrete subject, hr, is initialized with the race results (name of the winner for each race)</span>
+
+  <span class="c1">// concrete obervers, bettors Larry, Moe, and Curly are created, each with the name of the horse that they will bet upon in each race.</span>
+  <span class="n">Bettor</span> <span class="n">Larry</span><span class="p">{</span> <span class="o">&amp;</span><span class="n">hr</span><span class="p">,</span> <span class="s">"Larry"</span><span class="p">,</span> <span class="s">"RunsLikeACow"</span> <span class="p">};</span>
+  <span class="n">Bettor</span> <span class="n">Moe</span><span class="p">{</span> <span class="o">&amp;</span><span class="n">hr</span><span class="p">,</span> <span class="s">"Moe"</span><span class="p">,</span> <span class="s">"Molasses"</span> <span class="p">};</span>
+  <span class="n">Bettor</span> <span class="n">Curly</span><span class="p">{</span> <span class="o">&amp;</span><span class="n">hr</span><span class="p">,</span> <span class="s">"Curly"</span><span class="p">,</span> <span class="s">"TurtlePower"</span> <span class="p">};</span>
+
+  <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">Bettor</span> <span class="o">*</span><span class="n">Shemp</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+
+  <span class="k">while</span><span class="p">(</span> <span class="n">hr</span><span class="p">.</span><span class="n">runRace</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">2</span> <span class="p">)</span>
+      <span class="n">Shemp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bettor</span><span class="p">{</span> <span class="o">&amp;</span><span class="n">hr</span><span class="p">,</span> <span class="s">"Shemp"</span><span class="p">,</span> <span class="s">"GreasedLightning"</span> <span class="p">};</span> 
+    <span class="k">if</span> <span class="p">(</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">5</span> <span class="p">)</span> <span class="k">delete</span> <span class="n">Shemp</span><span class="p">;</span>
+    <span class="n">hr</span><span class="p">.</span><span class="n">notifyObservers</span><span class="p">();</span>
+    <span class="o">++</span><span class="n">count</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">count</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">)</span> <span class="k">delete</span> <span class="n">Shemp</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="racetxt">race.txt</h3>
+
+<pre><code class="language-txt">Molasses
+RunsLikeACow
+GreasedLightning
+GreasedLightning
+Molasses
+FinishLine'sThatWay
+</code></pre>
+
+<h3 id="execution">Execution</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./main
+Winner: Molasses
+Larry loses.
+Moe wins! Off to collect.
+Curly loses.
+Winner: RunsLikeACow
+Larry wins! Off to collect.
+Moe loses.
+Curly loses.
+Winner: GreasedLightning
+Larry loses.
+Moe loses.
+Curly loses.
+Shemp wins! Off to collect.
+Winner: GreasedLightning
+Larry loses.
+Moe loses.
+Curly loses.
+Shemp wins! Off to collect.
+Winner: Molasses
+Larry loses.
+Moe wins! Off to collect.
+Curly loses.
+Shemp loses.
+Winner: FinishLine'sThatWay
+Larry loses.
+Moe loses.
+Curly loses.
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="decorator">Decorator</h1>
+
+<p>Decorator is intended to let you add functionality or features to an object at run-time rather than to the class as a whole (also be withdrawn).</p>
+
+<h3 id="example-of-use-1">Example of use</h3>
+
+<ul>
+  <li>Window: navigation, action buttons, metadata, horizontal scroll bar, vertical scroll bar, title bar, border, content</li>
+</ul>
+
+<p><img src="/assets/img/cs246/06-decorator-motivation1.jpeg" /></p>
+
+<p>If the features are indpendent and can be used in any combination, then implementing the features as subclasses effectively means creating  a subclass for each possible combination.</p>
+
+<p><img src="/assets/img/cs246/07-decorator-motivation2.jpeg" /></p>
+
+<h3 id="general-uml-class-model-1">General UML class model</h3>
+
+<p>The general for of the Decorator design pattern’s UML class model diagram looks like:</p>
+
+<p><img src="/assets/img/cs246/08-decorator-ClassModel.jpeg" /></p>
+
+<p>If we apply the Decorator design pattern to our window example, it would look like:</p>
+
+<p><img src="/assets/img/cs246/09-decorator-as-window.jpeg" /></p>
+
+<h3 id="code-example-1">Code Example:</h3>
+
+<p>Creation of a pizza with a custom set of toppings, where the cost of the pizza itself depends on upon the items ordered.</p>
+
+<ul>
+  <li>Basic pizza(crust and some sauce): $5.99</li>
+  <li>Topings: each $0.75</li>
+  <li>Crust: $2.69</li>
+  <li>Dipping Sauce: $0.30</li>
+</ul>
+
+<p><img src="/assets/img/cs246/14-PizzaAsDecorator.jpeg" /></p>
+
+<p>Our abstract base classes:</p>
+
+<h3 id="pizzah">pizza.h</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef _PIZZA_H_
+#define _PIZZA_H_
+#include &lt;string&gt;
+</span>
+<span class="k">class</span> <span class="nc">Pizza</span> <span class="p">{</span>
+ <span class="nl">public:</span>
+  <span class="k">virtual</span> <span class="kt">float</span> <span class="n">price</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">description</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="o">~</span><span class="n">Pizza</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<h3 id="decoratorh">decorator.h</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef _DECORATOR_H_
+#define _DECORATOR_H_
+#include "pizza.h"
+</span>
+<span class="k">class</span> <span class="nc">Decorator</span><span class="o">:</span> <span class="k">public</span> <span class="n">Pizza</span> <span class="p">{</span>
+ <span class="nl">protected:</span>
+  <span class="n">Pizza</span> <span class="o">*</span><span class="n">component</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">Decorator</span><span class="p">(</span> <span class="n">Pizza</span> <span class="o">*</span><span class="n">component</span> <span class="p">);</span>
+  <span class="k">virtual</span> <span class="o">~</span><span class="n">Decorator</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<h3 id="pizzc">pizz.c</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include "pizza.h"
+</span>
+<span class="n">Pizza</span><span class="o">::~</span><span class="n">Pizza</span><span class="p">()</span> <span class="p">{}</span>
+</code></pre></div></div>
+
+<h3 id="decoratorcc">decorator.cc</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include "pizza.h"
+#include "decorator.h"
+</span>
+<span class="n">Decorator</span><span class="o">::</span><span class="n">Decorator</span><span class="p">(</span> <span class="n">Pizza</span> <span class="o">*</span><span class="n">component</span> <span class="p">)</span>
+  <span class="o">:</span> <span class="n">component</span><span class="p">{</span><span class="n">component</span><span class="p">}</span> <span class="p">{}</span>
+
+<span class="n">Decorator</span><span class="o">::~</span><span class="n">Decorator</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="n">component</span><span class="p">;</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>we will show only two concrete classses, CrustAndSauce and Topping:</p>
+</blockquote>
+
+<h3 id="crustandsauceh">crustandsauce.h</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef _CRUSTANDSAUCE_H_
+#define _CRUSTANDSAUCE_H_
+#include "pizza.h"
+</span>
+<span class="k">class</span> <span class="nc">CrustAndSauce</span><span class="o">:</span> <span class="k">public</span> <span class="n">Pizza</span> <span class="p">{</span>
+ <span class="nl">public:</span>
+  <span class="kt">float</span> <span class="n">price</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">description</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<h3 id="crustandsauceh-1">crustandsauce.h</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include "crustandsauce.h"
+</span>
+<span class="kt">float</span> <span class="n">CrustAndSauce</span><span class="o">::</span><span class="n">price</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="mf">5.99</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">CrustAndSauce</span><span class="o">::</span><span class="n">description</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="s">"Pizza"</span><span class="p">;</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="toppingh">topping.h</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef _TOPPING_H_
+#define _TOPPING_H_
+#include "decorator.h"
+#include &lt;string&gt;
+</span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Topping</span><span class="o">:</span> <span class="k">public</span> <span class="n">Decorator</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">theTopping</span><span class="p">;</span>
+  <span class="k">const</span> <span class="kt">float</span> <span class="n">thePrice</span><span class="p">;</span>
+ <span class="nl">public:</span>
+  <span class="n">Topping</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">topping</span><span class="p">,</span> <span class="n">Pizza</span> <span class="o">*</span><span class="n">component</span> <span class="p">);</span>
+  <span class="kt">float</span> <span class="n">price</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">description</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<h3 id="toppingcc">topping.cc</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include "topping.h"
+#include "pizza.h"
+</span>
+<span class="n">Topping</span><span class="o">::</span><span class="n">Topping</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">topping</span><span class="p">,</span> <span class="n">Pizza</span> <span class="o">*</span><span class="n">component</span> <span class="p">)</span>
+  <span class="o">:</span> <span class="n">Decorator</span><span class="p">{</span><span class="n">component</span><span class="p">},</span> <span class="n">theTopping</span><span class="p">{</span><span class="n">topping</span><span class="p">},</span> <span class="n">thePrice</span><span class="p">{</span><span class="mf">0.75</span><span class="p">}</span> <span class="p">{}</span>
+
+<span class="kt">float</span> <span class="n">Topping</span><span class="o">::</span><span class="n">price</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> 
+   <span class="k">return</span> <span class="n">component</span><span class="o">-&gt;</span><span class="n">price</span><span class="p">()</span> <span class="o">+</span> <span class="n">thePrice</span><span class="p">;</span> 
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">Topping</span><span class="o">::</span><span class="n">description</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">component</span><span class="o">-&gt;</span><span class="n">description</span><span class="p">()</span> <span class="o">+</span> <span class="s">" with "</span> <span class="o">+</span> <span class="n">theTopping</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="maincc-1">main.cc</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;iomanip&gt;
+#include "pizza.h"
+#include "topping.h"
+#include "stuffedcrust.h"
+#include "dippingsauce.h"
+#include "crustandsauce.h"
+</span>            
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// pizza order contain 3 custom pizzas</span>
+   <span class="n">Pizza</span> <span class="o">*</span><span class="n">myPizzaOrder</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+  <span class="c1">// </span>
+   <span class="n">myPizzaOrder</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Topping</span><span class="p">{</span><span class="s">"pepperoni"</span><span class="p">,</span>    
+      <span class="k">new</span> <span class="n">Topping</span><span class="p">{</span><span class="s">"cheese"</span><span class="p">,</span> <span class="k">new</span> <span class="n">CrustAndSauce</span><span class="p">}};</span> <span class="c1">// Pizza with cheese with pepperoni: $7.49</span>
+
+   <span class="n">myPizzaOrder</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StuffedCrust</span><span class="p">{</span>
+      <span class="k">new</span> <span class="n">Topping</span><span class="p">{</span><span class="s">"cheese"</span><span class="p">,</span>
+         <span class="k">new</span> <span class="n">Topping</span><span class="p">{</span><span class="s">"mushrooms"</span><span class="p">,</span>
+            <span class="k">new</span> <span class="n">CrustAndSauce</span><span class="p">}}};</span> <span class="c1">// Pizza with mushrooms with cheese with stuffed crust: $10.18</span>
+
+   <span class="n">myPizzaOrder</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DippingSauce</span><span class="p">{</span><span class="s">"garlic"</span><span class="p">,</span>
+      <span class="k">new</span> <span class="n">Topping</span><span class="p">{</span><span class="s">"cheese"</span><span class="p">,</span>
+         <span class="k">new</span> <span class="n">Topping</span><span class="p">{</span><span class="s">"cheese"</span><span class="p">,</span>
+            <span class="k">new</span> <span class="n">Topping</span><span class="p">{</span><span class="s">"cheese"</span><span class="p">,</span>
+               <span class="k">new</span> <span class="n">Topping</span><span class="p">{</span><span class="s">"cheese"</span><span class="p">,</span>
+                   <span class="k">new</span> <span class="n">CrustAndSauce</span><span class="p">}}}}};</span> <span class="c1">// Pizza with cheese with cheese with cheese with cheese with garlic dipping sauce: $9.29</span>
+
+            
+   <span class="kt">float</span> <span class="n">total</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+            
+   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">myPizzaOrder</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">description</span><span class="p">()</span>
+            <span class="o">&lt;&lt;</span> <span class="s">": $"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">fixed</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">showpoint</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setprecision</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> 
+            <span class="o">&lt;&lt;</span> <span class="n">myPizzaOrder</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">price</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+       <span class="n">total</span> <span class="o">+=</span> <span class="n">myPizzaOrder</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">price</span><span class="p">();</span>
+   <span class="p">}</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="s">"Total cost: $"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">fixed</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">showpoint</span> 
+      <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setprecision</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">total</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="c1">// Total cost: $26.96</span>
+            
+   <span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span> <span class="k">delete</span> <span class="n">myPizzaOrder</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

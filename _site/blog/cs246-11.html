@@ -114,7 +114,7 @@
 
 <p class="post-metadata text-muted">
   09 March 2021 -  
-  <b>26 mins read time</b>
+  <b>39 mins read time</b>
 
   <br>Tags: 
     
@@ -695,6 +695,342 @@ The book ptr: Spiderman Unabridged; Peter Parker; heavy
 <blockquote>
   <p>Always make your destructor <code class="language-plaintext highlighter-rouge">virtual</code>, even if they do nothing!</p>
 </blockquote>
+
+<h1 id="abstract-classes">Abstract Classes</h1>
+
+<p>Sometimes, we don’t have anything to write in the implementation of a virtual method in a base class. For example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Student</span> <span class="p">{</span>
+  <span class="nl">protected:</span>
+    <span class="kt">int</span> <span class="n">numCourses</span><span class="p">;</span>
+  <span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">fees</span><span class="p">()</span> <span class="n">connst</span><span class="p">;</span> <span class="c1">// What should this do?</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Regular</span><span class="o">:</span> <span class="k">public</span> <span class="n">student</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="kt">int</span> <span class="n">fees</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span> <span class="c1">// Computes regular student fees</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">CoOp</span><span class="o">:</span> <span class="k">public</span> <span class="n">student</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="kt">int</span> <span class="n">fees</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span> <span class="c1">// computes co-op student fees</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Since every student should be either regular or co-op, we don’t know what to do for <code class="language-plaintext highlighter-rouge">Student::fees</code>.</p>
+
+<p>Therefore, we can make <code class="language-plaintext highlighter-rouge">Student</code> be an abstract class. An abstract class cannot be instantiated and has at least one method that is not implemented. Purpose is to organize subclasses.</p>
+
+<p>In C++, we create abstract classes by leaving methods without implementation. So we can explicitly give <code class="language-plaintext highlighter-rouge">Student::fees</code> no implementation. This is done in C++ by adding <code class="language-plaintext highlighter-rouge">= 0</code> to the end of the declaration of a virtual method:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Student</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">fees</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Here, the method <code class="language-plaintext highlighter-rouge">fees</code> has no implementation. It is called a pure virtual method. A class with a pure virtual method cannot be instantiated:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Student</span> <span class="n">s</span><span class="p">;</span> <span class="c1">//ERROR</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Subclasses of an abstract class are also abstract unless they implement all pure virtual methods.</p>
+</blockquote>
+
+<p>Non-abstract classes are called concrete:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Regular</span><span class="o">:</span> <span class="k">public</span> <span class="n">Student</span> <span class="p">{</span> <span class="c1">// concrete class</span>
+  <span class="nl">public:</span>
+    <span class="kt">int</span> <span class="n">fees</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span><span class="k">return</span> <span class="mi">700</span> <span class="o">*</span> <span class="n">numCourses</span><span class="p">;}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="uml-representation">UML Representation</h3>
+
+<p><img src="/assets/img/cs246/abstract_class.jpg" /></p>
+
+<p>In UML, represent virtual and pure virtual methods using italics.</p>
+
+<h1 id="inheritance-and-copy-move-operation">Inheritance and copy move operation</h1>
+
+<p>What happens with the object’s compy and move operations when you use inheritance? For Example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Book</span> <span class="p">{</span>
+  <span class="nl">protected:</span>
+    <span class="n">string</span> <span class="n">title</span><span class="p">,</span> <span class="n">author</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">length</span><span class="p">;</span>
+  <span class="nl">public:</span>
+    <span class="n">Book</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">title</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">author</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">);</span>
+    <span class="n">Book</span><span class="p">(</span><span class="k">const</span> <span class="n">Book</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">);</span>
+    <span class="c1">// Let's define the copy constroctor:</span>
+    <span class="n">Book</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Book</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">);</span>
+    <span class="c1">// Other... blah blah blah</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Text</span><span class="o">:</span> <span class="k">public</span> <span class="n">Book</span> <span class="p">{</span>
+    <span class="n">string</span> <span class="n">topic</span><span class="p">;</span>
+  <span class="nl">public:</span>
+    <span class="n">Text</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">title</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">author</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span> <span class="n">topic</span><span class="p">);</span>
+    <span class="c1">// Does not define copy/move constructors and operations</span>
+    <span class="c1">// ...</span>
+    <span class="c1">// Other... blah blah blah</span>
+<span class="p">};</span>
+
+<span class="n">Text</span> <span class="n">t</span> <span class="p">{</span><span class="s">"Algoriths"</span><span class="p">,</span> <span class="s">"CLRS"</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="s">"CS"</span><span class="p">};</span>
+<span class="n">Text</span> <span class="n">t2</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span> <span class="c1">// no copy constructor in Text... what happen?</span>
+</code></pre></div></div>
+
+<p>This copy (<code class="language-plaintext highlighter-rouge">Text t2 = t;</code>) calls <code class="language-plaintext highlighter-rouge">Book</code>’s copy constructor and goes filed-by-filed for the <code class="language-plaintext highlighter-rouge">Text</code> part.</p>
+
+<p>However, you can also write your own implementation of the constructors and assignment operators. Do this by calling one of <code class="language-plaintext highlighter-rouge">Book</code>’s constructors/operators first, and then continuing with your implementation. For example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copy Constructor:</span>
+<span class="n">Text</span><span class="o">::</span><span class="n">Text</span><span class="p">(</span><span class="k">const</span> <span class="n">Text</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span><span class="o">:</span> <span class="n">Book</span><span class="p">{</span><span class="n">other</span><span class="p">},</span> <span class="n">topic</span><span class="p">{</span><span class="n">other</span><span class="p">.</span><span class="n">topic</span><span class="p">}</span> <span class="p">{}</span>
+
+<span class="c1">// Copy assignment:</span>
+<span class="n">Text</span> <span class="o">&amp;</span><span class="n">Text</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Text</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Book</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">other</span><span class="p">);</span>
+  <span class="n">topic</span> <span class="o">=</span> <span class="n">other</span><span class="p">.</span><span class="n">topic</span><span class="p">;</span>
+  <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Move constructor:</span>
+<span class="n">Text</span><span class="o">::</span><span class="n">Text</span><span class="p">(</span><span class="n">Text</span> <span class="o">&amp;&amp;</span><span class="n">other</span><span class="p">)</span><span class="o">:</span> <span class="n">Book</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">other</span><span class="p">)},</span> <span class="n">topic</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">topic</span><span class="p">)}{}</span>
+
+<span class="c1">// Move assignment:</span>
+<span class="n">Text</span> <span class="o">&amp;</span><span class="n">Text</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Text</span><span class="o">&amp;&amp;</span><span class="n">other</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Book</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">other</span><span class="p">));</span>
+  <span class="n">topic</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">topic</span><span class="p">);</span>
+  <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Even though <code class="language-plaintext highlighter-rouge">other</code> points at an rvalue, <code class="language-plaintext highlighter-rouge">other</code> itself is an lvalue(so is other.topic)</p>
+</blockquote>
+
+<p>Therefore, we use the function <code class="language-plaintext highlighter-rouge">std::move(x)</code>, which forces an lvalue <code class="language-plaintext highlighter-rouge">x</code> to be treated as an rvalue, so that the move versions of the operations run. <strong>IMPORTANT</strong></p>
+
+<h3 id="partial-assignment">Partial Assignment</h3>
+
+<p>What happens if you use pointers to the base class to assign an object to another via copy or move?</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Text</span> <span class="nf">t1</span><span class="p">(</span><span class="s">"Programming for Beginners"</span><span class="p">,</span> <span class="s">"Niklaus Wirth"</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="s">"Pascal"</span><span class="p">);</span>
+<span class="n">Text</span> <span class="nf">t2</span><span class="p">(</span><span class="s">"Programming for Big Kids"</span><span class="p">,</span> <span class="s">"Bjarne Stroustrup"</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="s">"C++"</span><span class="p">);</span>
+<span class="n">Book</span> <span class="o">*</span><span class="n">pb1</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">t1</span><span class="p">;</span>
+<span class="n">Book</span> <span class="o">*</span><span class="n">pb2</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">t2</span><span class="p">;</span>
+
+<span class="c1">// What if we do the following, using Book pointers instead of Text pointers?</span>
+<span class="o">*</span><span class="n">pb2</span> <span class="o">=</span> <span class="o">*</span><span class="n">pb1</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Since we are using the <code class="language-plaintext highlighter-rouge">=</code> operator on objects of type <code class="language-plaintext highlighter-rouge">Book*</code>, <code class="language-plaintext highlighter-rouge">Book::operator=</code> runs. The result is a partial asignment: only the <code class="language-plaintext highlighter-rouge">Book</code> part is copied, but <code class="language-plaintext highlighter-rouge">Text</code>’s fields are not copied.</p>
+
+<ul>
+  <li>Before the assignment:</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>t1</th>
+      <th>t2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Programming for Beginners</td>
+      <td>Programming for Big Kids</td>
+    </tr>
+    <tr>
+      <td>Niklaus Wirth</td>
+      <td>Bjarne Stroustrup</td>
+    </tr>
+    <tr>
+      <td>200</td>
+      <td>300</td>
+    </tr>
+    <tr>
+      <td>Pascal</td>
+      <td>C++</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>After the assignment</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>t1</th>
+      <th>t2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Programming for Beginners</td>
+      <td>Programming for Beginners</td>
+    </tr>
+    <tr>
+      <td>Niklaus Wirth</td>
+      <td>Niklaus Wirth</td>
+    </tr>
+    <tr>
+      <td>200</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <td>Pascal</td>
+      <td>C++</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>C++ part does not change</p>
+</blockquote>
+
+<h3 id="solution-1virtual-operations">Solution 1:Virtual operations</h3>
+
+<p>From the above example, partial assignment is not desirable. If only some of the fields are copied when you try to assign different objects, thi can potentially lead to bugs in your program.</p>
+
+<p>One potential solution to the problem of partial assignment is making <code class="language-plaintext highlighter-rouge">operator=</code> virtual.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Book</span> <span class="p">{</span>
+    <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+  <span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="n">Book</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Book</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="n">Book</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Book</span> <span class="o">&amp;&amp;</span><span class="n">other</span><span class="p">);</span>
+ <span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Text</span><span class="o">:</span> <span class="k">public</span> <span class="n">Book</span> <span class="p">{</span>
+    <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+  <span class="nl">public:</span>
+    <span class="n">Text</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Book</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+    <span class="n">Text</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Book</span> <span class="o">&amp;&amp;</span><span class="n">other</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+ <span class="p">};</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Text::operator=</code> is permitted to return(by reference) a subtype object, but the parameter types must be the same, or it is not an override and won’t compile.</p>
+
+<p>With this implementation, the example above, where we assigned a <code class="language-plaintext highlighter-rouge">Text</code> object to another one using two variables of type <code class="language-plaintext highlighter-rouge">Book*</code>, is fixed. <code class="language-plaintext highlighter-rouge">Text::operator=</code> will run and all the fields will be copied correctly!!!</p>
+
+<p>However, there exists a new problem:</p>
+
+<p>By the “is-a” principle, if a <code class="language-plaintext highlighter-rouge">Book</code> can be assigned from another <code class="language-plaintext highlighter-rouge">Book</code>, then a <code class="language-plaintext highlighter-rouge">Text</code> can be assigned from another <code class="language-plaintext highlighter-rouge">Book</code>. Therefore, assignment of a <code class="language-plaintext highlighter-rouge">Book</code> object to a <code class="language-plaintext highlighter-rouge">Text</code> object variable would be allowed, which is called mixed assignment:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Text</span> <span class="n">t</span> <span class="p">{</span> <span class="p">.</span> <span class="p">.</span> <span class="p">.</span> <span class="p">};</span>
+<span class="n">Book</span> <span class="n">b</span> <span class="p">{</span> <span class="p">.</span> <span class="p">.</span> <span class="p">.</span> <span class="p">};</span>
+<span class="n">Text</span> <span class="o">*</span><span class="n">pt</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">t</span><span class="p">;</span>
+<span class="o">*</span><span class="n">pt</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span> <span class="c1">// call virtual operator= through pointer; subclass version runs</span>
+         <span class="c1">// Uses a Book to assign a Text: BAD (but it would compile)</span>
+</code></pre></div></div>
+
+<p>Also, it is now possible to use a <code class="language-plaintext highlighter-rouge">Comic</code> object to assign a <code class="language-plaintext highlighter-rouge">Text</code> variable (or vice-versa)!</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Text</span> <span class="n">t</span> <span class="p">{</span> <span class="p">.</span> <span class="p">.</span> <span class="p">.</span> <span class="p">};</span>
+<span class="n">Comic</span> <span class="n">c</span> <span class="p">{</span> <span class="p">.</span> <span class="p">.</span> <span class="p">.</span> <span class="p">};</span>
+<span class="o">*</span><span class="n">pt</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span> <span class="c1">// Use Comic object to assign Text object. Really BAD!</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>If operator= is not virtual, then we get partial assignment when assigning through base class pointers. If it is virtual, then the compiler will allowed mixed assignment.</p>
+</blockquote>
+
+<h3 id="solution-2-abstract-superclass">Solution 2: Abstract Superclass</h3>
+
+<p>Our above two sections are not a good idea to implement a class hierachy with non-virtual or you will create a problem of partial assignment</p>
+
+<p>Also it is not a good idea to just make them virtual or you will create a problem of mixed assignment. (Can lead to logical errors and bugs that are hard to debug)</p>
+
+<blockquote>
+  <p>Recommendation: all superclasses should be abstract</p>
+</blockquote>
+
+<p>Let’s rewrite the class hierarchy:</p>
+
+<p><img src="/assets/img/cs246/purevirt_abstract_superclass.png" /></p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AbstractBook</span> <span class="p">{</span>
+    <span class="n">string</span> <span class="n">title</span><span class="p">,</span> <span class="n">author</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">length</span><span class="p">;</span>
+  <span class="nl">protected:</span>
+    <span class="n">AbstractBook</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">AbstractBook</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">);</span> <span class="c1">// Assignment now protected</span>
+    <span class="n">AbstractBook</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">AbstractBook</span> <span class="o">&amp;&amp;</span><span class="n">other</span><span class="p">);</span>      <span class="c1">// Assignment now protected</span>
+  <span class="nl">public:</span>
+    <span class="n">AbstractBook</span><span class="p">(...);</span>
+    <span class="k">virtual</span> <span class="o">~</span> <span class="n">AbstractBook</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// Need at least one pure virtual method</span>
+                                  <span class="c1">// If you don't have one, use the destructor</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Hence we want to make the class abstract, need at least one pure virtual. We still need to implement the destructor because it will be called by the subclasses when the objects are destroyed.</p>
+</blockquote>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In abstractBook.cc</span>
+<span class="n">AbstractBook</span><span class="o">::~</span><span class="n">AbstractBook</span><span class="p">()</span> <span class="p">{}</span>
+</code></pre></div></div>
+
+<p>Now we can create a new concrete class, so we can instantiate normal books. We can just call <code class="language-plaintext highlighter-rouge">AbstractBook::operator=</code> as needed:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">NormalBook</span><span class="o">:</span> <span class="k">public</span> <span class="n">AbstractBook</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">NormalBook</span><span class="p">(</span> <span class="p">.</span> <span class="p">.</span> <span class="p">.</span> <span class="p">);</span>
+    <span class="o">~</span><span class="n">NormalBook</span><span class="p">();</span>
+    <span class="n">NormalBook</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">NormalBook</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">AbstractBook</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">other</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">NormalBook</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">NormalBook</span> <span class="o">&amp;&amp;</span><span class="n">other</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">AbstractBook</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">other</span><span class="p">));</span>
+        <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>We can do this for <code class="language-plaintext highlighter-rouge">Text</code> and <code class="language-plaintext highlighter-rouge">Comic</code> in the same way.</p>
+
+<blockquote>
+  <p>This design prevent partial and mixed assignment!</p>
+</blockquote>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Text</span> <span class="nf">t1</span><span class="p">(.</span> <span class="p">.</span> <span class="p">.);</span>
+<span class="n">Text</span> <span class="nf">t2</span><span class="p">(.</span> <span class="p">.</span> <span class="p">.);</span>
+
+<span class="c1">// The lines below will not compile</span>
+<span class="c1">// because AbstractBook::operator= is protected, so it cannot be called here.</span>
+<span class="n">AbstractBook</span> <span class="o">*</span><span class="n">pb1</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">t1</span><span class="p">;</span>
+<span class="n">AbstractBook</span> <span class="o">*</span><span class="n">pb2</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">t2</span><span class="p">;</span>
+<span class="o">*</span><span class="n">pb2</span> <span class="o">=</span> <span class="o">*</span><span class="n">pb1</span><span class="p">;</span> <span class="c1">// compile error</span>
+
+<span class="c1">// However, it is possible to assign a Text object to another:</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">t1</span><span class="p">;</span>     <span class="c1">// this is fine</span>
+<span class="c1">// Or using pointers:</span>
+<span class="n">Text</span> <span class="o">*</span><span class="n">pt1</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">t1</span><span class="p">;</span>
+<span class="n">Text</span> <span class="o">*</span><span class="n">pt2</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">t2</span><span class="p">;</span>
+<span class="o">*</span><span class="n">pt2</span> <span class="o">=</span> <span class="o">*</span><span class="n">pt1</span><span class="p">;</span> <span class="c1">// this is fine</span>
+</code></pre></div></div>
+
+<h3 id="summary">Summary</h3>
+
+<ol>
+  <li>Public non-virtual operations do not restrict what the programmer can do but allow partial assignment</li>
+  <li>Public virtual operations do not restrict what the programmer can do but allow mixed assignment</li>
+  <li>Protected operations in an abstract superclass that are called by the public operations in the concrete subclasses prevent partial and mixed assignments but prevent the programmer from making assignment using base class pointers.</li>
+</ol>
+
+<blockquote>
+  <p>Unfortunately, none of these solutions are perfect as each one of them has one weakness</p>
+</blockquote>
+
+<p>Let’s check the better solution!</p>
 
 
 

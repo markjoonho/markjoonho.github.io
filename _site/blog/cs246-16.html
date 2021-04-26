@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta
+    property="og:title"
+    content="10. Advanced C++ for CS246"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>
+    10. Advanced C++ for CS246
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"
+    async
+  ></script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>10. Advanced C++ for CS246</b></h1>
+
+<p class="post-metadata text-muted">
+  26 March 2021 -  
+  <b>48 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-246-object-oriented-software-development">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 246 Object-Oriented Software Development</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
+
+<hr />
+
+<p>Contents:</p>
+
+<ul>
+  <li><a href="#smart-pointers">Smart Pointers</a></li>
+  <li><a href="#resource-acquisition-is-initialization">Resource Acquisition is Initialization</a></li>
+  <li><a href="#pimpl-idiom">Pimpl Idiom</a></li>
+  <li><a href="#exception-safety">Exception Safety</a></li>
+  <li><a href="#advanced-casts">Advanced casts</a></li>
+  <li><a href="#fixing-the-polymorphic-assignment-problem-with-dynamic-casting">Fixing the polymorphic assignment problem with dynamic casting</a></li>
+  <li><a href="#template-function">Template Function</a></li>
+  <li><a href="#function-objects-and-lambdas">Function Objects and Lambdas</a></li>
+  <li><a href="#stl-algorithm">STL Algorithm</a></li>
+</ul>
+
+<hr />
+
+<h1 id="smart-pointers">Smart Pointers</h1>
+
+<p>In C++ STL has some features to make memory management less painful.</p>
+
+<p>First, let’s see what makes memory management so difficult in the first place.</p>
+
+<p>In C and C++, you have two options for storing a <code class="language-plaintext highlighter-rouge">struct</code> or <code class="language-plaintext highlighter-rouge">class</code>: In the heap, or on the stack. Local variables allocate their space on the stack, so to use heap storage, you instead put a pointer on the stack, and use <code class="language-plaintext highlighter-rouge">new</code> and <code class="language-plaintext highlighter-rouge">delete</code> to allocate and reclaim its space.</p>
+
+<p>Stack-based storage: when the relevant function returns, all objects must exist for exactly the duration of the function that declares them</p>
+
+<p>Heap-stored: do not have this restrion, but they are difficult to correctly manage</p>
+
+<p>In C++, control flow can be extremely complicated. Consider following example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Point</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">Point</span> <span class="p">(</span><span class="kt">double</span> <span class="n">sx</span><span class="p">,</span> <span class="kt">double</span> <span class="n">sy</span><span class="p">)</span> <span class="o">:</span> <span class="n">x</span><span class="p">(</span><span class="n">sx</span><span class="p">),</span> <span class="n">y</span><span class="p">(</span><span class="n">sy</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// [...]</span>
+
+<span class="kt">double</span> <span class="nf">pointDistance</span><span class="p">(</span><span class="n">Point</span> <span class="o">*</span><span class="p">);</span>
+
+<span class="c1">// [...]</span>
+
+<span class="kt">double</span> <span class="nf">mydistance</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Point</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">);</span>
+  <span class="kt">double</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">pointDistance</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+  <span class="k">delete</span> <span class="n">p</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Without knowing the actual implementation of <code class="language-plaintext highlighter-rouge">pointDistance</code>, it appears impossible for this function to fail the <code class="language-plaintext highlighter-rouge">delete</code> its allocated <code class="language-plaintext highlighter-rouge">Point</code>. But if <code class="language-plaintext highlighter-rouge">pointDistance</code> might throw an exception, then this function could end before ever reaching the <code class="language-plaintext highlighter-rouge">delete p;</code>. If this function had multiple conditional <code class="language-plaintext highlighter-rouge">return</code>s, the situation would be more complicated.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">mydistance</code> example may have worked with stack allocation:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">mydistance</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Point</span> <span class="n">p</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">pointDistance</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="two-types-of-smart-pointers">Two types of smart pointers:</h1>
+
+<ul>
+  <li>unique_ptr</li>
+  <li>shared_ptr</li>
+</ul>
+
+<h3 id="unique_ptr"><code class="language-plaintext highlighter-rouge">unique_ptr</code></h3>
+
+<p><code class="language-plaintext highlighter-rouge">unique_ptr</code> wraps a pointer, but it’s guaranted, so long as it’s correctly used, to be the only pointer to the heap-allocated object in question. Since the <code class="language-plaintext highlighter-rouge">unique_ptr</code> is unique, its own destructor can delete the object pointed to. We can rewrite <code class="language-plaintext highlighter-rouge">mydistance</code> example with a <code class="language-plaintext highlighter-rouge">unique_ptr</code> like:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;memory&gt;
+</span>
+<span class="c1">//  [...]</span>
+
+<span class="kt">double</span> <span class="nf">pointDistance</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span><span class="p">);</span>
+
+<span class="c1">//  [...]</span>
+
+<span class="kt">double</span> <span class="nf">mydistance</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="cm">/* std::unique_ptr&lt;point&gt; */</span><span class="n">p</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+    <span class="c1">// Here, we could access p-&gt;x and p-&gt;y, just as if p was a pointer</span>
+    <span class="c1">// delete p;</span>
+    <span class="k">return</span> <span class="n">pointDistance</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">p</span><span class="p">));</span>
+<span class="p">}</span> <span class="c1">// at this moment, p is automatically deleted</span>
+</code></pre></div></div>
+
+<p>Type of p is <code class="language-plaintext highlighter-rouge">unique_ptr&lt;Point&gt;</code>. This appears quite similar to the tack-allocated example, but there is a critical difference.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">unique_ptr</code> cannot be copied so they cannot be pased by value.</p>
+</blockquote>
+
+<p>We must instead move p. To move a <code class="language-plaintext highlighter-rouge">unique_ptr</code> to transfer the actual, underlying pointer to another <code class="language-plaintext highlighter-rouge">unique_ptr, and remove it from its starting </code>unique_ptr<code class="language-plaintext highlighter-rouge">. If we were attempt to use </code>p` after the move, it would no longer be available:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">mydistance</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+  <span class="kt">double</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">pointDistance</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">p</span><span class="p">));</span> <span class="c1">// </span>
+  <span class="n">ret</span> <span class="o">+=</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">;</span> <span class="c1">// segmentation fault because the internal pointer was moved.</span>
+  <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">unique_ptr</code> have a restricted liftem, like stack values, but with much more control.</p>
+
+<p>Though <code class="language-plaintext highlighter-rouge">unique_ptr</code> cannot be passed by value, they can safely be passed by reference.</p>
+
+<p>For many uses, this is sufficient. But, it’s not uncommon to bypass <code class="language-plaintext highlighter-rouge">unique_ptr</code> and their protection. The <code class="language-plaintext highlighter-rouge">get</code> method of <code class="language-plaintext highlighter-rouge">unique_ptr</code> gets the underlying pointer, but it is important to note that it is still considered owned by the <code class="language-plaintext highlighter-rouge">unique_ptr</code>. When object delete, you’ve extracted the pointer with `get’.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">pointDistance</span><span class="p">(</span><span class="n">Point</span> <span class="o">*</span><span class="p">);</span>
+<span class="c1">// If pointDistance stores the pointer to use it later,</span>
+<span class="c1">// it will be invalid after mydistance returns!</span>
+<span class="c1">//  [...]</span>
+
+<span class="kt">double</span> <span class="nf">mydistance</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">pointDistance</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">get</span><span class="p">());</span> <span class="c1">// p.get == Point *</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You should always be careful when using <code class="language-plaintext highlighter-rouge">get</code> to assure that the underlying pointer is not retained after <code class="language-plaintext highlighter-rouge">unique_ptr</code> has gone out of scope.</p>
+
+<h3 id="shared_ptr"><code class="language-plaintext highlighter-rouge">shared_ptr</code></h3>
+
+<p>When the objeject is no single “owner” - we need to use <code class="language-plaintext highlighter-rouge">shared_ptr</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">shared_ptr</code> is similar to a <code class="language-plaintext highlighter-rouge">unique_ptr</code>, in that it controls the lifetime of the object it points to. You may have multiple <code class="language-plaintext highlighter-rouge">shared_ptr</code> pointing to the same object. <code class="language-plaintext highlighter-rouge">shared_ptr</code> can be copied and passed by value, exactly like normal * pointers, but don’t need to be explicitly deleted.</p>
+
+<blockquote>
+  <p>Since <code class="language-plaintext highlighter-rouge">shared_ptr</code> use a technique called reference counting to determine when there are no more <code class="language-plaintext highlighter-rouge">shared_ptr</code> pointing to a given object.</p>
+</blockquote>
+
+<p>When a <code class="language-plaintext highlighter-rouge">shared_ptr</code> goes out of scope, the internal reference count is reduced by 1. Whne it reaches 0, there are no more <code class="language-plaintext highlighter-rouge">shared_ptr</code> pointing to the object, so it is deleted.</p>
+
+<p>Since reference counting is handled automatically, we prefer to use <code class="language-plaintext highlighter-rouge">shared_ptr</code> isntead of * pointers.</p>
+
+<p>Example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">pointDistance</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span><span class="p">);</span>
+
+<span class="c1">//  [...]</span>
+
+<span class="kt">double</span> <span class="nf">mydistance</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="cm">/* std::shared_ptr&lt;point&gt; */</span> <span class="n">p</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span> 
+    <span class="k">return</span> <span class="n">pointDistance</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">unique_ptr</code> example, <code class="language-plaintext highlighter-rouge">p</code> does not need to be moved, but can simply be shared, so <code class="language-plaintext highlighter-rouge">p</code> remains usable:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">mydistance</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span> <span class="c1">// increase ref cnt to 1</span>
+    <span class="kt">double</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">pointDistance</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>          <span class="c1">// increase ref cnt to 2</span>
+    <span class="n">ret</span> <span class="o">+=</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">;</span> <span class="c1">// No problem</span>
+    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// When the first one is destroyed, the ref cnt is decreased frm 2 to 1</span>
+<span class="c1">// When the second one is destroyed, the ref cnt is decreased frm 1 to 0</span>
+</code></pre></div></div>
+
+<h3 id="caveats-of-shared_ptr">Caveats of <code class="language-plaintext highlighter-rouge">shared_ptr</code></h3>
+
+<p><code class="language-plaintext highlighter-rouge">shared_ptr</code> come with important caveats that must be understood.</p>
+
+<p>First let’s see the implementation of a graph:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">GraphNode</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">GraphNode</span><span class="p">(</span><span class="n">sname</span><span class="p">)</span> <span class="o">:</span> <span class="n">name</span><span class="p">(</span><span class="n">sname</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="kt">void</span> <span class="n">addVertex</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">&gt;</span> <span class="n">to</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">vertices</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">to</span><span class="p">);</span>
+    <span class="p">}</span>
+
+  <span class="c1">//  [...]</span>
+
+  <span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">&gt;&gt;</span> <span class="n">vertices</span><span class="p">;</span>
+    <span class="c1">// vertices would be delete in the destructor of the GraphNode object </span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>It will able to leak memory! Let’s see the following example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">graphWork</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">root</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"Node 1"</span><span class="p">);</span> <span class="c1">// "Node 1" ref cnt inc to 1</span>
+    <span class="k">auto</span> <span class="n">n2</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"Node 2"</span><span class="p">);</span> <span class="c1">// "Node 2" ref cnt inc to 1</span>
+    <span class="n">root</span><span class="o">-&gt;</span><span class="n">addVertex</span><span class="p">(</span><span class="n">n2</span><span class="p">);</span> <span class="c1">// "Node 2" ref cnt inc to 2</span>
+    <span class="n">n2</span><span class="o">-&gt;</span><span class="n">addVertex</span><span class="p">(</span><span class="n">root</span><span class="p">);</span> <span class="c1">// "Node 1" ref cnt inc to 2</span>
+
+  <span class="c1">//    [... do some graph work ...]</span>
+
+    <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span> <span class="c1">// "Node 1" ref cnt dec to 1</span>
+  <span class="c1">// "Node 2" ref cnt dec to 1</span>
+  <span class="c1">// Not 0 so not deleted</span>
+</code></pre></div></div>
+
+<p>Adding the vertex from <code class="language-plaintext highlighter-rouge">root</code> to <code class="language-plaintext highlighter-rouge">n2</code> refence count to 2, because it now has the additional reference from <code class="language-plaintext highlighter-rouge">root</code>’s vertices.</p>
+
+<p>Adding the vertex from <code class="language-plaintext highlighter-rouge">n2</code> to <code class="language-plaintext highlighter-rouge">root</code> increases <code class="language-plaintext highlighter-rouge">root</code>’s reference count to 2, because it now has the additional reference from <code class="language-plaintext highlighter-rouge">n2</code>’s <code class="language-plaintext highlighter-rouge">vertices</code>.</p>
+
+<p>Returning from <code class="language-plaintext highlighter-rouge">graphWork</code> reduces each of them by 1, because the <code class="language-plaintext highlighter-rouge">root</code> and <code class="language-plaintext highlighter-rouge">n2</code> variables have gone out of scope. (2-1 = 1) These two objects are never deleted.</p>
+
+<p>This is the cyclic references!</p>
+
+<p>The only solution is to reorganize your data so that no such cycles exist or not to use reference counting at all.</p>
+
+<p>Usually, complex data structures like this are implemented with normal * pointers, and controlled manually, or reorganized.</p>
+
+<p>The example of reorganization of <code class="language-plaintext highlighter-rouge">GraphNode</code> will be below.</p>
+
+<hr />
+
+<p>The second major caveat is that counting reference is extra work and thus a performance pernalty. However, in many cases this work is negligible.</p>
+
+<h1 id="resource-acquisition-is-initialization">Resource Acquisition is Initialization</h1>
+
+<blockquote>
+  <p>RAII concept extends further than simply using smar pointers</p>
+</blockquote>
+
+<p>It is the concept that you should always design your classes so that object lifetimes are bound to other objects.</p>
+
+<p>Let’s see the <code class="language-plaintext highlighter-rouge">GraphNode</code>:</p>
+
+<blockquote>
+  <p>rewrite it!</p>
+</blockquote>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">GraphNode</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">GraphNode</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sname</span><span class="p">)</span> <span class="o">:</span> <span class="n">name</span><span class="p">(</span><span class="n">sname</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="kt">void</span> <span class="n">addVertex</span><span class="p">(</span><span class="n">GraphNode</span> <span class="o">*</span><span class="n">to</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">vertices</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">to</span><span class="p">);</span>
+    <span class="p">}</span>
+
+  <span class="c1">//    [...]</span>
+
+  <span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GraphNode</span> <span class="o">*&gt;</span> <span class="n">vertices</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>With this implementation, it would be exceptionally difficult to properly delete an entire graph, because deleting a node does not delete every node it references. (cyclic references)</p>
+
+<p>Simplests way is to have a surrounding <code class="language-plaintext highlighter-rouge">Graph</code> type and bind the nodes to the <code class="language-plaintext highlighter-rouge">Graph</code> itself:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Graph</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">&gt;</span> <span class="n">createNode</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">node</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">&gt;</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">nodes</span><span class="p">.</span><span class="n">length</span><span class="p">);</span>
+        <span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">node</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">&gt;</span> <span class="n">getNode</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">nodes</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">addVertex</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">&gt;</span> <span class="n">from</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">&gt;</span> <span class="n">to</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">from</span><span class="o">-&gt;</span><span class="n">addVertex</span><span class="p">(</span><span class="n">to</span><span class="o">-&gt;</span><span class="n">getIndex</span><span class="p">());</span>
+    <span class="p">}</span>
+
+  <span class="c1">//    [...]</span>
+
+  <span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">&gt;&gt;</span> <span class="n">nodes</span><span class="p">;</span> 
+    <span class="c1">// When each shared_ptr is deleted, the ref cnt goes to 0.</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">GraphNode</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">GraphNode</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sname</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sindex</span><span class="p">)</span> <span class="o">:</span> <span class="n">name</span><span class="p">(</span><span class="n">sname</span><span class="p">),</span> <span class="n">index</span><span class="p">(</span><span class="n">sindex</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="kt">int</span> <span class="n">getIndex</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">index</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">addVertex</span><span class="p">(</span><span class="kt">int</span> <span class="n">to</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">vertices</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">to</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">&gt;&gt;</span> <span class="n">getVertices</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Graph</span><span class="o">&gt;</span> <span class="n">graph</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">&gt;&gt;</span> <span class="n">ret</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">index</span> <span class="o">:</span> <span class="n">vertices</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">graph</span><span class="o">-&gt;</span><span class="n">getNode</span><span class="p">(</span><span class="n">index</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+    <span class="p">}</span>
+
+  <span class="c1">//    [...]</span>
+
+  <span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">index</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vertices</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In this example, instead of GraphNodes referring directly to other GraphNodes, which created the problem of cyclic dependencies, GraphNodes refer only to indices.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">Graph</span> <span class="n">g</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Graph</span><span class="o">&gt;</span><span class="p">();</span> <span class="c1">// replace new with make_unique or make_shared</span>
+
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">Graph</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span> <span class="c1">// Follows RAII because when the vector is deleted, it will delete the Graphs</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">Graph</span> <span class="o">*&gt;</span> <span class="n">v</span><span class="p">;</span> <span class="c1">// Does not follow RAII, vector will delete pointers, but not the Graphs</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Graph</span><span class="o">&gt;&gt;</span><span class="n">V</span><span class="p">;</span> <span class="c1">// This follows RAII</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Graph</span><span class="o">&gt;&gt;</span><span class="n">V</span><span class="p">;</span> <span class="c1">// This follows RAII</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Like this, dynamic memory is one such resource, but there are others, such as files, network connections, database connections, etc.</p>
+
+<h3 id="file-operation">File Operation</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">getIntFromFile</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">f</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+  <span class="n">f</span> <span class="o">&gt;&gt;</span> <span class="n">ret</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span> <span class="c1">// don't need to close the file!</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>What RAII really helps is with resource cleaning!</p>
+</blockquote>
+
+<h1 id="pimpl-idiom">Pimpl Idiom</h1>
+
+<blockquote>
+  <p>pointer to implementation</p>
+</blockquote>
+
+<p>Idiom means that this is a programming technique, not a design pattern.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// xwindow.h</span>
+
+<span class="cp">#ifndef __WINDOW_H__
+#define __WINDOW_H__
+#include &lt;X11/Xlib.h&gt;
+#include &lt;string&gt;
+</span>
+<span class="k">class</span> <span class="nc">Xwindow</span> <span class="p">{</span>
+    <span class="n">Display</span> <span class="o">*</span><span class="n">d</span><span class="p">;</span>
+    <span class="n">Window</span> <span class="n">w</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">s</span><span class="p">;</span>
+    <span class="n">GC</span> <span class="n">gc</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">colours</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+  <span class="nl">public:</span>
+    <span class="n">Xwindow</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">);</span>  <span class="c1">// Displays the window.</span>
+    <span class="o">~</span><span class="n">Xwindow</span><span class="p">();</span>                              <span class="c1">// Destroys the window.</span>
+    <span class="n">Xwindow</span><span class="p">(</span><span class="k">const</span> <span class="n">Xwindow</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span> <span class="c1">// Disallow copy and assignment</span>
+    <span class="n">Xwindow</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Xwindow</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+
+    <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">MAX_NUM_COLOURS</span><span class="p">;</span> <span class="c1">// Available colours.</span>
+    <span class="k">enum</span> <span class="k">class</span> <span class="nc">Colour</span> <span class="p">{</span><span class="n">White</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Black</span><span class="p">,</span> <span class="n">Red</span><span class="p">,</span> <span class="n">Green</span><span class="p">,</span> <span class="n">Blue</span><span class="p">};</span> 
+
+    <span class="c1">// Draws a rectangle</span>
+    <span class="kt">void</span> <span class="n">fillRectangle</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> 
+        <span class="n">Xwindow</span><span class="o">::</span><span class="n">Colour</span> <span class="n">colour</span><span class="o">=</span><span class="n">Colour</span><span class="o">::</span><span class="n">Black</span><span class="p">);</span>
+
+    <span class="c1">// Draws a string</span>
+    <span class="kt">void</span> <span class="n">drawString</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// xwindow.cc</span>
+<span class="cp">#include &lt;X11/Xutil.h&gt;
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;string&gt;
+#include &lt;unistd.h&gt;
+#include "window.h"
+</span>
+<span class="c1">// Allocate the static constant space.</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">Xwindow</span><span class="o">::</span><span class="n">MAX_NUM_COLOURS</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> 
+
+<span class="n">Xwindow</span><span class="o">::</span><span class="n">Xwindow</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">XOpenDisplay</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">);</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="n">Xwindow</span><span class="o">::~</span><span class="n">Xwindow</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">XFreeGC</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">gc</span><span class="p">);</span>
+    <span class="n">XCloseDisplay</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Xwindow</span><span class="o">::</span><span class="n">fillRectangle</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> 
+    <span class="n">Xwindow</span><span class="o">::</span><span class="n">Colour</span> <span class="n">colour</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="n">XSetForeground</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">colours</span><span class="p">[</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">colour</span><span class="p">)]);</span>
+    <span class="n">XFillRectangle</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">);</span>
+    <span class="n">XSetForeground</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">colours</span><span class="p">[</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Colour</span><span class="o">::</span><span class="n">Black</span><span class="p">)]);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Xwindow</span><span class="o">::</span><span class="n">drawString</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">XDrawString</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">DefaultGC</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">s</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> 
+        <span class="n">msg</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">msg</span><span class="p">.</span><span class="n">length</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If we modify <code class="language-plaintext highlighter-rouge">window.cc</code>, we just need to rebuilt <code class="language-plaintext highlighter-rouge">window.o</code> and link all <code class="language-plaintext highlighter-rouge">*.o</code> files again into the final executable.</p>
+
+<p>If we modify <code class="language-plaintext highlighter-rouge">window.h</code>, we need to rebuilt all the <code class="language-plaintext highlighter-rouge">*.o</code> files that depend on <code class="language-plaintext highlighter-rouge">window.h</code> before relinking the executable.</p>
+
+<p>This is inefficient for 1000 files! :(</p>
+
+<p>Thus, we want to encapsulate the internal, private details of the class so the client does not see it.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// xwindow.h</span>
+
+<span class="cp">#ifndef __WINDOW_H__
+#define __WINDOW_H__
+</span><span class="c1">// #include &lt;X11/Xlib.h&gt; we don't need this anymore</span>
+<span class="cp">#include &lt;string&gt;
+</span>
+<span class="k">class</span> <span class="nc">XWindowImpl</span><span class="p">;</span> <span class="c1">// forward declaration;</span>
+
+<span class="k">class</span> <span class="nc">Xwindow</span> <span class="p">{</span>
+    <span class="n">XWindowImpl</span> <span class="o">*</span> <span class="n">pImpl</span><span class="p">;</span> <span class="c1">// pointer to our implementation class</span>
+    <span class="c1">// Client does not know what the private fields of this class</span>
+  <span class="nl">public:</span>
+    <span class="n">Xwindow</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">);</span>  <span class="c1">// Displays the window.</span>
+    <span class="o">~</span><span class="n">Xwindow</span><span class="p">();</span>                              <span class="c1">// Destroys the window.</span>
+    <span class="n">Xwindow</span><span class="p">(</span><span class="k">const</span> <span class="n">Xwindow</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span> <span class="c1">// Disallow copy and assignment</span>
+    <span class="n">Xwindow</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Xwindow</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+
+    <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">MAX_NUM_COLOURS</span><span class="p">;</span> <span class="c1">// Available colours.</span>
+    <span class="k">enum</span> <span class="k">class</span> <span class="nc">Colour</span> <span class="p">{</span><span class="n">White</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Black</span><span class="p">,</span> <span class="n">Red</span><span class="p">,</span> <span class="n">Green</span><span class="p">,</span> <span class="n">Blue</span><span class="p">};</span> 
+
+    <span class="c1">// Draws a rectangle</span>
+    <span class="kt">void</span> <span class="n">fillRectangle</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> 
+        <span class="n">Xwindow</span><span class="o">::</span><span class="n">Colour</span> <span class="n">colour</span><span class="o">=</span><span class="n">Colour</span><span class="o">::</span><span class="n">Black</span><span class="p">);</span>
+
+    <span class="c1">// Draws a string</span>
+    <span class="kt">void</span> <span class="n">drawString</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// xwindow.cc</span>
+
+<span class="cp">#include &lt;X11/Xlib.h&gt;
+#include &lt;X11/Xutil.h&gt;
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;string&gt;
+#include &lt;unistd.h&gt;
+#include "window.h"
+</span>
+<span class="c1">// Allocate the static constant space.</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">Xwindow</span><span class="o">::</span><span class="n">MAX_NUM_COLOURS</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="nc">XWindowImpl</span> <span class="p">{</span>
+    <span class="n">Display</span> <span class="o">*</span><span class="n">d</span><span class="p">;</span>
+    <span class="n">Window</span> <span class="n">w</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">s</span><span class="p">;</span>
+    <span class="n">GC</span> <span class="n">gc</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">colours</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="p">};</span>
+
+<span class="n">Xwindow</span><span class="o">::</span><span class="n">Xwindow</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">)</span> <span class="o">:</span> <span class="n">pimpl</span><span class="p">{</span><span class="k">new</span> <span class="n">XWindowImpl</span><span class="p">}</span> <span class="p">{</span>
+    <span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">d</span> <span class="o">=</span> <span class="n">XOpenDisplay</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">);</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="n">Xwindow</span><span class="o">::~</span><span class="n">Xwindow</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">XFreeGC</span><span class="p">(</span><span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">d</span><span class="p">,</span> <span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">gc</span><span class="p">);</span>
+    <span class="n">XCloseDisplay</span><span class="p">(</span><span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">d</span><span class="p">);</span>
+    <span class="k">delete</span> <span class="n">pImpl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Xwindow</span><span class="o">::</span><span class="n">fillRectangle</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> 
+    <span class="n">Xwindow</span><span class="o">::</span><span class="n">Colour</span> <span class="n">colour</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="n">XSetForeground</span><span class="p">(</span><span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">d</span><span class="p">,</span> <span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">gc</span><span class="p">,</span> 
+       <span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">colours</span><span class="p">[</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">colour</span><span class="p">)]);</span>
+    <span class="n">XFillRectangle</span><span class="p">(</span><span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">d</span><span class="p">,</span> <span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">w</span><span class="p">,</span> <span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">gc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">);</span>
+    <span class="n">XSetForeground</span><span class="p">(</span><span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">d</span><span class="p">,</span> <span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">gc</span><span class="p">,</span> 
+       <span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">colours</span><span class="p">[</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Colour</span><span class="o">::</span><span class="n">Black</span><span class="p">)]);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Xwindow</span><span class="o">::</span><span class="n">drawString</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">XDrawString</span><span class="p">(</span><span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">d</span><span class="p">,</span> <span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">w</span><span class="p">,</span> <span class="n">DefaultGC</span><span class="p">(</span><span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">d</span><span class="p">,</span> <span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">s</span><span class="p">),</span> 
+      <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">msg</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">msg</span><span class="p">.</span><span class="n">length</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="exception-safety">Exception Safety</h1>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">MyClass</span> <span class="n">mc</span><span class="p">;</span>
+  <span class="n">MyClass</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyClass</span><span class="p">;</span>
+  <span class="n">g</span><span class="p">();</span> <span class="c1">// throws exception</span>
+  <span class="k">delete</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// exception unwinding frees mc and the variable p, </span>
+<span class="c1">// but not the MyClass object pointed by p: memory leak!</span>
+</code></pre></div></div>
+
+<p><strong>Currently, f is not exception safe!</strong></p>
+
+<p>It leaks memory if an exception is thrown.</p>
+
+<h3 id="solution-1">Solution 1</h3>
+
+<p>Add Exception Handler:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">MyClass</span> <span class="n">mc</span><span class="p">;</span>
+  <span class="n">MyClass</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyClass</span><span class="p">;</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">g</span><span class="p">();</span>
+    <span class="k">delete</span> <span class="n">p</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">p</span><span class="p">;</span>
+    <span class="k">throw</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="solution-2">Solution 2</h3>
+
+<p>Smart Pointer</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">MyClass</span> <span class="n">mc</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">MyClass</span><span class="o">&gt;</span><span class="p">();</span>
+  <span class="n">g</span><span class="p">();</span> <span class="c1">// throws exception</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is simple and better!</p>
+
+<p>These new two versions of <code class="language-plaintext highlighter-rouge">f</code> are exception safe!</p>
+
+<p>We should never write C++ code that is not exception-safe!</p>
+
+<p>All functions should at least offer a basic exception safety guarantee! There is optional also offer a strong exception safety.</p>
+
+<h3 id="types-of-exception-safety-for-a-function-f">Types of exception safety for a function f:</h3>
+
+<h5 id="1-basic-guarantee">1. Basic Guarantee</h5>
+
+<p>If an exception occurs, the program will be in some valid state, nothing leaked, class invariants maintained.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">calculateGrades</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Student</span><span class="o">&gt;</span> <span class="n">students</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">Student</span> <span class="o">&amp;</span> <span class="n">s</span> <span class="o">:</span> <span class="n">students</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">s</span><span class="p">.</span><span class="n">calculateGrade</span><span class="p">();</span> <span class="c1">// This works for the first 10 students,</span>
+                        <span class="c1">// but throws exception at the 11th student</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// This function still offers a basic exception guarantee</span>
+<span class="c1">// But if an exception is thrown, a partial update of the vector may be permanent</span>
+<span class="c1">// We are not sure after an exception, what is the state of the vector</span>
+<span class="c1">// (how many students have their grades calculate or not?)</span>
+</code></pre></div></div>
+
+<h5 id="2-strong-guarantee">2. Strong Guarantee</h5>
+
+<p>If <code class="language-plaintext highlighter-rouge">f</code> throws or propagates an exception, the state of the program will be as if <code class="language-plaintext highlighter-rouge">h</code> had not been called.</p>
+
+<p>Two basic strategies:</p>
+
+<ul>
+  <li>Make modifications, but undo them in case of an exception. (complex)</li>
+  <li>Make copies of the data, modify the copies first, and if everything worked, then replace the originals with the copies</li>
+</ul>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// second strategy</span>
+<span class="c1">// Offers a strong exception safety guarantee</span>
+<span class="kt">void</span> <span class="nf">calculateGrades</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Student</span><span class="o">&gt;</span> <span class="n">students</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">Student</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">students</span><span class="p">;</span> <span class="c1">// copy of vector</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">Student</span> <span class="o">&amp;</span> <span class="n">s</span> <span class="o">:</span> <span class="n">temp</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">s</span><span class="p">.</span><span class="n">calculateGrade</span><span class="p">();</span> <span class="c1">// This works for the first 10 students,</span>
+                        <span class="c1">// but throws exception at the 11th student</span>
+  <span class="p">}</span>
+  <span class="n">students</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span> <span class="c1">// this line is not executed if an exception is thrown in the for loop.</span>
+  <span class="c1">// copy of vector</span>
+<span class="p">}</span>
+<span class="c1">// This version of the function offers a strong exception safety guarantee</span>
+<span class="c1">// It can decrease performance</span>
+
+<span class="kt">void</span> <span class="nf">calculateGrades</span><span class="p">(</span><span class="kt">int</span> <span class="n">start</span><span class="p">,</span> <span class="kt">int</span> <span class="n">end</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">make_unique</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Student</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">students</span><span class="p">);</span> <span class="c1">// copy vector</span>
+  <span class="k">for</span> <span class="p">(...)</span> <span class="p">{</span>
+    <span class="n">s</span><span class="p">.</span><span class="n">calculateGrade</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">pImpl</span><span class="o">-&gt;</span><span class="n">student</span><span class="p">,</span> <span class="n">temp</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>What if the vector has 5000 students, but I am only reclaculating 10?</p>
+
+<blockquote>
+  <p>it causes low efficient</p>
+</blockquote>
+
+<h5 id="3-no-throw-guarantee">3. No-throw Guarantee</h5>
+
+<p>The function never throws an exception</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MyClass</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+  <span class="nl">public:</span>
+    <span class="kt">int</span> <span class="n">getX</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="c1">// does not change anything, so never throws</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setX</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span><span class="p">)</span> <span class="k">noexcept</span><span class="p">(</span><span class="nb">true</span> <span class="cm">/*false*/</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// only copies an int value, so never throws</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<h3 id="exception-safety-and-the-stl-vectors">Exception Safety and the STL vectors</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">f</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">MyClass</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+    <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="p">}</span> <span class="c1">// v goes out of scope; array is freed, MyClass destructor runs on all objs in the vector</span>
+
+<span class="c1">// -----------------------------------------------------</span>
+
+<span class="kt">void</span> <span class="nf">g</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">MyClass</span><span class="o">*&gt;</span> <span class="n">v</span><span class="p">;</span>
+    <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="p">}</span> <span class="c1">// v goes out of scope; pointers don't have destructors; only the array is freed</span>
+<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="n">x</span> <span class="o">:</span> <span class="n">v</span><span class="p">)</span> <span class="k">delete</span> <span class="n">x</span><span class="p">;</span>
+
+<span class="c1">// -----------------------------------------------------</span>
+<span class="kt">void</span> <span class="nf">h</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">MyClass</span><span class="o">&gt;&gt;</span> <span class="n">v</span><span class="p">;</span>
+    <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="p">}</span> <span class="c1">// array is freed; unique_ptr destructors run, so the objects ARE deleted</span>
+</code></pre></div></div>
+
+<p>When using vectors(or any kind of collection), using smart pointers instead of regular pointers is a good way to write exception-safe function.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">h</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">MyClass</span><span class="o">&gt;&gt;</span> <span class="n">v</span><span class="p">;</span>
+    <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+    <span class="n">v</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(...);</span>
+<span class="p">}</span> <span class="c1">// array is freed; unique_ptr destructors run, so the objects ARE deleted</span>
+</code></pre></div></div>
+
+<p>When we are doing the <code class="language-plaintext highlighter-rouge">emplace_back</code>, it offers a strong guarantee:</p>
+
+<ul>
+  <li>allocate a new, larger array</li>
+  <li>copy the objects over (copy constructor)
+    <ul>
+      <li>if a copy constructor throws (strong guarantee):
+        <ul>
+          <li>destroy the new array</li>
+          <li>old array still intact</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>delete the old array and replace it with the new, larger array</li>
+</ul>
+
+<p>However, copying is expensive, so we will do the moving:</p>
+
+<ul>
+  <li>allocate a new, larger array</li>
+  <li>move the objects over (move constructor)</li>
+  <li>delete the old array and replace it with the new, larger array</li>
+</ul>
+
+<p>Thus, if the move operations throw exceptions, vector cannot use them, otherwise, a strong exception would not be guaranteed.</p>
+
+<p>What if the move operations in <code class="language-plaintext highlighter-rouge">MyClass</code> did never throw exceptions?</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MyClass</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+  <span class="cm">/*[...]*/</span>
+    <span class="n">MyClass</span><span class="p">(</span><span class="n">MyClass</span> <span class="o">&amp;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span><span class="cm">/*[...]*/</span><span class="p">}</span>
+    <span class="n">MyClass</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">MyClass</span> <span class="o">&amp;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span><span class="cm">/*[...]*/</span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now we can still use strong guarantee!</p>
+
+<h1 id="advanced-casts">Advanced casts</h1>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// safe</span>
+<span class="c1">// double d = i;</span>
+<span class="kt">double</span> <span class="o">*</span><span class="n">dp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">i</span><span class="p">;</span> <span class="c1">// not safe</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">i</code> probably uses 32 bits, however, a double would require more bits.</p>
+
+<p>Usually, casting pointers is not safe!</p>
+
+<p>Consider various of casting:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Book</span> <span class="p">{</span>
+    <span class="nl">public:</span>
+    <span class="n">Book</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">stitle</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sauthor</span><span class="p">)</span> <span class="o">:</span> <span class="n">title</span><span class="p">(</span><span class="n">stitle</span><span class="p">),</span> <span class="n">author</span><span class="p">(</span><span class="n">sauthor</span><span class="p">),</span> <span class="n">price</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="kt">void</span> <span class="n">setPrice</span><span class="p">(</span><span class="kt">int</span> <span class="n">to</span><span class="p">)</span> <span class="p">{</span> <span class="n">priceCents</span> <span class="o">=</span> <span class="n">to</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setPrice</span><span class="p">(</span><span class="kt">double</span> <span class="n">to</span><span class="p">)</span> <span class="p">{</span> <span class="n">priceCents</span> <span class="o">=</span> <span class="n">round</span><span class="p">(</span><span class="n">to</span><span class="o">*</span><span class="mi">100</span><span class="p">);</span> <span class="p">}</span>
+
+    <span class="c1">//  [...]</span>
+
+    <span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">title</span><span class="p">,</span> <span class="n">author</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">priceCents</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">FullText</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Book</span> <span class="p">{</span>
+    <span class="nl">public:</span>
+    <span class="n">FullText</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">stitle</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sauthor</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">stext</span><span class="p">)</span>
+      <span class="o">:</span> <span class="n">Book</span><span class="p">(</span><span class="n">stitle</span><span class="p">,</span> <span class="n">sauthor</span><span class="p">),</span> <span class="n">text</span><span class="p">(</span><span class="n">stext</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="c1">//  [...]</span>
+
+    <span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">text</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">FrenchTranslation</span> <span class="p">{</span>
+    <span class="nl">public:</span>
+    <span class="n">WordTranslation</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sen</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sfr</span><span class="p">)</span> <span class="o">:</span> <span class="n">en</span><span class="p">(</span><span class="n">sen</span><span class="p">),</span> <span class="n">fr</span><span class="p">(</span><span class="n">sfr</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="c1">//  [...]</span>
+
+    <span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">en</span><span class="p">,</span> <span class="n">fr</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="static_cast"><code class="language-plaintext highlighter-rouge">static_cast</code></h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Book</span> <span class="o">*</span><span class="n">b</span> <span class="o">=</span> <span class="cm">/*[...]*/</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">priceDollars</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n">b</span><span class="o">-&gt;</span><span class="n">setPrice</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">priceDollars</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">static_cast</code> is safer.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">badlyPriceABook</span><span class="p">(</span><span class="n">Book</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">isFullText</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">getTitle</span><span class="p">().</span><span class="n">length</span> <span class="o">*</span> <span class="mi">120</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">isFullText</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">FullText</span> <span class="o">*</span><span class="n">f</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">FullText</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">);</span> <span class="c1">// Or auto f = ...</span>
+      <span class="n">p</span> <span class="o">+=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">getText</span><span class="p">().</span><span class="n">length</span> <span class="o">/</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">b</span><span class="o">-&gt;</span><span class="n">setPrice</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is a <strong>downcast</strong> from pointer to superclass to a pointer to subclass(<code class="language-plaintext highlighter-rouge">Book</code> to <code class="language-plaintext highlighter-rouge">FullText</code>)</p>
+
+<h3 id="reinterpret_cast"><code class="language-plaintext highlighter-rouge">reinterpret_cast</code></h3>
+
+<p>It causes a value to be reinterpreted as another type.</p>
+
+<p>This is totally unsafe.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"My book is stored at this address: "</span> <span class="o">&lt;&lt;</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>It works! However following example is unsafe:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Book</span> <span class="o">*</span><span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Book</span><span class="p">(</span><span class="s">"I Know Why the Caged Bird Sings"</span><span class="p">,</span> <span class="s">"Maya Angelou"</span><span class="p">);</span>
+<span class="n">FrenchTranslation</span> <span class="o">*</span><span class="n">f</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">FrenchTranslation</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>It is of course completely invalid to reinterpret a <code class="language-plaintext highlighter-rouge">Book *</code> as a <code class="language-plaintext highlighter-rouge">(FrenchTranslation *)</code>. reinterpret_cast is usually unsafe.</p>
+
+<h4 id="const_cast"><code class="language-plaintext highlighter-rouge">const_cast</code></h4>
+
+<p>If you’re certain that a non-const pointer won’t actually modify the value, you can use <code class="language-plaintext highlighter-rouge">const_cast</code> to cast that const away. For example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">getTitleLength</span><span class="p">(</span><span class="n">Book</span> <span class="o">*</span><span class="p">);</span> <span class="c1">// Does not actually modify the book</span>
+
+<span class="c1">//  [...]</span>
+
+<span class="k">const</span> <span class="n">Book</span> <span class="o">*</span><span class="n">b</span> <span class="o">=</span> <span class="cm">/*[...]*/</span><span class="p">;</span>
+<span class="n">getTitleLength</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">Book</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">))</span> <span class="c1">// remove the const specifier from b to pass it ass a Book * (instead of const Book *)</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">const_cast</code> is not safe.</p>
+
+<h3 id="dynamic_cast"><code class="language-plaintext highlighter-rouge">dynamic_cast</code></h3>
+
+<p><code class="language-plaintext highlighter-rouge">dynamic_cast</code> is a checked cast: It allows downcasts, like <code class="language-plaintext highlighter-rouge">static_cast</code>, but actually checks that the object is of the given type, and so is safe.</p>
+
+<p>If it fails, return <code class="language-plaintext highlighter-rouge">nullptr</code>. So check <code class="language-plaintext highlighter-rouge">nullptr</code>.</p>
+
+<p>Using <code class="language-plaintext highlighter-rouge">dynamic_cast</code>, we can rewrite <code class="language-plaintext highlighter-rouge">badlyPriceABook</code> from above to not require the <code class="language-plaintext highlighter-rouge">isFullText</code> argument:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">badlyPriceABook</span><span class="p">(</span><span class="n">Book</span> <span class="o">*</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">getTitle</span><span class="p">().</span><span class="n">length</span> <span class="o">*</span> <span class="mi">120</span><span class="p">;</span>
+    <span class="n">FullText</span> <span class="o">*</span><span class="n">f</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">FullText</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">);</span> <span class="c1">// Or auto f = ...</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">!=</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">p</span> <span class="o">+=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">getText</span><span class="p">().</span><span class="n">length</span> <span class="o">/</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">b</span><span class="o">-&gt;</span><span class="n">setPrice</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="smart-pointers-1">Smart Pointers</h3>
+
+<p>For <code class="language-plaintext highlighter-rouge">shared_ptr</code> we can use followings:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">static_pointer_cast</code></li>
+  <li><code class="language-plaintext highlighter-rouge">const_pointer_cast</code></li>
+  <li><code class="language-plaintext highlighter-rouge">dynamic_pointer_cast</code></li>
+</ul>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">badlyPriceABook</span><span class="p">(</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Book</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">getTitle</span><span class="p">().</span><span class="n">length</span> <span class="o">*</span> <span class="mi">120</span><span class="p">;</span>
+    <span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">FullText</span><span class="o">&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">dynamic_pointer_cast</span><span class="o">&lt;</span><span class="n">FullText</span><span class="o">&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">);</span> <span class="c1">// Or auto f = ...</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">!=</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">p</span> <span class="o">+=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">getText</span><span class="p">().</span><span class="n">length</span> <span class="o">/</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">b</span><span class="o">-&gt;</span><span class="n">setPrice</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>dynamic cast only works when there exists at least one destructor.</p>
+</blockquote>
+
+<h1 id="fixing-the-polymorphic-assignment-problem-with-dynamic-casting">Fixing the polymorphic assignment problem with dynamic casting</h1>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Text</span> <span class="n">t</span> <span class="p">{</span> <span class="p">.</span> <span class="p">.</span> <span class="p">.</span> <span class="p">};</span>
+<span class="n">Comic</span> <span class="n">c</span> <span class="p">{</span> <span class="p">.</span> <span class="p">.</span> <span class="p">.</span> <span class="p">};</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span> <span class="c1">// Use Comic object to assign Text object. REALLY BAD</span>
+</code></pre></div></div>
+
+<p>However, there is a better way to implement the copy/move assignment operators that allows the program to better deal with the error above. To do this, we need to use dynamic casting and exception handlers.</p>
+
+<h3 id="using-dynamic-casting-to-safely-implement-the-assignment-operators">Using dynamic casting to safely implement the assignment operators</h3>
+
+<p>So, this is how the implementation of the two methods would look like:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Text</span> <span class="o">&amp;</span><span class="n">Text</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Book</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+    <span class="n">Book</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">rhs</span><span class="p">);</span>
+    <span class="c1">// Attempt to treat rhs as a Text object using a dynamic_cast.</span>
+    <span class="c1">// If rhs is not a Text, an exception will the thrown.</span>
+    <span class="k">const</span> <span class="n">Text</span> <span class="o">&amp;</span><span class="n">rhst</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Text</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="n">rhs</span><span class="p">);</span>
+    <span class="n">topic</span> <span class="o">=</span> <span class="n">rhst</span><span class="p">.</span><span class="n">topic</span><span class="p">;</span>
+    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">Text</span> <span class="o">&amp;</span><span class="n">Text</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Book</span> <span class="o">&amp;&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+    <span class="n">Book</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">rhs</span><span class="p">));</span>
+    <span class="c1">// Attempt to treat rhs as a Text object using a dynamic_cast.</span>
+    <span class="c1">// If rhs is not a Text, an exception will the thrown.</span>
+    <span class="n">Text</span> <span class="o">&amp;</span><span class="n">rhst</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="n">rhs</span><span class="p">);</span>
+    <span class="n">topic</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">rhst</span><span class="p">.</span><span class="n">topic</span><span class="p">);</span>
+    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="handling-the-stdbad_cast-exception">Handling the std::bad_cast exception</h3>
+
+<p>Note that this fix will not completely eliminate the mixed assignment issue. If the programmer tries to do a mixed assignment (for example, by trying to use a <code class="language-plaintext highlighter-rouge">Book</code> or <code class="language-plaintext highlighter-rouge">Comic</code> object to assign it into a <code class="language-plaintext highlighter-rouge">Text</code> variable), the compiler will not detect the problem. However, the exception std::bad_cast will be thrown when the dynamic cast is attempted:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Trying to assign a Text from a Book will raise a std::bad_cast exception</span>
+<span class="k">try</span> <span class="p">{</span>
+    <span class="n">Book</span> <span class="n">b1</span><span class="p">(</span><span class="s">"Programming for Beginners"</span><span class="p">,</span> <span class="s">"Niklaus Wirth"</span><span class="p">,</span> <span class="mi">200</span><span class="p">);</span>
+    <span class="n">Text</span> <span class="n">t2</span><span class="p">(</span><span class="s">"Programming for Big Kids"</span><span class="p">,</span> <span class="s">"Bjarne Stroustrup"</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="s">"C++"</span><span class="p">);</span>
+    <span class="n">Book</span> <span class="o">*</span><span class="n">pb1</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">b1</span><span class="p">;</span>
+    <span class="n">Book</span> <span class="o">*</span><span class="n">pb2</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">t2</span><span class="p">;</span>
+    <span class="o">*</span><span class="n">pb2</span> <span class="o">=</span> <span class="o">*</span><span class="n">pb1</span><span class="p">;</span>  <span class="c1">// std::bad_cast will be thrown</span>
+    <span class="n">printTextBook</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="s">"Text 2"</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_cast</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Error trying to assign a Text object: "</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In summary, this fix does not completely eliminate the problem of mixed assignment, but at least it allows the program to gracefully handle the exception and avoid crashing.</p>
+
+<h1 id="template-functions">Template Functions</h1>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="n">T</span> <span class="nf">min</span> <span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">,</span> <span class="n">T</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="n">y</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">f</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">z</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>      <span class="c1">// T = int</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>We don’t need to say <code class="language-plaintext highlighter-rouge">min&lt;int&gt;</code>. But this is only for template functions, not template!</p>
+
+<p>If C++ is unable to determine T, you can parameterize the template yourself as we have in the past:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">z</span> <span class="o">=</span> <span class="n">min</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>For following which types can T be used? Well how does the typing of templates work in C++?</p>
+
+<p>C++ uses what’s called duck typing for tempaltes.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">f</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">z</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>      <span class="c1">// T = int</span>
+    <span class="kt">char</span> <span class="n">w</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="sc">'a'</span><span class="p">,</span> <span class="sc">'c'</span><span class="p">);</span> <span class="c1">// T = char</span>
+    <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">);</span> <span class="c1">// T = double</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>However we use the template type specifiews what valid types can be used with that template.</p>
+
+<h3 id="template-iterator-functions">Template Iterator Functions</h3>
+
+<p>Public interface of generic Iterator:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Iterator</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">T</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="n">Iterator</span> <span class="k">operator</span><span class="o">++</span><span class="p">();</span>
+    <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">Iterator</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="k">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="n">Iterator</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>So, Iterator support <code class="language-plaintext highlighter-rouge">operator*</code>, <code class="language-plaintext highlighter-rouge">operator++</code>, <code class="language-plaintext highlighter-rouge">operator!=</code>, and optionally <code class="language-plaintext highlighter-rouge">operator==</code>.</p>
+
+<p>Knowing this, let’s write a generic function that executes some other function for each element returned by an iterator:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Iter</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Func</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">for_each</span> <span class="p">(</span><span class="n">Iter</span> <span class="n">start</span><span class="p">,</span> <span class="n">Iter</span> <span class="n">finish</span><span class="p">,</span> <span class="n">Func</span> <span class="n">f</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">start</span> <span class="o">!=</span> <span class="n">finish</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">start</span><span class="p">);</span>
+        <span class="o">++</span><span class="n">start</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kt">void</span> <span class="nf">f</span> <span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="kt">int</span> <span class="n">a</span> <span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+<span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="n">for_each</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="mi">5</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span> <span class="c1">// prints the array</span>
+</code></pre></div></div>
+
+<h1 id="function-objects-and-lambdas">Function Objects and Lambdas</h1>
+
+<p>If we write the method <code class="language-plaintext highlighter-rouge">operator()</code> for a class, then we can use objects of that class as functions. For example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Plus1</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="kt">int</span> <span class="k">operator</span><span class="p">()</span> <span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+<span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="n">Plus1</span> <span class="n">p</span><span class="p">;</span>
+<span class="n">p</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span> <span class="c1">// produces 5 </span>
+<span class="c1">// p.operator()(4);</span>
+</code></pre></div></div>
+
+<p>So now, we can use function object from iterator:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Iter</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Func</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">for_each</span> <span class="p">(</span><span class="n">Iter</span> <span class="n">start</span><span class="p">,</span> <span class="n">Iter</span> <span class="n">finish</span><span class="p">,</span> <span class="n">Func</span> <span class="n">f</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">start</span> <span class="o">!=</span> <span class="n">finish</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">start</span><span class="p">);</span>
+        <span class="o">++</span><span class="n">start</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Plus1</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="kt">int</span> <span class="k">operator</span><span class="p">()</span> <span class="p">(</span><span class="kt">int</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="o">++</span><span class="n">n</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+<span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="kt">int</span> <span class="n">a</span> <span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+<span class="n">Plus1</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="n">for_each</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="mi">5</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span> <span class="c1">// adds one to each element of the array</span>
+</code></pre></div></div>
+
+<h3 id="lambdas">Lambdas</h3>
+
+<p>How many <code class="language-plaintext highlighter-rouge">int</code> in a vector are even?</p>
+
+<p>We can create function above:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="nf">even</span> <span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="c1">// iterate over the elements and count how many times f returns true</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Iter</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Func</span><span class="p">&gt;</span>
+<span class="kt">int</span> <span class="nf">count_if</span> <span class="p">(</span><span class="n">Iter</span> <span class="n">start</span><span class="p">,</span> <span class="n">Iter</span> <span class="n">finish</span><span class="p">,</span> <span class="n">Func</span> <span class="n">f</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">start</span> <span class="o">!=</span> <span class="n">finish</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">start</span><span class="p">))</span> <span class="p">{</span> <span class="o">++</span><span class="n">n</span> <span class="p">};</span>
+        <span class="o">++</span><span class="n">start</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+<span class="p">}</span> 
+<span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="n">vector</span> <span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="p">{</span> <span class="p">.</span> <span class="p">.</span> <span class="p">.</span> <span class="p">};</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">count_if</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">even</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>It works but we can make it better using lambda function!</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span> <span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="p">{</span> <span class="p">.</span> <span class="p">.</span> <span class="p">.</span> <span class="p">};</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">count_if</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">});</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">[]</code>: put a list of captures inside</li>
+  <li><code class="language-plaintext highlighter-rouge">()</code>: list of arguments</li>
+  <li><code class="language-plaintext highlighter-rouge">{}</code>: body of the function</li>
+</ul>
+
+<h1 id="stl-algorithms">STL Algorithms</h1>
+
+<p>STL also provides a suite of useful template functions, many of which work over iterators. You can use <code class="language-plaintext highlighter-rouge">#include &lt;algorithm&gt;</code>.</p>
+
+<p>We will only mention five of followings:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">for_each</code></li>
+  <li><code class="language-plaintext highlighter-rouge">find</code></li>
+  <li><code class="language-plaintext highlighter-rouge">count</code></li>
+  <li><code class="language-plaintext highlighter-rouge">copy</code></li>
+  <li><code class="language-plaintext highlighter-rouge">transform</code></li>
+</ul>
+
+<h3 id="for_each"><code class="language-plaintext highlighter-rouge">for_each</code></h3>
+
+<p>Applies a function fn to each of the elements in the range [first, last):</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">InputIterator</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Function</span><span class="p">&gt;</span>
+  <span class="n">Function</span> <span class="nf">for_each</span><span class="p">(</span><span class="n">InputIterator</span> <span class="n">first</span><span class="p">,</span> <span class="n">InputIterator</span> <span class="n">last</span><span class="p">,</span> <span class="n">Function</span> <span class="n">fn</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">first</span><span class="o">!=</span><span class="n">last</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fn</span> <span class="p">(</span><span class="o">*</span><span class="n">first</span><span class="p">);</span>
+    <span class="o">++</span><span class="n">first</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">fn</span><span class="p">;</span>      <span class="c1">// or, since C++11: return move(fn);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Use example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">addOne</span><span class="p">(</span><span class="kt">int</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="o">++</span><span class="n">n</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="n">for_each</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">addOne</span><span class="p">);</span> <span class="c1">// calls addOne for each element in the vector</span>
+</code></pre></div></div>
+
+<h3 id="find"><code class="language-plaintext highlighter-rouge">find</code></h3>
+
+<p>Returns an iterator to the first element in the range [first, last) that compares equal to <code class="language-plaintext highlighter-rouge">val</code>. If no such element is found, the function returns <code class="language-plaintext highlighter-rouge">last</code>.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">InputIterator</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="p">&gt;</span>
+  <span class="n">InputIterator</span> <span class="nf">find</span> <span class="p">(</span><span class="n">InputIterator</span> <span class="n">first</span><span class="p">,</span> <span class="n">InputIterator</span> <span class="n">last</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">first</span><span class="o">!=</span><span class="n">last</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">first</span><span class="o">==</span><span class="n">val</span><span class="p">)</span> <span class="k">return</span> <span class="n">first</span><span class="p">;</span>
+    <span class="o">++</span><span class="n">first</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">last</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Usage example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">myints</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span> <span class="p">};</span>
+<span class="kt">int</span> <span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">find</span> <span class="p">(</span><span class="n">myints</span><span class="p">,</span> <span class="n">myints</span><span class="o">+</span><span class="mi">4</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span> <span class="c1">// p points to the element 30 in the array</span>
+</code></pre></div></div>
+
+<h3 id="count"><code class="language-plaintext highlighter-rouge">count</code></h3>
+
+<p>Returns the number of elements in the range [first, last) that compares equal to <code class="language-plaintext highlighter-rouge">val</code>.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">InputIterator</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="p">&gt;</span>
+  <span class="k">typename</span> <span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">InputIterator</span><span class="o">&gt;::</span><span class="n">difference_type</span>
+  <span class="nf">count</span> <span class="p">(</span><span class="n">InputIterator</span> <span class="n">first</span><span class="p">,</span> <span class="n">InputIterator</span> <span class="n">last</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">typename</span> <span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">InputIterator</span><span class="o">&gt;::</span><span class="n">difference_type</span> <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">first</span><span class="o">!=</span><span class="n">last</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">first</span> <span class="o">==</span> <span class="n">val</span><span class="p">)</span> <span class="o">++</span><span class="n">ret</span><span class="p">;</span>
+    <span class="o">++</span><span class="n">first</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Usage example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">myints</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">};</span>        <span class="c1">// 8 elements</span>
+<span class="kt">int</span> <span class="n">mycount</span> <span class="o">=</span> <span class="n">count</span> <span class="p">(</span><span class="n">myints</span><span class="p">,</span> <span class="n">myints</span><span class="o">+</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span> <span class="c1">// mycount = 3</span>
+</code></pre></div></div>
+
+<h3 id="copy"><code class="language-plaintext highlighter-rouge">copy</code></h3>
+
+<p>Copies the elements in the range [first, last) into the range begining at <code class="language-plaintext highlighter-rouge">result</code>.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">InputIterator</span><span class="p">,</span> <span class="k">class</span> <span class="nc">OutputIterator</span><span class="p">&gt;</span>
+  <span class="n">OutputIterator</span> <span class="nf">copy</span> <span class="p">(</span><span class="n">InputIterator</span> <span class="n">first</span><span class="p">,</span> <span class="n">InputIterator</span> <span class="n">last</span><span class="p">,</span> <span class="n">OutputIterator</span> <span class="n">result</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">first</span><span class="o">!=</span><span class="n">last</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">*</span><span class="n">result</span> <span class="o">=</span> <span class="o">*</span><span class="n">first</span><span class="p">;</span>
+    <span class="o">++</span><span class="n">result</span><span class="p">;</span> <span class="o">++</span><span class="n">first</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Usage example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">w</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span> <span class="c1">// space for 4 ints</span>
+<span class="n">copy</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span> <span class="c1">// w = {2,3,4,5}</span>
+</code></pre></div></div>
+
+<p>But consider this:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">w</span><span class="p">;</span>
+<span class="n">copy</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span> <span class="c1">// WRONG! No space available in w.</span>
+</code></pre></div></div>
+
+<p>Thus we will fix as following:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">w</span><span class="p">;</span>
+<span class="n">copy</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">back_inserter</span><span class="p">(</span><span class="n">w</span><span class="p">));</span> <span class="c1">// works</span>
+</code></pre></div></div>
+
+<p>A <code class="language-plaintext highlighter-rouge">back_inserter</code> is an iterator that calls the method <code class="language-plaintext highlighter-rouge">push_back</code>.</p>
+
+<h3 id="transform"><code class="language-plaintext highlighter-rouge">transform</code></h3>
+
+<p>Applies an operation <code class="language-plaintext highlighter-rouge">op</code> to each of the elemnets in the range [first, last) and stores the value returned by each operation in the range that begins at <code class="language-plaintext highlighter-rouge">result</code>. This is similar to the <code class="language-plaintext highlighter-rouge">copy</code> but using <code class="language-plaintext highlighter-rouge">op</code>.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">InputIterator</span><span class="p">,</span> <span class="k">class</span> <span class="nc">OutputIterator</span><span class="p">,</span> <span class="k">class</span> <span class="nc">UnaryOperator</span><span class="p">&gt;</span>
+  <span class="n">OutputIterator</span> <span class="nf">transform</span> <span class="p">(</span><span class="n">InputIterator</span> <span class="n">first</span><span class="p">,</span> <span class="n">InputIterator</span> <span class="n">last</span><span class="p">,</span>
+                            <span class="n">OutputIterator</span> <span class="n">result</span><span class="p">,</span> <span class="n">UnaryOperator</span> <span class="n">op</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">first1</span> <span class="o">!=</span> <span class="n">last1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">*</span><span class="n">result</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="o">*</span><span class="n">first1</span><span class="p">);</span>
+    <span class="o">++</span><span class="n">result</span><span class="p">;</span> <span class="o">++</span><span class="n">first1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Usage example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">add1</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="n">vector</span> <span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">};</span>
+<span class="n">vector</span> <span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">w</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+<span class="n">transform</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">add1</span><span class="p">);</span> <span class="c1">// w = {3, 4, 6, 8, 12}</span>
+</code></pre></div></div>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

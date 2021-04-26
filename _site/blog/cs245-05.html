@@ -114,7 +114,7 @@
 
 <p class="post-metadata text-muted">
   08 March 2021 -  
-  <b>6 mins read time</b>
+  <b>9 mins read time</b>
 
   <br>Tags: 
     
@@ -498,7 +498,7 @@
 
 <p>(Note that for every term t, if \(s_1,s_2\) agree on the variables in t, then \(s_1\)‘(t) = \(s_2\)‘(t))</p>
 
-<p><img src="/assets/img/cs245/cs245.jpeg" /></p>
+<p><img src="/assets/img/cs245/cs245-02.jpeg" /></p>
 
 <p>\(M(s) \vDash R(t_1, t_2)\) iff s’(\(t_1\)), s’(\(t_2\)) \(\in R^M\).</p>
 
@@ -511,9 +511,7 @@
 
 <h3 id="semantic-notions">Semantic Notions</h3>
 
-<ol>
-  <li>\(\phi\) is a logical truth if for every structure for the language of \(\phi\), and every assignmnet s that structure \(M(s) \vDash \phi\).</li>
-</ol>
+<p>1) \(\phi\) is a logical truth if for every structure for the language of \(\phi\), and every assignmnet s that structure \(M(s) \vDash \phi\). (satisfy, LHS is M)</p>
 
 <h5 id="examples-1">Examples:</h5>
 
@@ -533,9 +531,9 @@
 
 <p>Contradiction!</p>
 
-<ol>
-  <li>\(\sum\) logically implies \(\phi\) if for every M, s, that make every member of \(\sum\) get T, M(s) \(\vDash \phi\).</li>
-</ol>
+<hr />
+
+<p>2) \(\sum\) logically implies \(\phi\) if for every M, s, that make every member of \(\sum\) get T, M(s) \(\vDash \phi\). (LHS is different as satisfiy)</p>
 
 <h5 id="lemma-1">lemma:</h5>
 
@@ -546,6 +544,91 @@
 <p>\(\{\exists y \forall x R(x,y)\} \vDash \forall x \exists y R(x,y)\).</p>
 
 <p>\(M(s) \vDash \phi\) stands for s’(\(\phi\)) = T in M.</p>
+
+<h3 id="example-2">Example:</h3>
+
+<p>Let L = &lt;R(,)&gt;.</p>
+
+\[M_1 = &lt;N, \{(n,m): n &lt; m\}&gt;\]
+
+<p>\(M_1(s) \vDash R(x, y)\) iff s(x) &lt; s(y)</p>
+
+\[M_2 = &lt;N, \{(n,m): n \space divide \space m\}&gt;\]
+
+<p>\(M_1(s) \vDash R(x, y)\) and \(M_1(s) \nvDash R(x, y)\) iff s(x) = 2, s(y) = 3</p>
+
+<p>\(\phi = \exists x R(x,x)\) then \(M_1 \nvDash \phi\) and \(M_2 \vDash \phi\)</p>
+
+\[M_3 = &lt;P(N), \{(A,B): A\subseteq B\} &gt;\]
+
+<p>where P(N) is all subsets of N</p>
+
+<p>\(\phi '\) = \(\exists x \forall y R(x, y)\)</p>
+
+<hr />
+
+<h1 id="the-expressive-power-of-1st-order-logic">The expressive power of 1st order logic</h1>
+
+<p>A set of structures K is <strong>definable</strong> in a 1st order language L, if there exist a set of L sentences \(\sum\) such that K = \(\{M:M\vDash \sum\}\).</p>
+
+<p>(Meaning, for all \(\phi \in \sum\), \(M \vDash \phi\))</p>
+
+<h3 id="example-3">Example:</h3>
+
+<p>Let L be the empty language.</p>
+
+<h5 id="claim">Claim:</h5>
+
+<p>1) the collection of all structures M such that \(\|U^M\|\) = 1 is definable in L.</p>
+
+\[\sum_1 = \{\forall x \forall y (x=y)\}\]
+
+<p>2) For every n the collection of all structures with at least n elements in \(U^M\) is definable. And \(\{M:\|U^M\| \leq n \}\) is definable.</p>
+
+\[\sum_{atLeastN} = \exists X_1 \exists X_2 ... \exists X_n (\neg (X_1 = X_2)\land \neg (X_1 = X_3)...)\]
+
+\[\sum_{atMostN} = \forall X_1 \forall X_2 ... \forall X_{n+1} ( (X_1 = X_2)\lor  (X_1 = X_3)...)\]
+
+\[\sum_{infinite} = \{\phi_i: i\in N\}\]
+
+<h3 id="example-2">Example 2:</h3>
+
+<p>Let L = &lt;R(,)&gt;.</p>
+
+<p>\(\{M:R^M\)is a total order\(\}\)</p>
+
+\[\sum_{order} = \forall x \forall y (R(x,y)\lor R(y,x))\]
+
+\[\sum_{order} = \forall x \forall y  \forall z ((R(x,y)\land R(y,x)) \to R(x,z))\]
+
+\[\sum_{order} = \forall x \forall y ((R(x,y) \land R(y,x)) \to (x=y))\]
+
+\[\sum_{order with first element} = \exists x \forall y R(x, y)\]
+
+<p>“There is no maximal element” \(\forall x \exists y (R(x, y) \land \neg(x=y))\)</p>
+
+<p>\(M_1 = &lt;Z, \leq&gt;\) Integer</p>
+
+<p>\(M_2 = &lt;Q, \leq&gt;\) Rational</p>
+
+<p>We want create sentence that holds for \(M_2\) but not for \(M_1\).</p>
+
+<p>$$\phi_{density} = \forall x \forall y (((\neg x = y) \land R(x, y)) \to \exists z (\neg x = z \land \neg y = z \land R(x,z) \land R(z,y)))</p>
+
+\[M_3 = &lt;R, \leq&gt;\]
+
+<p>How to distinguish Real and Rational.</p>
+
+<hr />
+
+<p>\(\sum_{equivalence} = \forall x \forall y  \forall z ((R(x,y)\land R(y,x)) \to R(x,z))\) transitive</p>
+
+<p>\(\sum_{equivalence} = \forall x \forall y (R(x,y) \to R(y,x))\) symmetric</p>
+
+<p>\(\sum_{equivalence} = \forall x R(x,x)\) relative</p>
+
+<hr />
+
 
 
 

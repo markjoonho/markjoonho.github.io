@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="Overview of Databdase. It's written in Korean by Mark Joonho Lee."
+  />
+  <meta
+    property="og:title"
+    content="01. DataBase Overview"
+  />
+  <meta
+    property="og:description"
+    content="Overview of Databdase. It's written in Korean by Mark Joonho Lee."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>
+    01. DataBase Overview
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"
+    async
+  ></script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>01. DataBase Overview</b></h1>
+
+<p class="post-metadata text-muted">
+  25 April 2021 -  
+  <b>2 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#database">
+      <span class="tag badge badge-pill text-primary border border-primary">DataBase</span>
+    </a>
+    </p>
+
+<p>Source: <a href="https://youtu.be/HmVAN1xq9KI">Youtube</a></p>
+
+<h3 id="concept-of-database">Concept of DataBase</h3>
+
+<ul>
+  <li>
+    <p>Integrated storage on a computter to efficiently manage vast amount of data.</p>
+  </li>
+  <li>
+    <p>A collection of integrated and stored operational data for users in a particular organization to use and share.</p>
+  </li>
+  <li>
+    <p>Using the Data Managemement Systme(DBMS) to manage.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="feature-of-stored-data-in-database">Feature of Stored Data in DataBase</h3>
+
+<ul>
+  <li>
+    <p><strong>Shared Data</strong>: 특정 조직의 여러 사용자가 함께 소유하고 이용할수 있는 공용 데이터</p>
+  </li>
+  <li>
+    <p><strong>Integrated Data</strong>: 최소의 중복과 통제 가능한 중복만 허용하는 데이터</p>
+  </li>
+  <li>
+    <p><strong>Stored Data</strong>: 컴퓨터가 접근할 수 있는 매체에 저장된 데이터</p>
+  </li>
+  <li>
+    <p><strong>Operational Data</strong>: 주요 기능을 수행하기 위해 지속적으로 필요한 데이터</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="feature-of-database">Feature of DataBase</h3>
+
+<ul>
+  <li>
+    <p><strong>Real-time Accessibility</strong>: 사용자의 데이터 요구에 실시간으로 응답</p>
+  </li>
+  <li>
+    <p><strong>Continuous Evolution</strong>: 계속적인 삽입, 삭제, 수정을 통해 현재의 정확한 데이터 유지</p>
+  </li>
+  <li>
+    <p><strong>Concurrent Sharing</strong>: 서로 다른 데이터ㅢ 동시 사용뿐만 아니라 같은 데이터의 동시 사용 지원</p>
+  </li>
+  <li>
+    <p><strong>Content Reference</strong>: 데이터가 저장된 주소나 위치가 아닌 내용으로 참조 (i.e. 성적이 70점 이상인 학생)</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="file-process-system과거">File Process System(과거)</h3>
+
+<ul>
+  <li>
+    <p>데이터를 파일로 관리하기 위해 파일을 생성, 수정, 삭제, 검색하는 기능을 제공하는 소프트웨어</p>
+  </li>
+  <li>
+    <p>응용프로그램마다 필요한 데이터를 파일로 관리함</p>
+  </li>
+</ul>
+
+<h5 id="disadvantages-of-fps">Disadvantages of FPS</h5>
+
+<ul>
+  <li>
+    <p>같은 내용의 데이터가 여러 파일에 중복 저장(데이터 중복성)</p>
+  </li>
+  <li>
+    <p>응용프로갬이 데이터 파일에 종속적(데이터 종속성)</p>
+  </li>
+  <li>
+    <p>데이터 파일에 대한 동식 공유, 보안 회복 기능 부족</p>
+  </li>
+  <li>
+    <p>응용 프로그램 개발이 쉽지 않음</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="database-management-system">DataBase Management System</h3>
+
+<ul>
+  <li>
+    <p>FPS의 문제점을 해결하기 위해 제시된 소프트웨어</p>
+  </li>
+  <li>
+    <p>조직에 필요한 데이터를 데이터 베이스에 통합하여 저장하고 관리함</p>
+  </li>
+  <li>
+    <p>사용자와 응용프로그램에 편리하고 효율적인 데이터베이스 사용환경을 제공하는 소프트웨어</p>
+  </li>
+</ul>
+
+<p><img src="/assets/img/dbms/dbms.jpeg" /></p>
+
+<blockquote>
+  <p>출처: <a href="https:://www.facebook.com/DBMSDatabaseManagementSystem/">https:://www.facebook.com/DBMSDatabaseManagementSystem/</a></p>
+</blockquote>
+
+<h5 id="dmbs-important-feature">DMBS Important Feature</h5>
+
+<ul>
+  <li>
+    <p>Data Definition Language(DDL): 데이터베이스 구조를 정의하거나 수정 가능 (데이터 정의 기능)</p>
+  </li>
+  <li>
+    <p>Data Manipulate Language(DML): 데이터를 삽입, 수정, 삭제, 검색 하는 연산 가능 (데이터 조작 기능)</p>
+  </li>
+  <li>
+    <p>Data Control Language(DCL): 데이터를 항상 정확하고 안전하게 유지 (데이터 제어 기능)</p>
+  </li>
+</ul>
+
+<h5 id="advantages-of-dbms">Advantages of DBMS</h5>
+
+<ul>
+  <li>
+    <p>데이터의 중복과 불일치 감소</p>
+  </li>
+  <li>
+    <p>데이터 독립성 확보(종속성 해결)</p>
+  </li>
+  <li>
+    <p>데이터의 공유와 동시 접근이 가능함</p>
+  </li>
+  <li>
+    <p>데이터 보안 향상</p>
+  </li>
+  <li>
+    <p>데이터 무결성 향상</p>
+  </li>
+  <li>
+    <p>표준화 용이</p>
+  </li>
+  <li>
+    <p>시스템의 융통성 향상</p>
+  </li>
+  <li>
+    <p>응용프로그램 개발 및 유지 비용 감소</p>
+  </li>
+  <li>
+    <p>사용자에게 더 나은 서비스 제공</p>
+  </li>
+  <li>
+    <p>요구 사항에 따른 조정 가능</p>
+  </li>
+  <li>
+    <p>시스템의 고장으로 부터 데이터 베이스 복구 가능</p>
+  </li>
+  <li>
+    <p>데이터 중심의 중앙 집중 관리</p>
+  </li>
+</ul>
+
+<h5 id="users-of-database">Users of DataBase</h5>
+
+<ul>
+  <li>
+    <p>응용 프로그래머: 프로그래밍 언어를 사용하여 특정 응용 프로그램이나 인터페이스를 구현하는 사람</p>
+  </li>
+  <li>
+    <p>최종 사용자: 데이터의 검색, 삽입, 삭제, 갱신 등을 위해 DBMS를 사용하는 사람</p>
+  </li>
+  <li>
+    <p>데이터베이스 관리자: DDL과 DCL을 사용하여 데이터베이스 스키마를 생성하고 관리하는 사람</p>
+  </li>
+</ul>
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

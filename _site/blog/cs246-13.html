@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta
+    property="og:title"
+    content="07. The Standard Template Library (STL) for CS246"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>
+    07. The Standard Template Library (STL) for CS246
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"
+    async
+  ></script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>07. The Standard Template Library (STL) for CS246</b></h1>
+
+<p class="post-metadata text-muted">
+  17 March 2021 -  
+  <b>9 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-246-object-oriented-software-development">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 246 Object-Oriented Software Development</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
+
+<hr />
+
+<p>Contents:</p>
+
+<ul>
+  <li><a href="#introduction-to-templates">Introduction to Templates</a></li>
+  <li><a href="#introduction-to-the-stl">Introduction to the STL</a></li>
+  <li><a href="#stl:vector">STL:vector</a></li>
+  <li><a href="#stl:std::map">STL:std::map</a></li>
+</ul>
+
+<hr />
+
+<h1 id="introduction-to-templates">Introduction to Templates</h1>
+
+<p>Template programming allows us to create parameterized classes(templates) that are specialized to actual code when we need to use them. Advantage is that we can use the template code to generate many concrete classes without having to duplicate code.</p>
+
+<blockquote>
+  <p>Templates are a large and complex topic! We will do basic introduction!</p>
+</blockquote>
+
+<p>Let’s say we need to implement a class <code class="language-plaintext highlighter-rouge">List</code> for <code class="language-plaintext highlighter-rouge">int</code> data and another <code class="language-plaintext highlighter-rouge">float</code> data. We could copy and paste the code and just change the type of the private field with the <code class="language-plaintext highlighter-rouge">Node</code>s:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">IntList</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="nc">Node</span> <span class="p">{</span>
+      <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+      <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+     <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+    <span class="p">};</span>
+    <span class="n">Node</span> <span class="o">*</span><span class="n">theList</span><span class="p">;</span>
+  <span class="nl">public:</span>
+    <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">FloatList</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="nc">Node</span> <span class="p">{</span>
+      <span class="kt">float</span> <span class="n">data</span><span class="p">;</span>
+      <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+     <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+    <span class="p">};</span>
+    <span class="n">Node</span> <span class="o">*</span><span class="n">theList</span><span class="p">;</span>
+  <span class="nl">public:</span>
+    <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>To avoide this code duplication, we can create a <code class="language-plaintext highlighter-rouge">List</code> template with a parameter that corresponds to the type of data stored in the list:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">List</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="nc">Node</span> <span class="p">{</span>
+      <span class="n">T</span> <span class="n">data</span><span class="p">;</span>
+      <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+     <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+    <span class="p">};</span>
+    <span class="n">Node</span> <span class="o">*</span><span class="n">theList</span><span class="p">;</span>
+  <span class="nl">public:</span>
+    <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Now, our <code class="language-plaintext highlighter-rouge">List</code> class can store any type of data. To create a new <code class="language-plaintext highlighter-rouge">List</code> object, we need to specify the value of the parameter <code class="language-plaintext highlighter-rouge">T</code>(the type of data we want to store).</p>
+
+<p>For example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">li</span><span class="p">;</span>  <span class="c1">// int is the value of the template parameter T.</span>
+               <span class="c1">// So, each T in the List's code will be replaced with int.</span>
+<span class="n">li</span><span class="p">.</span><span class="n">addToFront</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="n">List</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ls</span><span class="p">;</span>  <span class="c1">// string is the value of the template parameter T.</span>
+                  <span class="c1">// So, each T in the List's code will be replaced with string.</span>
+<span class="n">ls</span><span class="p">.</span><span class="n">addToFront</span><span class="p">(</span><span class="s">"hello"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Because of the way that tempaltes work, the implementation of the template needs to go in the .h file instead of the .cc file as usual.</p>
+</blockquote>
+
+<p>Here is the other example with two template parameters:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">K</span><span class="p">,</span> <span class="n">V</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Dictionary</span> <span class="p">{</span>
+    <span class="n">K</span> <span class="n">key</span><span class="p">;</span>
+    <span class="n">V</span> <span class="n">value</span><span class="p">;</span>
+    <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="p">}</span>
+<span class="n">Dictionary</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span> <span class="n">Student</span><span class="o">&gt;</span> <span class="n">d</span><span class="p">;</span> <span class="c1">// Each K in Dictionary will be replaced with string</span>
+                               <span class="c1">// and each V will be replaced with Student</span>
+</code></pre></div></div>
+
+<h1 id="introduction-to-the-stl">Introduction to the STL</h1>
+
+<p>The Standard Template Library(STL) is a large collection of useful templates that alread exist in C++.</p>
+
+<p>It containls collection classes such as lists, vectors, maps, deque, etc., which we can use to do common tasks, as well as iterators to traverse the elements in those collections and generic functions to oper on them.</p>
+
+<h1 id="stlvector">STL:vector</h1>
+
+<p>It is a generic implementation of dynamic-length arrays.</p>
+
+<p>For example, you can use it to create a dynamic-length array of integers:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;vector&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span> <span class="c1">// because it's a template, we need to specify the type of data to store, which is int in this example</span>
+<span class="n">v</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span> <span class="c1">// {6} add elements</span>
+<span class="n">v</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span> <span class="c1">// {6, 7} add elements</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">emplace_back</code> and <code class="language-plaintext highlighter-rouge">push_pack</code> can be used to add elements to the vector.</p>
+
+<p>Difference is that:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">emplace_back</code> creates a new object by using the class constructor before adding it to the array.</li>
+  <li><code class="language-plaintext highlighter-rouge">push_back</code> copies or moves the content from an existing object into the array.</li>
+</ul>
+
+<p>For example, we could create a vector of <code class="language-plaintext highlighter-rouge">Vec</code> object using <code class="language-plaintext highlighter-rouge">emplace_back</code>:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+</span>
+<span class="k">struct</span> <span class="nc">Vec</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+  <span class="n">Vec</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="o">:</span> <span class="n">x</span><span class="p">{</span><span class="n">x</span><span class="p">},</span> <span class="n">y</span><span class="p">{</span><span class="n">y</span><span class="p">}</span> <span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vec</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span> 
+        <span class="n">v</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="p">);</span> <span class="c1">// invokes Vec ctor</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span> <span class="n">i</span> <span class="o">:</span> <span class="n">v</span> <span class="p">)</span> 
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"("</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">.</span><span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">", "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="s">")"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">v.pop_back()</code> removes the last element of <code class="language-plaintext highlighter-rouge">v</code>.</p>
+
+<h3 id="looping-over-vectors">Looping over vectors</h3>
+
+<p>You can use a for loop:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>vectors also support the iterator abstraction:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// could use auto</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">it</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">n</span> <span class="o">:</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>To iterate in reverse:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">reverse_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">rbegin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">v</span><span class="p">.</span><span class="n">rend</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="p">}</span>
+<span class="c1">// Shorter:</span>
+<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">rbegin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">v</span><span class="p">.</span><span class="n">rend</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Other vector operations are based on iterators. For examples, the <code class="language-plaintext highlighter-rouge">erase</code> method, which removes an item from a vector, works with iterators:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span> <span class="c1">// erases item 0; returns iterator to first</span>
+<span class="c1">// item after the erase</span>
+<span class="n">it</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="mi">3</span><span class="p">);</span> <span class="c1">// erases item 3 (4th item)</span>
+<span class="n">it</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">it</span><span class="p">);</span> <span class="c1">// erases item pointed to by it</span>
+<span class="n">it</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// erases last item</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>v[i] is better than v.at(i)</p>
+</blockquote>
+
+<p>Using vectors instead of dynamic-length arrays</p>
+
+<h1 id="stlstdmap">STL:std::map</h1>
+
+<p><code class="language-plaintext highlighter-rouge">std::map</code> can be used to implement dictionaries, in which unique keys are mapped to values. It is a generic class, so we can define any type for the keys and the values.</p>
+
+<p>For example, a <code class="language-plaintext highlighter-rouge">map</code> of <code class="language-plaintext highlighter-rouge">string</code> keys to <code class="language-plaintext highlighter-rouge">int</code> values:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;map&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+<span class="n">map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">m</span><span class="p">;</span>  <span class="c1">// string is the key type, and int is the value type</span>
+<span class="c1">// Setting the values for the keys "abc" and "def":</span>
+<span class="n">m</span><span class="p">[</span><span class="s">"abc"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">m</span><span class="p">[</span><span class="s">"def"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="c1">// Reading the values associated with each key</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">m</span><span class="p">[</span><span class="s">"abc"</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">// 1</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">m</span><span class="p">[</span><span class="s">"ghi"</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">// 0 (see note below)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>If a key is not found when trying to read it, such as in the last line above, it is inserted and the value is default-constructed(for an <code class="language-plaintext highlighter-rouge">int</code>, default = 0)</p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">erase</code> method can be used to delete a key and its associated value:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">m</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="s">"abc"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">count</code> method returns one if a key is found in the map, or zero otherwise:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="s">"def"</span><span class="p">))</span> <span class="p">...</span> <span class="c1">// 0 = not found, 1 = found</span>
+</code></pre></div></div>
+
+<h3 id="iterating-over-a-map">Iterating over a Map</h3>
+
+<p>Iterating over a <code class="language-plaintext highlighter-rouge">map</code> happens in sorted key order:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="n">p</span><span class="o">:</span><span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">p</span><span class="p">.</span><span class="n">first</span> <span class="o">&lt;&lt;</span> <span class="sc">' '</span> <span class="o">&lt;&lt;</span> <span class="n">p</span><span class="p">.</span><span class="n">second</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">// first and seconds are fields, not methods</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

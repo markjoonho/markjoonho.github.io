@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta
+    property="og:title"
+    content="08. Error Handling with Exceptions for CS246"
+  />
+  <meta
+    property="og:description"
+    content="This post is based on University of Waterloo CS 246 Lecture by Professor Gustavo Fortes Tondello. Since the post is summarized by Joonho Mark Lee, the conten..."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>
+    08. Error Handling with Exceptions for CS246
+  </title>
+
+  <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="/assets/favicon.ico"
+  />
+
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+
+  <!-- Animate CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css"
+    type="text/css"
+  />
+
+  <!-- Custom CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+    type="text/css"
+  /><!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-M2CHBNL1PG"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-M2CHBNL1PG");
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"
+    async
+  ></script></head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/"><h5><b>Joonho</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>08. Error Handling with Exceptions for CS246</b></h1>
+
+<p class="post-metadata text-muted">
+  17 March 2021 -  
+  <b>17 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#cs-246-object-oriented-software-development">
+      <span class="tag badge badge-pill text-primary border border-primary">CS 246 Object-Oriented Software Development</span>
+    </a>
+    </p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>Source: University of Waterloo CS 246 by Professor Gustavo Fortes Tondello</p>
+
+<hr />
+
+<p>Contents:</p>
+
+<ul>
+  <li><a href="#introduction-to-exceptions">Introduction to Exceptions</a></li>
+  <li><a href="#exceptions-and-the-call-chain">Exceptions and the Call Chain</a></li>
+  <li><a href="#catching-exceptions-with-subclasses-and-by-reference">Catching Exceptions With Subclasses And By Reference</a></li>
+  <li><a href="#exceptions-from-the-c++-standard-classes">Exceptions From the C++ Standard Classes</a></li>
+</ul>
+
+<hr />
+
+<h1 id="introduction-to-exceptions">Introduction to Exceptions</h1>
+
+<p>Consider the simble <code class="language-plaintext highlighter-rouge">Student</code> Class. We have <code class="language-plaintext highlighter-rouge">checkGrade</code> to check the grade is lower than zero or higher than 100:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Helper function</span>
+<span class="kt">int</span> <span class="nf">checkGrade</span><span class="p">(</span> <span class="kt">int</span> <span class="n">grade</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="n">grade</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">grade</span> <span class="o">&lt;=</span> <span class="mi">100</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">grade</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// How should we report this error?</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Student</span> <span class="p">{</span>
+  <span class="nl">private:</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">id</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">assns</span><span class="p">,</span> <span class="n">mt</span><span class="p">,</span> <span class="k">final</span><span class="p">;</span>
+  <span class="nl">public:</span>
+    <span class="n">Student</span><span class="p">(</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">int</span> <span class="n">assns</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">mt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="k">final</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">)</span>
+      <span class="o">:</span> <span class="n">id</span><span class="p">{</span><span class="n">id</span><span class="p">},</span> <span class="n">assns</span><span class="p">{</span><span class="n">checkGrade</span><span class="p">(</span><span class="n">assns</span><span class="p">)},</span> <span class="n">mt</span><span class="p">{</span><span class="n">checkGrade</span><span class="p">(</span><span class="n">mt</span><span class="p">)},</span> <span class="k">final</span><span class="p">{</span><span class="n">checkGrade</span><span class="p">(</span><span class="k">final</span><span class="p">)}</span> <span class="p">{}</span>
+    <span class="kt">float</span> <span class="n">grade</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="n">assns</span> <span class="o">*</span> <span class="mf">0.4</span> <span class="o">+</span> <span class="n">mt</span> <span class="o">*</span> <span class="mf">0.2</span> <span class="o">+</span> <span class="k">final</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// In main.cc</span>
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// How would we detect here if these grades are valid?</span>
+  <span class="n">Student</span> <span class="n">s</span><span class="p">{</span> <span class="mi">7899</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span> <span class="p">};</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"s.grade() = "</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">grade</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>What happens when the function <code class="language-plaintext highlighter-rouge">checkGrade</code> detects an invalid grade?</p>
+
+<h5 id="problem">Problem:</h5>
+
+<p><code class="language-plaintext highlighter-rouge">Student</code>’s code can detect the error but doesn’t know what to do about it.</p>
+
+<h5 id="c-solution">C Solution:</h5>
+
+<p>Functions return a status, or set the global variable <code class="language-plaintext highlighter-rouge">errno</code>. This leads to awkward programming and encourages programmers to ignor error-checking.</p>
+
+<h5 id="c">C++:</h5>
+
+<p>When an error condition arises, the function raises or throws an exception. By default, execution stops. But we can write handlers to catch exceptions and deal with them.</p>
+
+<h3 id="throwing-an-exception">Throwing an Exception</h3>
+
+<p>Let’s first complete the code of the function <code class="language-plaintext highlighter-rouge">checkGrade</code> to throw an exception when it detects an invalid grade. Let’s create a class <code class="language-plaintext highlighter-rouge">InvalideGrade</code> and throw an exception as an instance of this class when an invalid grade is detected:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">InvalidGrade</span> <span class="p">{</span>
+  <span class="c1">// We will add fields later</span>
+<span class="p">};</span>
+
+<span class="c1">// Helper function</span>
+<span class="kt">int</span> <span class="nf">checkGrade</span><span class="p">(</span> <span class="kt">int</span> <span class="n">grade</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="n">grade</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">grade</span> <span class="o">&lt;=</span> <span class="mi">100</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">grade</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="n">InvalidGrade</span><span class="p">{};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now, if we compile and run, the exception will be raised when the first invalid grade is encountered.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./main
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>terminate called after throwing an instance of 'InvalidGrade'
+Aborted (core dumped)
+</code></pre></div></div>
+
+<h3 id="handling-exception">Handling Exception</h3>
+
+<p>To handle exception, we use a try-catch block.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In main.cc</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">Student</span> <span class="n">s</span><span class="p">{</span> <span class="mi">7899</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span> <span class="p">};</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"s.grade() = "</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">grade</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">InvalidGrade</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Invalid grade."</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> 
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If we compile and run the updated program, we will see our error message:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./main
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Invalid grade.
+</code></pre></div></div>
+
+<h3 id="passing-information-in-the-exception">Passing Information in the Exception</h3>
+
+<p>Our error message is better than the message displayed automatically when we don’t have an exception handler. However, it would even better if we could pass additional information in the exception, which could be displayed in the error message.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">InvalidGrade</span> <span class="p">{</span>
+  <span class="nl">private:</span>
+    <span class="kt">int</span> <span class="n">grade</span><span class="p">;</span>
+  <span class="nl">public:</span>
+    <span class="n">InvalidGrade</span><span class="p">(</span><span class="n">grade</span><span class="p">)</span><span class="o">:</span> <span class="n">grade</span><span class="p">{</span><span class="n">grade</span><span class="p">}</span> <span class="p">{}</span>
+    <span class="kt">int</span> <span class="n">getGrade</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">grade</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Helper function</span>
+<span class="kt">int</span> <span class="nf">checkGrade</span><span class="p">(</span> <span class="kt">int</span> <span class="n">grade</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="n">grade</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">grade</span> <span class="o">&lt;=</span> <span class="mi">100</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">grade</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="n">InvalidGrade</span><span class="p">{</span><span class="n">grade</span><span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Let’s update our exception handler by catching the thrown object into the variable <code class="language-plaintext highlighter-rouge">ex</code>.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In main.cc</span>
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">Student</span> <span class="n">s</span><span class="p">{</span> <span class="mi">7899</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span> <span class="p">};</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"s.grade() = "</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">grade</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">InvalidGrade</span> <span class="n">ex</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Invalid grade: "</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">getGrade</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> 
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>When we compile and run the program, we will see the updated message:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./main
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Invalid grade: -10
+</code></pre></div></div>
+
+<h3 id="continuing-the-programs-execution-after-the-exception">Continuing the Program’s Execution After the Exception</h3>
+
+<p>It is good that once you catch an exception, the program does not terminate.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">Student</span> <span class="n">s</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="c1">// assume that we have a method to read a Student object from cin, which may throw an InvalidGrade exception:</span>
+      <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
+      <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"s.grade() = "</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">grade</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">InvalidGrade</span> <span class="n">ex</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Invalid grade: "</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">getGrade</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> 
+    <span class="p">}</span>
+    <span class="c1">// write some condition to break the while loop</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="exceptions-and-the-call-chain">Exceptions and the Call Chain</h1>
+
+<p>What happens when an exception is raised in a call chain? For example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="n">out_of_range</span><span class="p">{</span><span class="s">"f"</span><span class="p">};</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">g</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">f</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">h</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">g</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">h</span><span class="p">();</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">out_of_range</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Range error in main()"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>What happens? <code class="language-plaintext highlighter-rouge">main</code> calls <code class="language-plaintext highlighter-rouge">h</code>, then <code class="language-plaintext highlighter-rouge">h</code> calls <code class="language-plaintext highlighter-rouge">g</code>, then <code class="language-plaintext highlighter-rouge">g</code> calls <code class="language-plaintext highlighter-rouge">f</code>, then <code class="language-plaintext highlighter-rouge">f</code> raises <code class="language-plaintext highlighter-rouge">out_of_range</code>.</p>
+
+<ol>
+  <li>An exception is raised in <code class="language-plaintext highlighter-rouge">f</code>. Because <code class="language-plaintext highlighter-rouge">f</code> does not have an exception handler, its execution is interrupted and control goes back to <code class="language-plaintext highlighter-rouge">g</code>.</li>
+  <li>Because <code class="language-plaintext highlighter-rouge">g</code> does not have an exception handler, its execution is interrupted and control goes back to <code class="language-plaintext highlighter-rouge">h</code>.</li>
+  <li>Because <code class="language-plaintext highlighter-rouge">h</code> does not have an exception handler, its execution is interrupted and control goes back to <code class="language-plaintext highlighter-rouge">main</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">main</code> has an exception handler. So the exception is caught and the body of the <code class="language-plaintext highlighter-rouge">catch</code> block is executed.</li>
+</ol>
+
+<p>If we print something at the start and end of each function in the program above, we can see this happening:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./callchain
+Start main
+Start h
+Start g
+Start f
+Range error in main()
+Finish main
+</code></pre></div></div>
+
+<p>If there is no matching handler in the entire call chain, the program terminates.</p>
+
+<h3 id="partial-exception-handling">Partial Exception Handling</h3>
+
+<p>A handler can do part of the recovery job:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span> <span class="p">.</span> <span class="p">.</span> <span class="p">.</span> <span class="p">}</span>
+<span class="k">catch</span> <span class="p">(</span><span class="n">SomeErrorType</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+  <span class="k">throw</span> <span class="n">SomeOtherError</span><span class="p">{</span> <span class="p">.</span> <span class="p">.</span> <span class="p">.</span> <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>or rethrow the same exception:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span> <span class="p">.</span> <span class="p">.</span> <span class="p">.</span> <span class="p">}</span>
+<span class="k">catch</span> <span class="p">(</span><span class="n">SomeErrorType</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+  <span class="k">throw</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>But it won’t be able to completely handle the error. (function allocated dynamic memory, partial exception handler can free it before rethrowing the original exception)</p>
+</blockquote>
+
+<p>For example, we could modify <code class="language-plaintext highlighter-rouge">f</code>, <code class="language-plaintext highlighter-rouge">g</code>, <code class="language-plaintext highlighter-rouge">h</code> as follow:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">h</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Start h"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">g</span><span class="p">();</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">out_of_range</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Range error in h()"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="k">throw</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Finish h"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Then it produces following output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./callchain_partial_handler
+Start main
+Start h
+Start g
+Start f
+Range error in f()
+Range error in g()
+Range error in h()
+Range error in main()
+Finish main
+</code></pre></div></div>
+
+<h3 id="exceptions-in-destructors">Exceptions in Destructors</h3>
+
+<h3 id="important">IMPORTANT</h3>
+
+<p>NEVER let a destructor throw an exception!!!</p>
+
+<p>The program will terminate immediately!!!</p>
+
+<h1 id="catching-exceptions-with-subclasses-and-by-reference">Catching Exceptions with Subclasses and By Reference</h1>
+
+<p>For each <code class="language-plaintext highlighter-rouge">try</code> block, it is possible to add an unlimited number of <code class="language-plaintext highlighter-rouge">catch</code> blocks to handle different types of exceptions For example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span>
+  <span class="c1">// do something</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">CustomException</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// handle custom error</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">out_of_range</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// handle out of range error</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span> <span class="c1">// literally mean ... here)</span>
+  <span class="c1">// handle any other exception type</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>So if an exception of type <code class="language-plaintext highlighter-rouge">CustomException</code> is raised in the <code class="language-plaintext highlighter-rouge">try</code> block, the first <code class="language-plaintext highlighter-rouge">catch</code> block will run… Block <code class="language-plaintext highlighter-rouge">catch(...) {}</code> acts as a catch-all that handles any other type of exception not handled by the previous blocks.</p>
+
+<blockquote>
+  <p>Unless you add a catch-all block, then any exception that does not match the type of the existing exception handlers will cause the program to terminate immediately.</p>
+</blockquote>
+
+<h3 id="catching-exceptions-by-subclasses">Catching Exceptions By Subclasses</h3>
+
+<p>If your exception classes use inheritance, the class hierarchy is considered by the exception handling blocks. For example, if <code class="language-plaintext highlighter-rouge">E2</code> is a subclass of <code class="language-plaintext highlighter-rouge">E1</code>, then a catch <code class="language-plaintext highlighter-rouge">E1 {}</code> will handle exceptions of classes <code class="language-plaintext highlighter-rouge">E2</code> and <code class="language-plaintext highlighter-rouge">E1</code>. This is because, due to inheritance, an <code class="language-plaintext highlighter-rouge">E2</code> is a type of <code class="language-plaintext highlighter-rouge">E1</code>.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">E1</span> <span class="p">{};</span>
+<span class="k">class</span> <span class="nc">E2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">E1</span> <span class="p">{};</span>
+<span class="k">try</span> <span class="p">{</span>
+  <span class="c1">// do</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">E1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// will handle exceptions of type E1 or E2</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>You can also write multiple catch block to create different handlers. Handler for the subclass needs to appear before the handler of the superclass.</p>
+</blockquote>
+
+<p>Following example show this:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">E1</span> <span class="p">{};</span>
+<span class="k">class</span> <span class="nc">E2</span><span class="o">:</span> <span class="k">public</span> <span class="n">E1</span> <span class="p">{};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"First block: "</span><span class="p">;</span>
+    <span class="k">throw</span> <span class="n">E2</span><span class="p">{};</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">E2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This block will run because E2 will be caught here.</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"caught on E2 block"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">E1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This block will not run because the exception was already caught in the previous block.</span>
+    <span class="c1">// However, it would run if the exception raised was of type E1.</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"caught on E1 block"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Second block: "</span><span class="p">;</span>
+    <span class="k">throw</span> <span class="n">E2</span><span class="p">{};</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">E1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This block will run because E2 will be caught here.</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"caught on E1 block"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">E2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This block will never run. Any exception of types E1 or E2 will be handled by the block above.</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"caught on E2 block"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="catching-exceptions-by-reference">Catching Exceptions By Reference</h3>
+
+<p>If you have polymorphic methods in the classes, the methods that will run will be those of the superclass. For Example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">E1</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">f</span><span class="p">()</span> <span class="p">{</span>
+      <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"E1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">E2</span><span class="o">:</span> <span class="k">public</span> <span class="n">E1</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">f</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+      <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"E2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="n">E2</span><span class="p">{};</span>
+  <span class="p">}</span>
+  <span class="k">catch</span> <span class="p">(</span><span class="n">E1</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">e</span><span class="p">.</span><span class="n">f</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Even though the exception was raised using the subclass <code class="language-plaintext highlighter-rouge">E2</code>, the catch block needs to assign it to a variable of type <code class="language-plaintext highlighter-rouge">E1</code>. Therefore, the <code class="language-plaintext highlighter-rouge">E2</code> object is sliced into the class <code class="language-plaintext highlighter-rouge">E1</code>. Thus, the code above will use the <code class="language-plaintext highlighter-rouge">E1</code> version of the polymorphic method <code class="language-plaintext highlighter-rouge">f()</code> and will print “E1”.</p>
+
+<p>However, we want to use the exception object using its correct class. To do this, we need to catch the exception by reference:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="n">E2</span><span class="p">{};</span>
+  <span class="p">}</span>
+  <span class="k">catch</span> <span class="p">(</span><span class="n">E1</span> <span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">e</span><span class="p">.</span><span class="n">f</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>The maxim in C++ is, “Throw by value, catch by reference.”</p>
+</blockquote>
+
+<h3 id="rethrowing-exceptions-in-a-class-hierarchy">Rethrowing Exceptions in a Class Hierarchy</h3>
+
+<p>An exception can be thrown by using the statement <code class="language-plaintext highlighter-rouge">throw;</code> or by using <code class="language-plaintext highlighter-rouge">throw s;</code>, where <code class="language-plaintext highlighter-rouge">s</code> is a variable where the cuaght exception was stored. In general, both are similar.</p>
+
+<p>However, they will differ if the exception is a subclass and the exception handler cuaght it as an object of the subclass.</p>
+
+<p>For example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SomeErrorType</span> <span class="p">{};</span>
+<span class="k">class</span> <span class="nc">SpecialErrorType</span> <span class="o">:</span> <span class="k">public</span> <span class="n">SomeErrorType</span> <span class="p">{};</span>
+<span class="k">try</span> <span class="p">{</span>
+  <span class="p">.</span> <span class="p">.</span> <span class="p">.</span> <span class="c1">// some code that raises a SpecialErrorType exception</span>
+<span class="p">}</span>
+<span class="k">catch</span> <span class="p">(</span><span class="n">SomeErrorType</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// note that we're catching a SomeErrorType exception, not a SpecialErrorType</span>
+
+  <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
+
+  <span class="k">throw</span><span class="p">;</span>      <span class="c1">// will rethrow the original SpecialErrorType exception</span>
+  <span class="c1">// throw s; // would throw the original exception sliced as a SomeErrorType</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="exceptions-from-the-c-standard-classes">Exceptions From the C++ Standard Classes</h1>
+
+<h3 id="exceptions-from-the-c-standard-classes-1">Exceptions From the C++ Standard Classes</h3>
+
+<p>Many of the standard classes in C++ raise exceptions when an error occurs, so you can handle the error in the way that is the most appropriate for your application.</p>
+
+<h3 id="inputoutput-streams">Input/Output Streams</h3>
+
+<p>By default, the I/O streams such as <code class="language-plaintext highlighter-rouge">cin</code> and <code class="language-plaintext highlighter-rouge">cout</code> don’t raise exceptions, so we need to check the return of the <code class="language-plaintext highlighter-rouge">fail()</code> method. However, we can use <code class="language-plaintext highlighter-rouge">exceptions()</code> method to configure them to start raising the <code class="language-plaintext highlighter-rouge">ios::failure</code> exception when an error occurs.</p>
+
+<p>For example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Set cin to raise an exception on EOF or failure</span>
+  <span class="n">cin</span><span class="p">.</span><span class="n">exceptions</span><span class="p">(</span><span class="n">ios</span><span class="o">::</span><span class="n">eofbit</span><span class="o">|</span><span class="n">ios</span><span class="o">::</span><span class="n">failbit</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">;</span>
+      <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">catch</span> <span class="p">(</span><span class="n">ios</span><span class="o">::</span><span class="n">failure</span> <span class="o">&amp;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">cin</span><span class="p">.</span><span class="n">eof</span><span class="p">())</span> <span class="k">break</span><span class="p">;</span>
+      <span class="n">cin</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+      <span class="n">cin</span><span class="p">.</span><span class="n">ignore</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="range-errors">Range Errors</h3>
+
+<p>The exception that represents the “out of range” error is <code class="language-plaintext highlighter-rouge">std::out_of_range</code>.</p>
+
+<p>For example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+  <span class="n">v</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+  <span class="n">v</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+  <span class="n">v</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">v</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">// out of range</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Got here"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">catch</span> <span class="p">(</span><span class="n">out_of_range</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Bad range "</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Done"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="dynamic-memory-allocation">Dynamic Memory Allocation</h3>
+
+<p>When the <code class="language-plaintext highlighter-rouge">new</code> operation fails to allocate the requested memory, it raises the exception <code class="language-plaintext highlighter-rouge">std::bad_alloc</code>.</p>
+
+<p>For example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">C</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">a</span><span class="p">[</span><span class="mi">1000000</span><span class="p">];</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="n">C</span> <span class="o">*</span><span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">C</span><span class="p">[</span><span class="mi">10000000</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./newerror
+terminate called after throwing an instance of 'std::bad_alloc'
+  what(): std::bad_alloc
+Aborted (core dumped)
+</code></pre></div></div>
+
+
+
+
+<div class="pt-5">
+  
+</div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Mark Joonho Lee</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:junho2945@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/markjoonho"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/joonho-lee-739400193"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>
