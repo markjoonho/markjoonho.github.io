@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "03. Relational Data Operators",
+      "category" : "",
+      "tags"     : "DataBase",
+      "url"      : "/blog/database-03",
+      "date"     : "2021-04-28 00:00:00 -0400"
+    } ,
+  
+    {
       "title"    : "02. DataBase Modeling",
       "category" : "",
       "tags"     : "DataBase",
