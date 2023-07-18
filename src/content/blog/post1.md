@@ -1,16 +1,90 @@
 ---
-title: "Demo Post 1"
-description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+title: "[arXiv 2017] Focal Loss for Dense Object Detection"
+description: "Reshaping the standard cross entropy loss."
 pubDate: "Sep 10 2022"
 heroImage: "/post_img.webp"
+badge: "Paper Review"
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
+# Abstract
+Object Detection은 이미지 내의 foreground 영역을 찾아내고, IoU(Intersection over Union) threshold에 따라 positive/negative sample로 나눔.
 
-Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc. Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra massa massa ultricies mi.
 
-Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
+현재 accuracy가 높은 object detector의 대부분은 R-CNN기반 two-stage detector 사용.
 
-Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id cursus metus aliquam eleifend mi.
+ ```
+> Two-stage detector의 경우 one-stage에 비해 속도 느림, 성능 높음.
 
-Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
+> One-stage detector의 경우 two-stage detector에 비해 속도 빠름, 성능 낮음.
+```
+
+One-stage detector의 성능 저하 원인을 class imbalance라고 함. 
+
+```
+> 물체 vs 배경을 비교 했을때 배경이 일반적으로 더 많음.
+```
+
+위 문제 해결하기 위해 제안한 방식이 cross entropy loss를 reshaping 한 Focal Loss.
+```
+> Focal Loss의 효율성을 평가 하기 위해 간단한 dense detector인 RetinaNet 소개.
+
+> RetinaNet과 Focal Loss 함께 사용 시 이전 one-stage detector와 비슷한 스피드와 함께 sota two-stage detector와 비슷한 성능 보여줌.
+```
+
+
+# Introduction
+
+현재 많은 sota object detector 모델들은 two-stage 형태임.
+```
+> first stage에서 sparse set of candidate object locations 생성 (region proposal).
+
+> second stage에서 region proposal을 바탕으로 CNN을 이용한 object detection (foreground vs background)
+```
+
+Two-stage 모델이서는 왜 높은 accuracy가 나올까?
+```
+> first stage에서 object가 존재할 확률이 높은 region proposal를 생성, one-stage보다 class 불균형 문제가 덜 민감.
+
+> second stage에서 fixed forground-to-background ratio (1:3) 혹은 Online Hard Example Mining (OHEM)을 사용하여 object와 background의 비율 유지. (sampling heuristic) 
+```
+One-stage 모델들은 어떻게 작동 할까?
+```
+> One-stage detector는 CNN에서 나온 Feature map에서 grid 형태로 나누어서 localization 진행.
+
+> 이를 위해 미리 정의한 box(anchor box)를 사용하여, anchor box에 scales, aspect ratio를 적용한 dense sampling 사용.
+
+```
+One-stage 모델에서는 비슷한 accuracy 내기 힘들까?
+```
+> 정확도가 낮은 이유 중 하나로, Class 불균형 문제(Object vs Background)가 존재
+
+> 이미지 전체를 대상으로 dense sampling 진행으로 인한 class imbalance 문제가 심해짐.
+```
+
+One-stage model의 해결책 제시
+```
+> Focal Loss
+
+> RetinaNet
+```
+
+Focal Loss의 $$\gamma$$를 사용하게 되면, ground truth에 대한 probability가 낮을 수록 loss를 높게 주고 probability가 높을 수록 loss를 낮게 주는 걸 알 수 있다. (Figure 1 참고)
+```
+> Focal Loss는 기존의 Cross Entropy Loss에 factor를 적용 -> 감마가 0보다 커질수록 잘 검출한 물체(IoU가 높음)와 아닌 물체(IoU가 낮음) 사이의 loss 값의 차이를 더욱 분명하게 만듦.
+
+> Focal Loss는 학습 시에 background보다 object 검출에 집중할 수 있게 도움.
+
+> Focal Loss가 기존의 방법(sampling heuristics, OHEM)보다 더 효과적이고 간단한 것을 보여줌.
+```
+
+![Alt text](fig1.png)
+
+Focal Loss의 성과를 효과적으로 보여주기 위해, RetinaNet 제작 (figure2 참고).
+
+```
+> RetinaNet는 anchor box를 사용하는 FPN & Focal Loss 적용.
+```
+
+![Alt text](fig2.png)
+
+# Related Work
