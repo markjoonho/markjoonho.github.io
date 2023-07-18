@@ -1,3 +1,16 @@
 .time-line-container>div:last-child .education__time>.education__line {
     display: none;
 }
+.custom0 {
+    font-size: 14px;
+    font-weight: 300;
+}
+.customlink {
+    font-weight: 400;
+    color:blueviolet;
+}
+.customlink:hover {
+    font-weight: 400;
+    color:brown;
+
+}

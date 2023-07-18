@@ -5,88 +5,88 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
 
 <BaseLayout title="Resume" sideBarActiveItemID="cv">
   <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Profile</div>
+    <div class="text-3xl w-full font-bold">Joonho Mark Lee</div>
   </div>
 
   <div class="mb-10 text-justify">
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-    aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
-    aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-    cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    Hi, my name is Joonho Lee (Mark). Currently, I am working as a Machine Learning Engineer. I am always open to job offer. Feel free to contact me using Linkedin.
+  </div>
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Work Experience</div>
   </div>
 
+  <div class="time-line-container mb-10">
+    <TimeLineElement
+      title="DeepBio Inc., Machine Learning Engineer"
+      subtitle="2023.05 ~ Current @ Seoul, South Korea"
+    >
+    <br><br> 
+    </TimeLineElement>
+    <TimeLineElement
+      title="DeepBio Inc., Machine Learning Engineer Intern"
+      subtitle="2021.09 ~ 2022.04 @ Seoul, South Korea"
+    >
+    - Analyzed Histopathology image using Python Pytorch.<br>
+    - Developed and customized survival analysis model using deep learning attention based MIL.<br>
+    - Visualized and analyzed two risk groups(low, high risk) based on the risk score from the deep learning model using logrank test.<br>
+    - Publicated papers(abstract) at USCAP22, AACR22 (Check below).<br><br>
+    </TimeLineElement>
+    <TimeLineElement
+      title="Crowdworks, Data Analyst"
+      subtitle="2021.01 ~ 2021.02 @ Remote"
+    >
+    - Analyzed users' log data and feature selecting using Python.<br>
+    - Scaled the log datas and dimensionality reduction using PCA, TSNE.<br>
+    - Clustered users' log data using unsupervised ML models(KMeans, DBSCAN, etc.) to verify and select excellent worker.<br>
+    - Made the first version of ML model to verify and select excellent worker.<br><br>
+    </TimeLineElement>
+    <TimeLineElement
+      title="Crowdworks, Growth Hacker Intern"
+      subtitle="2019.05 ~ 2019.12 @ Seoul, South Korea"
+    >
+    - Planned and developed own marketing performance system using Python and Google Tag Manager through Google Cloud Platform.<br>
+    - Analyzed users' tracking data and extract meaningful insight using MYSQL, Big query, and Google Analytics.<br>
+    - Created human resource platform using the Word Press.<br>
+    </TimeLineElement>
+  </div>
+  
   <div class="mb-5">
     <div class="text-3xl w-full font-bold">Education</div>
   </div>
 
   <div class="time-line-container grid gap-4 mb-10">
     <TimeLineElement
-      title="Title Name"
-      subtitle="[start year] to [end year] at [Study Center Name], [City], [Country]"
-    />
+      title="University of Waterloo, Bachelor of Mathematics"
+      subtitle="2017.09 ~ 2023.04 @ Waterloo, ON, Canada"
+    >
+    - 2017 ~ 2018 President’s Scholarship.
+    </TimeLineElement>
     <TimeLineElement
-      title="Title Name"
-      subtitle="[start year] to [end year] at [Study Center Name], [City], [Country]"
-    />
+      title="Garibaldi Secondary School" 
+      subtitle="2015.09 ~ 2017.06 @ Maple Ridge, BC, Canada"
+    >
+    - School Champion and Top 1 percent from total in grade 12 Euclid math contest.<br>
+    - School Champion and Won 7th place from total in grade 11 Fermat math contest.
+    </TimeLineElement>
   </div>
 
   <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Experience</div>
+    <div class="text-3xl w-full font-bold">Publications</div>
   </div>
 
-  <div class="time-line-container mb-10">
-    <TimeLineElement
-      title="Job Title at Project or Company Name"
-      subtitle="From [Start Date] to [End Date] at [Company], [City], [Country]"
-    >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
-    </TimeLineElement>
-    <TimeLineElement
-      title="Job Title at Project or Company Name"
-      subtitle="From [Start Date] to [End Date] at [Company], [City], [Country]"
-    >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
-    </TimeLineElement>
-    <TimeLineElement
-      title="Job Title at Project or Company Name"
-      subtitle="From [Start Date] to [End Date] at [Company], [City], [Country]"
-    >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
-    </TimeLineElement>
-  </div>
-
+  <ul class="list-disc mx-6 mb-10 grid gap-2">
+    <a href="https://www.deepbio.co.kr/data/file/media/2949012065_07Qm5LUi_3003ad15bd5861d94b35fad62932d67f82b09ed0.jpg" target="_blank" class="customlink">[USCAP22] Breast Cancer Survival Analysis through the Extracted Feature from the Prostate Diagnosis Model</a>
+    <a href="https://www.abstractsonline.com/pp8/#!/10517/presentation/18438" target="_blank" class="customlink">[AACR22] A deep learning based pancreatic adenocarcinoma survival prediction model applicable to adenocarcinoma of other organs</a>
+  </ul>
+  
   <div class="mb-5">
     <div class="text-3xl w-full font-bold">Certifications</div>
   </div>
 
   <ul class="list-disc mx-6 mb-10 grid gap-2">
-    <li>
-      <a href="#" target="_blank"> Certification Name (with link)</a>
-    </li>
-    <li>
-      <a href="#" target="_blank"> Certification Name (with link)</a>
-    </li>
+      - 2023 Bachelor of Mathematics, University of Waterloo, Waterloo, ON, Canada <br>
+      - 2016 Lloyd Auckland Invitational Mathematics Workshop, University of Waterloo, Waterloo, ON, Canada
   </ul>
 
-  <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Skills</div>
-  </div>
-
-  <ul class="list-disc md:columns-5 columns-2 mx-6">
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-  </ul>
+ 
 </BaseLayout>
