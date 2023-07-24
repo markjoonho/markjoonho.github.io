@@ -2,7 +2,7 @@
 title: "[arXiv 2017] Focal Loss for Dense Object Detection"
 description: "Reshaping the standard cross entropy loss."
 pubDate: "Sep 10 2022"
-heroImage: "/content/blog/img/post1_fig11.png"
+heroImage: "/img/post1_fig11.png"
 badge: "Paper Review"
 ---
 
@@ -74,14 +74,14 @@ Focal Loss의 $$\gamma$$를 사용하게 되면, ground truth에 대한 probabil
 - Focal Loss가 기존의 방법(sampling heuristics, OHEM)보다 더 효과적이고 간단한 것을 보여줌.
 
 
-![Alt text](/src/content/blog/img/post1_fig1.png)
+![Alt text](/img/post1_fig1.png)
 
 Focal Loss의 성과를 효과적으로 보여주기 위해, RetinaNet 제작 (figure2 참고).
 
 
 - RetinaNet는 anchor box를 사용하는 FPN & Focal Loss 적용. (뒤에 다시 다룸)
 
-![Alt text](/src/content/blog/img/post1_fig2.png)
+![Alt text](/img/post1_fig2.png)
 
 ## 3. Focal Loss
 
@@ -89,16 +89,16 @@ Focal Loss의 성과를 효과적으로 보여주기 위해, RetinaNet 제작 (f
 
 - 기존 binary cross entropy(CE) loss는 아래와 같은 식.
 
-![Alt text](/src/content/blog/img/post1_fig3.png)
+![Alt text](/img/post1_fig3.png)
 
 - notation의 편리를 위해 P_t를 아래와 같이 적용.
 - 여기서 P_t는 해당 class가 존재할 확률.
 
-![Alt text](/src/content/blog/img/post1_fig4.png)
+![Alt text](/img/post1_fig4.png)
 
 - 따라서, 아래와 같은 식 성립.
 
-![Alt text](/src/content/blog/img/post1_fig5.png)
+![Alt text](/img/post1_fig5.png)
 
 - Cross entropy의 특징으로 인해 P_t가 0.5보다 커도 loss가 생김.
 - 이 의미는 box에 물체가 존재할 확률이 50% 넘어가도 loss가 꽤 생긴다는 점.
@@ -108,7 +108,7 @@ Focal Loss의 성과를 효과적으로 보여주기 위해, RetinaNet 제작 (f
 
 $\alpha$-balanced Cross Entropy(CE) Loss: weighted factor인 $\alpha$ 를 CE에 추가.
 
-![Alt text](/src/content/blog/img/post1_fig6.png)
+![Alt text](/img/post1_fig6.png)
 
 - Object class:  $\alpha$ 를 0 ~ 1 사이로 선정
 - Background class: 1 - $\alpha$
@@ -119,7 +119,7 @@ $\alpha$-balanced Cross Entropy(CE) Loss: weighted factor인 $\alpha$ 를 CE에 
 
 $\alpha$-balanced Cross Entropy(CE) Loss의 단점을 해결 하여 easy example과 hard example중 hard example에 초점을 주려 $\alpha$-balanced Cross Entropy(CE) Loss를 수정.
 
-![Alt text](/src/content/blog/img/post1_fig7_1.png)
+![Alt text](/img/post1_fig7_1.png)
 
 - CE loss에 modulating fact를 추가. 
 - P_t 값이 작을때, modulating factor가 1에 가까워 지면서 loss 커짐. (hard example)
@@ -128,7 +128,7 @@ $\alpha$-balanced Cross Entropy(CE) Loss의 단점을 해결 하여 easy example
 
 > modulating factor로 easy hard 구분 세기 결정 가능. (논문에서는 2가 최고 라고 함.)
 
-![Alt text](/src/content/blog/img/post1_fig7_2.png)
+![Alt text](/img/post1_fig7_2.png)
 
 - $\alpha$ 값이 추가된 focal loss.
 - easy와 hard 뿐만 아니라 positive와 negative 차별성도 표현 가능.
@@ -136,7 +136,7 @@ $\alpha$-balanced Cross Entropy(CE) Loss의 단점을 해결 하여 easy example
 
 ## 4. RetinaNet Detector
 
-![Alt text](/src/content/blog/img/post1_fig8.png)
+![Alt text](/img/post1_fig8.png)
 
 - RetinaNet은 Feature Pyramid Network(FPN) backbone과 두개의 subnet(class & box regression)을 사용함.
 - (a) feedforward로 ResNet 사용.
@@ -151,7 +151,7 @@ $\alpha$-balanced Cross Entropy(CE) Loss의 단점을 해결 하여 easy example
 - $\gamma$ 에 따른 최적의 $\alpha$ 값을 찾음.
 - $\gamma$ 가 실제로 더 중요했음.
 
-![Alt text](/src/content/blog/img/post1_fig9_1.png)
+![Alt text](/img/post1_fig9_1.png)
 
 ### Focal Loss Analysis
 - Focal Loss에 대한 이해를 위해 수렴한 모델들의 loss분포를 분석.
@@ -159,7 +159,7 @@ $\alpha$-balanced Cross Entropy(CE) Loss의 단점을 해결 하여 easy example
 - 학습 결과에 대한 Focal loss를 Foreground와 Background로 나누어서 누적분포함수를 그림.
 - Foreground에 대한 누적분포 함수를 보면 $\gamma$ 의값에 크게 영향을 받지 않음.
 - FL을 통해 효과적으로 Easy negatives의 영향을 무시할 수 있고 오직 Hard negative example에 집중할 수 있음.
-![Alt text](/src/content/blog/img/post1_fig9_2.png)
+![Alt text](/img/post1_fig9_2.png)
 
 #### Focal Loss vs OHEM
 
@@ -169,14 +169,14 @@ $\alpha$-balanced Cross Entropy(CE) Loss의 단점을 해결 하여 easy example
 
 > OHEM이 FL보다 좋은 성능 내지 못함.
 
-![Alt text](/src/content/blog/img/post1_fig10.png)
+![Alt text](/img/post1_fig10.png)
 
 #### 기타 실험 결과들
 - 
 
-![Alt text](/src/content/blog/img/post1_fig11.png)
+![Alt text](/img/post1_fig11.png)
 
-![Alt text](/src/content/blog/img/post1_fig12.png)
+![Alt text](/img/post1_fig12.png)
 
 
 ## 6. Conclusion
